@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 import ListDividers from './ListDividers';
@@ -13,14 +17,22 @@ const useStyles = makeStyles(theme => ({
 		height: '89vh'
 	},
 	paper: {
-		padding: theme.spacing(2),
 		textAlign: 'center',
 		color: theme.palette.text.secondary,
 		margin: '15px'
 	},
 	p: {
 		textIndent: '40px'
-	}
+	},
+	ButtonBase: {
+		width: '100%',
+		height: '100%',
+	},
+	CardContent: {
+		padding: '15px',
+		width: '100%',
+		height: '100%',
+	},
 }));
 
 const createData = (id, name, content) => {
@@ -69,8 +81,14 @@ export default function HomePage() {
 							{speeches.map(speech => (
 								<Grid key={speech.id} item xs={3}>
 									<Card className={classes.paper}>
-										<b>{speech.name}</b><br />
-										<p className={classes.p} align="left">{speech.content.substring(0, 255) + '...'}</p>
+										<ButtonBase>
+											<CardContent>
+												<b>{speech.name}</b><br />
+												<p className={classes.p} align="left">{speech.content.substring(0, 255) + '...'}</p>
+											</CardContent>
+											<CardActions>
+											</CardActions>
+										</ButtonBase>
 									</Card>
 								</Grid>
 							))}
@@ -84,10 +102,16 @@ export default function HomePage() {
 							alignItems="baseline">
 						{speeches.map(speech => (
 							<Grid key={speech.id} item xs={3}>
-								<Card className={classes.paper}>
-									<b>{speech.name}</b><br />
-									<p className={classes.p} align="left">{speech.content.substring(0, 255) + '...'}</p>
-								</Card>
+									<Card className={classes.paper}>
+										<ButtonBase>
+											<CardContent>
+												<b>{speech.name}</b><br />
+												<p className={classes.p} align="left">{speech.content.substring(0, 255) + '...'}</p>
+											</CardContent>
+											<CardActions>
+											</CardActions>
+										</ButtonBase>
+									</Card>
 							</Grid>
 						))}
 					</Grid>
