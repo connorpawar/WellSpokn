@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
+import SpeechPage from './components/SpeechPage'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import deepOrange from '@material-ui/core/colors/deepOrange';
@@ -19,6 +20,7 @@ const theme = createMuiTheme({
             <div>
 				<ThemeProvider theme={theme}>
                 	<Route exact path='/' component={HomePage} />
+					<Route exact path="/speech/:SpeechId" component={SpeechPage} />
 				</ThemeProvider>
             </div>
         </Router>

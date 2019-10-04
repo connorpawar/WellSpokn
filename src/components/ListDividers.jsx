@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,20 +20,28 @@ export default function ListDividers() {
 
 	return (
 		<List component="nav" className={classes.root} aria-label="mailbox folders">
-			<ListItem button>
-				<ListItemText primary="Speeches" />
-			</ListItem>
+			<Link style={{ textDecoration: 'none', color:'inherit' }} to={{ pathname: `/` }}>
+				<ListItem button>
+					<ListItemText primary="Speeches" />
+				</ListItem>
+			</Link>
 			<Divider />
-			<ListItem button divider>
-				<ListItemText primary="Progress" />
-			</ListItem>
-			<ListItem button>
-				<ListItemText primary="Settings" />
-			</ListItem>
+			<Link style={{ textDecoration: 'none', color:'inherit' }} to={{ pathname: `/` }}>
+				<ListItem button divider>
+					<ListItemText primary="Progress" />
+				</ListItem>
+			</Link>
+			<Link style={{ textDecoration: 'none', color:'inherit' }} to={{ pathname: `/` }}>
+				<ListItem button divider>
+					<ListItemText primary="Settings" />
+				</ListItem>
+			</Link>
 			<Divider light />
-			<ListItem button>
-				<ListItemText primary="Log out" />
-			</ListItem>
-		</List>
+			<Link style={{ textDecoration: 'none', color:'inherit' }} to={{ pathname: `/` }}>
+				<ListItem button divider>
+					<ListItemText primary="Log Out" />
+				</ListItem>
+			</Link>
+		</List >
 	);
 }
