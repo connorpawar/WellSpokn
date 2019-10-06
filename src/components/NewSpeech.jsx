@@ -21,11 +21,11 @@ const useStyles = makeStyles(theme => ({
 		color: blue[600],
 	},
 	fab: {
-		position: 'absolute',
+		position: 'fixed',
 		margin: theme.spacing(1),
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
-	  },
+	},
 }));
 
 function SimpleDialog(props) {

@@ -93,7 +93,7 @@ export default function NavBar(props) {
 			onClick={toggleDrawer(side, false)}
 			onKeyDown={toggleDrawer(side, false)}
 		>
-		<ListDividers />
+			<ListDividers />
 		</div>
 	);
 
@@ -103,7 +103,7 @@ export default function NavBar(props) {
 
 	return (
 		<div className={classes.root}>
-			<AppBar position="static">
+			<AppBar position="sticky">
 				<Toolbar>
 					<MenuButton Show={toggleDrawer('left', true)} />
 					<SwipeableDrawer
