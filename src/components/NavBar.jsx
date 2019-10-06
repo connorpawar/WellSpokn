@@ -7,9 +7,17 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuButton from './MenuButton';
 import SearchIcon from '@material-ui/icons/Search';
 
+
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import ListDividers from './ListDividers'
+
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
+	},
+	list: {
+		width: 250,
+		height: '98%'
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
@@ -63,14 +71,50 @@ const useStyles = makeStyles(theme => ({
 export default function NavBar(props) {
 	const classes = useStyles();
 
+	const [state, setState] = React.useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
+
+	const toggleDrawer = (side, open) => event => {
+		if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+			return;
+		}
+
+		setState({ ...state, [side]: open });
+	};
+
+	const sideList = side => (
+		<div
+			className={classes.list}
+			role="presentation"
+			onClick={toggleDrawer(side, false)}
+			onKeyDown={toggleDrawer(side, false)}
+		>
+		<ListDividers />
+		</div>
+	);
+
+	const handleSearch = (event) => {
+		props.SearchSpeeches(event.target.value);
+	}
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
 				<Toolbar>
-					<MenuButton Show={props.Show}/>
+					<MenuButton Show={toggleDrawer('left', true)} />
+					<SwipeableDrawer
+						open={state.left}
+						onClose={toggleDrawer('left', false)}
+						onOpen={toggleDrawer('left', true)}>
+						{sideList('left')}
+					</SwipeableDrawer>
 					<Typography className={classes.title} variant="h6" noWrap>
 						WellSpokn
-          </Typography>
+          			</Typography>
 					<div className={classes.search}>
 						<div className={classes.searchIcon}>
 							<SearchIcon />
@@ -82,6 +126,7 @@ export default function NavBar(props) {
 								input: classes.inputInput,
 							}}
 							inputProps={{ 'aria-label': 'search' }}
+							onChange={handleSearch}
 						/>
 					</div>
 				</Toolbar>

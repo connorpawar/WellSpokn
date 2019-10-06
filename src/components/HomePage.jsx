@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
-import ListDividers from './ListDividers';
+import NewSpeech from './NewSpeech';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 	paper: {
 		textAlign: 'center',
 		color: theme.palette.text.secondary,
-		margin: '15px'
+		margin: '25px'
 	},
 	p: {
 		textIndent: '40px'
@@ -63,51 +63,17 @@ export default function HomePage() {
 		return (show) ? setShow(false) : setShow(true);
 	}
 
-	const searchSpeeches = (speeches) => {
-		return setSpeechCards(speeches);
+	const searchSpeeches = (searchTerm) => {
+		let searchedSpeeches = speeches.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
+		return setSpeechCards(searchedSpeeches);
 	}
 
 
 	return (
 		<div>
-			<NavBar Show={hideMenu} SetSpeechCards={setSpeechCards} />
-			<Grid container spacing={0}
-				direction="row"
-				justify="flex-start"
-				alignItems="stretch">
-				{show && <Grid item xs={2}>
-					<ListDividers />
-				</Grid>}
-				{show && <Grid item xs={10}>
-					<div id="cards">
-						<Grid container spacing={2}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{speechCards.map(speech => (
-								<Grid key={speech.id} item xs={3}>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/speech/${speech.id}`,
-										state: { name: speech.name, content: speech.content, show: true }
-									}}>
-										<Card className={classes.paper}>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{speech.name}</b><br />
-														<p className={classes.p} align="left">{speech.content.substring(0, 255) + '...'}</p>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-							))}
-						</Grid>
-					</div>
-				</Grid>}
-				{!show && <div id="cards">
-					<Grid container spacing={2}
+			<NavBar SearchSpeeches={searchSpeeches} />
+				<div id="cards">
+					<Grid container spacing={0}
 						direction="row"
 						justify="flex-start"
 						alignItems="baseline">
@@ -131,8 +97,8 @@ export default function HomePage() {
 							</Grid>
 						))}
 					</Grid>
-				</div>}
-			</Grid>
+				</div>
+			<NewSpeech />
 		</div>
 	);
 }

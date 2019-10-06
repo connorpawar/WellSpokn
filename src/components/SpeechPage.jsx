@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
-import ListDividers from './ListDividers';
 
 const useStyles = makeStyles({
 	card: {
@@ -18,42 +17,14 @@ const useStyles = makeStyles({
 export default function SpeechPage(props) {
 	const classes = useStyles();
 
-	const [show, setShow] = useState(props.history.location.state.show);
-
-	const hideMenu = () => {
-		return (show) ? setShow(false) : setShow(true);
+	const searchSpeeches = (searchTerm) => {
+		//will eventually look for word and highlight
 	}
 
 	return (
 		<div>
-			<NavBar Show={hideMenu}/>
-			<Grid container spacing={0}
-				direction="row"
-				justify="flex-start"
-				alignItems="stretch">
-				{show && <Grid item xs={2}>
-					<ListDividers/>
-				</Grid>}
-				{show && <Grid item xs={10}>
-					<div id="cards">
-						<Grid container spacing={2}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							<Card className={classes.card}>
-								<CardActions>
-									<ButtonBase>
-										<CardContent>
-											<b>{props.history.location.state.name}</b><br />
-											<p className={classes.p} align="left">{props.history.location.state.content}</p>
-										</CardContent>
-									</ButtonBase>
-								</CardActions>
-							</Card>
-						</Grid>
-					</div>
-				</Grid>}
-				{!show && <div id="cards">
+			<NavBar SearchSpeeches={searchSpeeches} />
+				<div id="cards">
 					<Grid container spacing={2}
 						direction="row"
 						justify="flex-start"
@@ -69,8 +40,7 @@ export default function SpeechPage(props) {
 								</CardActions>
 							</Card>
 					</Grid>
-				</div>}
-			</Grid>
+				</div>
 		</div>
 	);
 }
