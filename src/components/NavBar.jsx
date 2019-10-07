@@ -7,9 +7,9 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuButton from './MenuButton';
 import SearchIcon from '@material-ui/icons/Search';
 
-
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import ListDividers from './ListDividers'
+import DrawerList from './DrawerList'
+import FilterSpeeches from './FilterSpeeches';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -93,7 +93,7 @@ export default function NavBar(props) {
 			onClick={toggleDrawer(side, false)}
 			onKeyDown={toggleDrawer(side, false)}
 		>
-			<ListDividers />
+			<DrawerList />
 		</div>
 	);
 
@@ -115,6 +115,7 @@ export default function NavBar(props) {
 					<Typography className={classes.title} variant="h6" noWrap>
 						WellSpokn
           			</Typography>
+					{props.SortSpeeches != null && <FilterSpeeches Sort={props.SortSpeeches}/>}
 					<div className={classes.search}>
 						<div className={classes.searchIcon}>
 							<SearchIcon />

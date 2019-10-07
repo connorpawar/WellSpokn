@@ -88,10 +88,21 @@ export default function HomePage() {
 		return setSpeechCards(searchedSpeeches);
 	}
 
+	const sortSpeeches = (sortTerm) => {
+		let sortedSpeeches = [];
+		if(sortTerm === 'name'){
+			sortedSpeeches = speechCards.slice().sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+		} else if(sortTerm === 'created'){
+			sortedSpeeches = speechCards.slice().sort((a,b) => (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0));
+		} else if(sortTerm === 'updated'){
+			sortedSpeeches = speechCards.slice().sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+		}
+		return setSpeechCards(sortedSpeeches);
+	}
 
 	return (
 		<div>
-			<NavBar SearchSpeeches={searchSpeeches} />
+			<NavBar SearchSpeeches={searchSpeeches} SortSpeeches={sortSpeeches}/>
 			<div id="cards">
 				<Grid container spacing={0}
 					direction="row"
