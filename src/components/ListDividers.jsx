@@ -37,7 +37,7 @@ export default function ListDividers() {
 				</ListItem>
 			</Link>
 			<Divider />
-			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/` }}>
+			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/Settings` }}>
 				<ListItem button divider>
 					<ListItemAvatar>
 						<Avatar className={classes.avatar}>
