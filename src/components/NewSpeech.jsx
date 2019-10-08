@@ -14,6 +14,8 @@ import { blue } from '@material-ui/core/colors';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
+import Recorder from './Recorder';
+
 const options = ['Record New Speech', 'Upload Existing Speech'];
 const useStyles = makeStyles(theme => ({
 	avatar: {
@@ -31,31 +33,45 @@ const useStyles = makeStyles(theme => ({
 function SimpleDialog(props) {
 	const classes = useStyles();
 	const { onClose, selectedValue, open } = props;
+	const [record, setRecord] = React.useState(false);
 
 	const handleClose = () => {
 		onClose(selectedValue);
 	};
 
 	const handleListItemClick = value => {
-		onClose(value);
+		if (value === 'Record New Speech') {
+			setRecord(true);
+		} else {
+			onClose(value);
+		}
 	};
 
 	return (
-		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-			<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
-			<List>
-				{options.map(option => (
-					<ListItem button onClick={() => handleListItemClick(option)} key={option}>
-						<ListItemAvatar>
-							<Avatar className={classes.avatar}>
-								{option === 'Record New Speech' && <MicIcon />}
-								{option === 'Upload Existing Speech' && <UploadIcon />}
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary={option} />
-					</ListItem>
-				))}
-			</List>
+		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" maxWidth={'sm'} open={open}>
+			{!record &&
+				<div>
+					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
+					<List>
+						{options.map(option => (
+							<ListItem button onClick={() => handleListItemClick(option)} key={option}>
+								<ListItemAvatar>
+									<Avatar className={classes.avatar}>
+										{option === 'Record New Speech' && <MicIcon />}
+										{option === 'Upload Existing Speech' && <UploadIcon />}
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText primary={option} />
+							</ListItem>
+						))}
+					</List>
+				</div>}
+			{record &&
+				<div>
+					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
+					<Recorder />
+				</div>
+			}
 		</Dialog>
 	);
 }

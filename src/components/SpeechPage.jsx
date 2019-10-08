@@ -8,6 +8,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 import BarGraph from './BarGraph';
+import Recorder from './Recorder';
 
 const useStyles = makeStyles({
 	card: {
