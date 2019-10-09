@@ -54,15 +54,15 @@ function SimpleDialog(props) {
 					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
 					<List>
 						{options.map(option => (
-							<ListItem button onClick={() => handleListItemClick(option)} key={option}>
-								<ListItemAvatar>
-									<Avatar className={classes.avatar}>
-										{option === 'Record New Speech' && <MicIcon />}
-										{option === 'Upload Existing Speech' && <UploadIcon />}
-									</Avatar>
-								</ListItemAvatar>
-								<ListItemText primary={option} />
-							</ListItem>
+								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
+									<ListItemAvatar>
+										<Avatar className={classes.avatar}>
+											{option === 'Record New Speech' && <MicIcon />}
+											{option === 'Upload Existing Speech' && <UploadIcon />}
+										</Avatar>
+									</ListItemAvatar>
+									<ListItemText primary={option} />
+								</ListItem>
 						))}
 					</List>
 				</div>}
