@@ -1,8 +1,8 @@
 import React,  { useState } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import Settings from './Pages/Settings';
-import SpeechPage from './components/SpeechPage'
+import HomePage from './Components/Pages/HomePage';
+import Settings from './Components/Pages/Settings';
+import SpeechPage from './Components/Pages/SpeechPage'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
