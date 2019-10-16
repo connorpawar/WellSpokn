@@ -9,8 +9,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import LoginBanner from '../LoginBanner';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -31,6 +30,7 @@ export default function Login(props) {
 	const [values, setValues] = React.useState({
 		username: '',
 		password: '',
+		email: '',
 		showPassword: false,
 	});
 
@@ -38,16 +38,17 @@ export default function Login(props) {
 		setValues({ ...values, [prop]: event.target.value });
 	};
 
-	const handleClickShowPassword = () => {
-		setValues({ ...values, showPassword: !values.showPassword });
-	};
-
 	const handleMouseDownPassword = event => {
 		event.preventDefault();
 	};
 
+	const handlePageChange= () => {
+		window.location.href = "/";
+	};
+
 	return (
 		<div>
+			<LoginBanner/>
 			<div id="cards">
 				<Grid container spacing={2}
 					direction="row"
@@ -56,15 +57,15 @@ export default function Login(props) {
 					<Grid item sm={4} xs={"auto"}>
 						<Card className={classes.card}>
 							<CardContent>
-								<b>Login</b><br />
+								<center><h2><b>Login</b></h2><br /></center>
 								<TextField
 									id="outlined-username"
 									className={classes.textField}
 									variant="outlined"
 									fullWidth={true}
-									label="Username"
-									value={values.username}
-									onChange={handleChange('username')}
+									label="Email"
+									value={values.email}
+									onChange={handleChange('email')}
 								/>
 								<TextField
 									id="outlined-adornment-password"
@@ -81,23 +82,25 @@ export default function Login(props) {
 												<IconButton
 													edge="end"
 													aria-label="toggle password visibility"
-													onClick={handleClickShowPassword}
 													onMouseDown={handleMouseDownPassword}
 												>
-													{values.showPassword ? <VisibilityOff /> : <Visibility />}
 												</IconButton>
 											</InputAdornment>
 										),
 									}}
 								/>
-								<Grid container spacing={2}
+								<Grid container spacing={1}
 									direction="row"
 									justify="center"
 									alignItems="baseline">
+										<Grid item xm={"auto"}>
+										<ButtonGroup color="primary" className={classes.buttons} aria-label="outlined primary button group">
+											<Button>Signup</Button>
+										</ButtonGroup>
+									</Grid>
 									<Grid item xm={"auto"}>
 										<ButtonGroup color="primary" className={classes.buttons} aria-label="outlined primary button group">
-											<Button>Login</Button>
-											<Button>Sign Up</Button>
+											<Button onClick={handlePageChange}>Continue as Guest</Button>
 										</ButtonGroup>
 									</Grid>
 								</Grid>
