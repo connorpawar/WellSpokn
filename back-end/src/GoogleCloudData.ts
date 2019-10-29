@@ -5,7 +5,11 @@ const fs = require('fs');
 
 
 class GoogleCloudData{
-  constructor(filename){
+  constructor(){
+    
+  }
+  
+  async init(fileName){
     const speechClient = new speech.SpeechClient();
     const langClient = new language.LanguageServiceClient();
   

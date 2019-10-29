@@ -34,7 +34,7 @@ class Speeches extends Sequelize.Model{}
 Speeches.init({
   title: Sequelize.STRING,
   last_edited: Sequelize.DATE,
-  transcript: Sequelize.TEXT(length="long"),
+  transcript: Sequelize.TEXT("long"),
 },
 {
   sequelize,
