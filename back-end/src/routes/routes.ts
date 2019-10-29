@@ -41,7 +41,7 @@ app.get('/create/:usr/:pw',  function (req, res) {
         res.send("NO NO NO");
     })
 });
-app.get('/create_speech/:usr/:title/:transcript',  function (req, res) {
+app.get('/create_speech',  function (req, res) {
     const json_data = req.body
     sql.createSpeech(json_data.username,json_data.title,json_data.transcript)
     .then(() =>{

@@ -35,6 +35,14 @@ Speeches.init({
   title: Sequelize.STRING,
   last_edited: Sequelize.DATE,
   transcript: Sequelize.TEXT("long"),
+  user_id:{
+    type: Sequelize.INTEGER,
+    allowNull:false,
+    references: {
+      model:Users,
+      key:'id',
+    }
+  },
 },
 {
   sequelize,
@@ -47,6 +55,14 @@ Errors.init({
   redundancy: Sequelize.INTEGER,
   diction: Sequelize.INTEGER,
   repetition: Sequelize.INTEGER,
+  user_id:{
+    type: Sequelize.INTEGER,
+    allowNull:false,
+    references: {
+      model:Speeches,
+      key:'id',
+    }
+  },
 },
 {
   sequelize,
@@ -61,21 +77,20 @@ Attempts.init({
   redundancy_errors: Sequelize.INTEGER,
   diction_errors: Sequelize.INTEGER,
   repetition_errors: Sequelize.INTEGER,
+  user_id:{
+    type: Sequelize.INTEGER,
+    allowNull:false,
+    references: {
+      model:Speeches,
+      key:'id',
+    }
+  },
 },
 {
   sequelize,
   modelName : 'attempt'
 });
 
-
-Speeches.belongsTo(Users)
-Users.hasMany(Speeches)
-
-Errors.belongsTo(Speeches)
-Speeches.hasMany(Errors)
-
-Attempts.belongsTo(Speeches)
-Speeches.hasMany(Attempts)
 
 sequelize.sync({force:true});
 
@@ -97,7 +112,7 @@ sequelize.sync({force:true}).then(() => {
 });
 */
 class SQL{
-  static registerUser(_username,_password,_email){
+  static registerUser(_username:string,_password:string,_email:string){
     return Users.create({
       username:_username,
       password:_password,
@@ -111,16 +126,13 @@ class SQL{
       }
     })
   }
-  static createSpeech(_username,_title,_transcript){
-    return Users.findOne({
-      where: {
-        username: _username
-      }
-    }).then(u => {
+  static createSpeech(_username:string,_title:string,_transcript:string){
+    return SQL.getUser(_username).then(u => {
       if(u == null){
         throw "User Not Found"
       }else{
         Speeches.create({
+          user_id:u.id,
           title: _title,
           last_edited: sequelize.literal('CURRENT_TIMESTAMP'),
           transcript: _transcript,
