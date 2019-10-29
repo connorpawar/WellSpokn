@@ -9,7 +9,7 @@
 /coverage
 
 
-back-end/node_modules
+back-end/node_modules/**
 back-end/package-lock.json
 back-end/*.wav
 back-end/ts-built

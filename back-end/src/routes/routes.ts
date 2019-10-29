@@ -33,7 +33,8 @@ app.get('/',  function (req, res) {
 });
 
 app.get('/create/:usr/:pw',  function (req, res) {
-    sql.registerUser(req.params.usr,req.params.pw,"This is REQUIREM")
+    const json_data = req.body
+    sql.registerUser(json_data.username,json_data.password,json_data.email)
     .then(() =>{
         res.send("YES YES YES");
     }).catch(() => {
@@ -41,7 +42,8 @@ app.get('/create/:usr/:pw',  function (req, res) {
     })
 });
 app.get('/create_speech/:usr/:title/:transcript',  function (req, res) {
-    sql.createSpeech(req.params.usr,req.params.title,req.params.transcript)
+    const json_data = req.body
+    sql.createSpeech(json_data.username,json_data.title,json_data.transcript)
     .then(() =>{
         res.send("Created Speech");
     }).catch(() => {
