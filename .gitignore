@@ -1,19 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+*/node_modules/**
 /.pnp
 .pnp.js
+
+/back-end/package-lock.json
+/back-end/*.wav
+/back-end/ts-built
+/back-end/package-lock.json
 
 # testing
 /coverage
 
 
-back-end/node_modules/**
-back-end/package-lock.json
-back-end/*.wav
-back-end/ts-built
-back-end/package-lock.json
 
 # production
 /build
