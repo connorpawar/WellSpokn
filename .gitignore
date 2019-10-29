@@ -8,6 +8,13 @@
 # testing
 /coverage
 
+
+back-end/node_modules
+back-end/package-lock.json
+back-end/*.wav
+back-end/ts-built
+back-end/package-lock.json
+
 # production
 /build
 
@@ -22,9 +29,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-
-
-/backend/node_modules
-/backend/package-lock.json
-/backend/*.wav
-/backend/ts-built
