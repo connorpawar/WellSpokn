@@ -15,6 +15,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 import Recorder from './Recorder';
+import Dropzone from './Dropzone';
 
 const options = ['Record New Speech', 'Upload Existing Speech'];
 const useStyles = makeStyles(theme => ({
@@ -34,22 +35,27 @@ function SimpleDialog(props) {
 	const classes = useStyles();
 	const { onClose, selectedValue, open } = props;
 	const [record, setRecord] = React.useState(false);
+	const [upload, setUpload] = React.useState(false);
 
 	const handleClose = () => {
 		onClose(selectedValue);
+		setRecord(false);
+		setUpload(false);
 	};
 
 	const handleListItemClick = value => {
 		if (value === 'Record New Speech') {
 			setRecord(true);
+			setUpload(false);
 		} else {
-			onClose(value);
+			setUpload(true);
+			setRecord(false);
 		}
 	};
 
 	return (
 		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" maxWidth={'sm'} open={open}>
-			{!record &&
+			{!record && !upload &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
 					<List>
@@ -70,6 +76,11 @@ function SimpleDialog(props) {
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
 					<Recorder />
+				</div>
+			}
+			{upload &&
+				<div>
+					<Dropzone onFilesAdded={console.log} />
 				</div>
 			}
 		</Dialog>
