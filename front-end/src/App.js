@@ -41,7 +41,7 @@ export default function App() {
 					<CssBaseline />
 					<Route exact path='/' component={HomePage} />
 					<Route exact path='/Login' component={Login}/>
-					<Route exact path='/Settings' render={() => <Settings Mode={Mode} />} />
+					<Route exact path='/Settings' render={() => <Settings Mode={Mode} IsThemeLight={isThemeLight} />} />
 					<Route exact path="/speech/:SpeechId" component={SpeechPage} />
 				</ThemeProvider>
 			</div>
