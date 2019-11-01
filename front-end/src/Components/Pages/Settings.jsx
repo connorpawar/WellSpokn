@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -25,7 +25,7 @@ export default function Settings(props) {
 	}
 
 	const [state, setState] = React.useState({
-		dark: false,
+		dark: !props.IsThemeLight,
 	});
 
 	const handleChange = name => event => {

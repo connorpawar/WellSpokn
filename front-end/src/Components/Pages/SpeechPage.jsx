@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 
 import NavBar from './../NavBar';
 import BarGraph from './../BarGraph';
+import SpeechEditor from './../SpeechEditor';
 
 const useStyles = makeStyles({
 	card: {
@@ -41,14 +42,11 @@ export default function SpeechPage(props) {
 					alignItems="baseline">
 					<Grid item sm={6} xs={"auto"}>
 						<Card className={classes.card}>
-							<CardActions>
-								<ButtonBase>
-									<CardContent>
-										<b>{props.history.location.state.name}</b><br />
-										<p className={classes.p} align="left">{props.history.location.state.content}</p>
-									</CardContent>
-								</ButtonBase>
-							</CardActions>
+							<CardContent>
+								<b>{props.history.location.state.name}</b><br />
+								{/*<p className={classes.p} align="left">{props.history.location.state.content}</p>*/}
+								<SpeechEditor Content={props.history.location.state.content}/>
+							</CardContent>
 						</Card>
 					</Grid>
 					<Grid item sm={"auto"} xs={"auto"}>
