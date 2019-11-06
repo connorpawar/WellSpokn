@@ -25,7 +25,10 @@ class GoogleCloudData{
       .output("out.wav")
       .run()
     }).then(() =>{
-      console.log("done!")
+      //TODO: Initialize the data
+    }).catch(() =>{
+      //TODO: Do something with the error
+      console.log("error")
     })
     
     /*

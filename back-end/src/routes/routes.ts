@@ -39,18 +39,20 @@ app.post('/register',  function (req, res) {
     .then(() =>{
         res.send("YES YES YES");
     }).catch(() => {
+        //TODO: Properly make an error
         res.send("NO NO NO");
     })
 });
-app.post('/create_speech',  function (req, res) {
+app.post('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var title = json_data.title
     var transcript = json_data.transcript
     sql.createSpeech(username,title,transcript)
-    .then(() =>{
-        res.send("Created Speech");
+    .then(s =>{
+        res.send({id:s.id});
     }).catch(() => {
+        //TODO: Properly make an error
         res.send("NOOOOO");
     })
 });
@@ -81,7 +83,11 @@ app.post('/logout',  function (req, res) {
 app.get('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
-    sql.getAllSpeechesForASpecificUser(username,res)
+    sql.getAllSpeechesForASpecificUser(username).then(data => {
+        res.send(data)
+    }).catch(e =>{
+        res.send(e)
+    })
 });
 
 

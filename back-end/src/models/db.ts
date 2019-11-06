@@ -96,23 +96,6 @@ Attempts.init({
 
 sequelize.sync();
 
-/*
-sequelize.sync({force:true}).then(() => {
-  return Users.create({
-    username:"Sherman",
-    password:"pw",
-    email:"s423c051@ku.edu"
-  }).then(u => {
-    return Speeches.create({
-      title: "Dinner or song?",
-      last_edited: "2019-1-1",
-      transcript: "WHAT A PERFECT GUY.",
-    }).then(s => {
-      u.addSpeeches(s)
-    });
-  });
-});
-*/
 class SQL{
   static registerUser(_username:String,_password:String,_email:String){
     return Users.create({
@@ -129,60 +112,70 @@ class SQL{
     })
   }
   static createSpeech(_username:String,_title:String,_transcript:String){
-    return SQL.getUser(_username).then(u => {
-      if(u == null){
-        throw "User Not Found"
-      }else{
-        Speeches.create({
-          user_id:u.id,
-          title: _title,
-          last_edited: sequelize.literal('CURRENT_TIMESTAMP'),
-          transcript: _transcript,
-        });
-      }
+    return new Promise((resolve,reject) =>{
+      SQL.getUser(_username).then(u => {
+        if(u == null){
+          throw "User Not Found"
+        }else{
+          Speeches.create({
+            user_id:u.id,
+            title: _title,
+            last_edited: sequelize.literal('CURRENT_TIMESTAMP'),
+            transcript: _transcript,
+          }).then(s =>{
+            resolve(s)
+          })
+        }
+      })
     })
   }
-  //TODO: res should not be here.
-  static getAllSpeechesForASpecificUser(_username:String,res){
-    var requested_data = {
-      transcript:String,
-      attempts:Array,
-      errors:Array
-    };
-    SQL.getUser(_username).then(u =>{
-      var user_id = u.id
-      return Speeches.findAll({
-        where: {
-          user_id: user_id
-        }
-      }).then(all_speeches => {
-        var all_promises = []
-        for(const s of all_speeches){
-          requested_data[s.id] = {}
-          requested_data[s.id].transcript = s.transcript
-
-          var a = Attempts.findAll({
+  //TODO: Clean up later.
+  static getAllSpeechesForASpecificUser(_username:String){
+    return new Promise((resolve,reject) =>{
+      var requested_data = {
+        transcript:String,
+        attempts:Array,
+        errors:Array
+      };
+      SQL.getUser(_username).then(u =>{
+        if(u != null){
+          var user_id = u.id
+          Speeches.findAll({
             where: {
-              speech_id: s.id
+              user_id: user_id
             }
-          }).then(a =>{
-            requested_data[s.id].attempts = a
-          })
-          
-          var e = Errors.findAll({
-            where: {
-              speech_id: s.id
+          }).then(all_speeches => {
+            var all_promises = []
+            for(const s of all_speeches){
+              requested_data[s.id] = {}
+              requested_data[s.id].transcript = s.transcript
+    
+              var a = Attempts.findAll({
+                where: {
+                  speech_id: s.id
+                }
+              }).then(a =>{
+                requested_data[s.id].attempts = a
+              })
+              
+              var e = Errors.findAll({
+                where: {
+                  speech_id: s.id
+                }
+              }).then(e =>{
+                requested_data[s.id].errors = e
+              })
+    
+              all_promises.push(a)
+              all_promises.push(e)
             }
-          }).then(e =>{
-            requested_data[s.id].errors = e
+            Promise.all(all_promises).then(() => {
+              resolve(requested_data)
+            })
           })
-
-          all_promises.push(a)
-          all_promises.push(e)
+        }else{
+          reject("User not found")
         }
-        Promise.all(all_promises).then(() => {
-          res.send(requested_data)
-        })
       })
     })
   }
