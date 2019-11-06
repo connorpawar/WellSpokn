@@ -1,6 +1,7 @@
 
 const speech = require('@google-cloud/speech');
 const language = require('@google-cloud/language');
+const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 
 
@@ -10,13 +11,26 @@ class GoogleCloudData{
   }
   
   async init(fileName){
-    const speechClient = new speech.SpeechClient();
-    const langClient = new language.LanguageServiceClient();
   
     // Reads a local audio file and converts it to base64
     const file = fs.readFileSync(fileName);
     const audioBytes = file.toString('base64');
   
+    var command_promise = new Promise((resolve,reject) =>{
+      ffmpeg({
+        source: fileName
+      }).audioChannels(1)
+      .on('error',reject)
+      .on('end',resolve)
+      .output("out.wav")
+      .run()
+    }).then(() =>{
+      console.log("done!")
+    })
+    
+    /*
+    const speechClient = new speech.SpeechClient();
+    const langClient = new language.LanguageServiceClient();
     // The audio file's encoding, sample rate in hertz, and BCP-47 language code
     const audio = {
       content: audioBytes,
@@ -37,6 +51,7 @@ class GoogleCloudData{
       .map(result => result.alternatives[0].transcript)
       .join('\n');
     console.log(`Transcription: ${transcription}`);
+    */
   }
 
   get Transcript(){
@@ -46,4 +61,5 @@ class GoogleCloudData{
 }
 
 var k = new GoogleCloudData()
+k.init("./talk_about_api_here.wav")
 console.log(k.Transcript)
