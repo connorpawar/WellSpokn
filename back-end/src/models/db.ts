@@ -94,7 +94,7 @@ Attempts.init({
 });
 
 
-sequelize.sync({force:true});
+sequelize.sync();
 
 /*
 sequelize.sync({force:true}).then(() => {
@@ -142,43 +142,48 @@ class SQL{
       }
     })
   }
-  static getAllSpeechesForASpecificUser(_username:String){
+  //TODO: res should not be here.
+  static getAllSpeechesForASpecificUser(_username:String,res){
     var requested_data = {
-      speech_id:Number,
       transcript:String,
-      number_of_attempts:Number,
       attempts:Array,
       errors:Array
     };
     SQL.getUser(_username).then(u =>{
       var user_id = u.id
-      Speeches.findAll({
+      return Speeches.findAll({
         where: {
           user_id: user_id
         }
-      }).then(s => {
-        requested_data.speech_id = s.id
-        requested_data.transcript = s.transcript
+      }).then(all_speeches => {
+        var all_promises = []
+        for(const s of all_speeches){
+          requested_data[s.id] = {}
+          requested_data[s.id].transcript = s.transcript
 
-        Attempts.findAll({
-          where: {
-            speech_id: requested_data.speech_id
-          }
-        }).then(a =>{
-          requested_data.number_of_attempts = a.length
-          requested_data.attempts = a
-        })
-        
-        Errors.findAll({
-          where: {
-            speech_id: requested_data.speech_id
-          }
-        }).then(e =>{
-          requested_data.errors = e
+          var a = Attempts.findAll({
+            where: {
+              speech_id: s.id
+            }
+          }).then(a =>{
+            requested_data[s.id].attempts = a
+          })
+          
+          var e = Errors.findAll({
+            where: {
+              speech_id: s.id
+            }
+          }).then(e =>{
+            requested_data[s.id].errors = e
+          })
+
+          all_promises.push(a)
+          all_promises.push(e)
+        }
+        Promise.all(all_promises).then(() => {
+          res.send(requested_data)
         })
       })
-    }).then(() => {
-      return requested_data
     })
   }
 }

@@ -46,7 +46,7 @@ app.post('/create_speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var title = json_data.title
-    var transcript = transcript
+    var transcript = json_data.transcript
     sql.createSpeech(username,title,transcript)
     .then(() =>{
         res.send("Created Speech");
@@ -77,6 +77,13 @@ app.post('/logout',  function (req, res) {
     var token = json_data.token
     //TODO: Authentcation stuff
 });
+
+app.get('/speech',  function (req, res) {
+    const json_data = req.body
+    var username = json_data.username
+    sql.getAllSpeechesForASpecificUser(username,res)
+});
+
 
 
 
