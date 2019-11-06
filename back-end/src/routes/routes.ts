@@ -28,20 +28,21 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/',  function (req, res) {
-	res.send('End points are working');
-});
-
-app.get('/create/:usr/:pw',  function (req, res) {
+app.post('/register',  function (req, res) {
     const json_data = req.body
-    sql.registerUser(json_data.username,json_data.password,json_data.email)
+    var email = json_data.email
+    var username = json_data.username
+    var raw_password = json_data.password
+    //TODO: Hash password for authenitication
+    var hashed_password = raw_password
+    sql.registerUser(username,hashed_password,email)
     .then(() =>{
         res.send("YES YES YES");
     }).catch(() => {
         res.send("NO NO NO");
     })
 });
-app.get('/create_speech',  function (req, res) {
+app.post('/create_speech',  function (req, res) {
     const json_data = req.body
     sql.createSpeech(json_data.username,json_data.title,json_data.transcript)
     .then(() =>{
@@ -51,11 +52,27 @@ app.get('/create_speech',  function (req, res) {
     })
 });
 
-app.get('/find/:usr',  function (req, res) {
-    sql.getUser(req.params.usr)
+app.post('/login',  function (req, res) {
+    const json_data = req.body
+    var username = json_data.username
+    var raw_password = json_data.password
+    var hashed_password = raw_password //TODO: Add hashing and authentication here. 
+
+    sql.getUser(username)
     .then(u => {
-        res.send(u.password)
+        if (u.password == hashed_password){
+            //TODO: What to do if authentication succeeds
+
+        }else{
+            //TODO: What to do if authentication fails
+        }
     })
+});
+
+app.post('/logout',  function (req, res) {
+    const json_data = req.body
+    var token = json_data.token
+    //TODO: Authentcation stuff
 });
 
 
