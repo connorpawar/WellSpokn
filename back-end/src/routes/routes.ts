@@ -44,7 +44,10 @@ app.post('/register',  function (req, res) {
 });
 app.post('/create_speech',  function (req, res) {
     const json_data = req.body
-    sql.createSpeech(json_data.username,json_data.title,json_data.transcript)
+    var username = json_data.username
+    var title = json_data.title
+    var transcript = transcript
+    sql.createSpeech(username,title,transcript)
     .then(() =>{
         res.send("Created Speech");
     }).catch(() => {

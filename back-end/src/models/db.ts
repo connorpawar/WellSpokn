@@ -1,3 +1,5 @@
+import { request } from "https";
+
 // // const Pool = require('pg').Pool
 // // const pool = new Pool({
 // // //   user: 'me',
@@ -55,7 +57,7 @@ Errors.init({
   redundancy: Sequelize.INTEGER,
   diction: Sequelize.INTEGER,
   repetition: Sequelize.INTEGER,
-  user_id:{
+  speech_id:{
     type: Sequelize.INTEGER,
     allowNull:false,
     references: {
@@ -77,7 +79,7 @@ Attempts.init({
   redundancy_errors: Sequelize.INTEGER,
   diction_errors: Sequelize.INTEGER,
   repetition_errors: Sequelize.INTEGER,
-  user_id:{
+  speech_id:{
     type: Sequelize.INTEGER,
     allowNull:false,
     references: {
@@ -112,21 +114,21 @@ sequelize.sync({force:true}).then(() => {
 });
 */
 class SQL{
-  static registerUser(_username:string,_password:string,_email:string){
+  static registerUser(_username:String,_password:String,_email:String){
     return Users.create({
       username:_username,
       password:_password,
       email:_email
     });
   }
-  static getUser(_username){
+  static getUser(_username:String){
     return Users.findOne({
       where: {
         username: _username
       }
     })
   }
-  static createSpeech(_username:string,_title:string,_transcript:string){
+  static createSpeech(_username:String,_title:String,_transcript:String){
     return SQL.getUser(_username).then(u => {
       if(u == null){
         throw "User Not Found"
@@ -138,6 +140,45 @@ class SQL{
           transcript: _transcript,
         });
       }
+    })
+  }
+  static getAllSpeechesForASpecificUser(_username:String){
+    var requested_data = {
+      speech_id:Number,
+      transcript:String,
+      number_of_attempts:Number,
+      attempts:Array,
+      errors:Array
+    };
+    SQL.getUser(_username).then(u =>{
+      var user_id = u.id
+      Speeches.findAll({
+        where: {
+          user_id: user_id
+        }
+      }).then(s => {
+        requested_data.speech_id = s.id
+        requested_data.transcript = s.transcript
+
+        Attempts.findAll({
+          where: {
+            speech_id: requested_data.speech_id
+          }
+        }).then(a =>{
+          requested_data.number_of_attempts = a.length
+          requested_data.attempts = a
+        })
+        
+        Errors.findAll({
+          where: {
+            speech_id: requested_data.speech_id
+          }
+        }).then(e =>{
+          requested_data.errors = e
+        })
+      })
+    }).then(() => {
+      return requested_data
     })
   }
 }
