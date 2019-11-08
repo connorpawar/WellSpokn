@@ -53,10 +53,10 @@ Speeches.init({
 
 class Errors extends Sequelize.Model{}
 Errors.init({
-  grammar: Sequelize.INTEGER,
-  redundancy: Sequelize.INTEGER,
-  diction: Sequelize.INTEGER,
-  repetition: Sequelize.INTEGER,
+  type: Sequelize.STRING,
+  start: Sequelize.INTEGER,
+  end: Sequelize.INTEGER,
+  description: Sequelize.TEXT,
   speech_id:{
     type: Sequelize.INTEGER,
     allowNull:false,
