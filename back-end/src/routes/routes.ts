@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sql = require('../models/db');
+const Multer = require('multer')
+
+const upload = Multer({dest : __dirname})
 
 const app = express();
 const port = 8080;
@@ -90,7 +93,10 @@ app.get('/speech',  function (req, res) {
     })
 });
 
-
+app.post('/upload_blob', upload.single('audio'), (req,res) =>{
+    console.log(req.file)
+    res.send("Hi")
+});
 
 
 
