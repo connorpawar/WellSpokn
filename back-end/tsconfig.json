@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "ts-built",
+        "rootDir": "src"       
+    }
+}

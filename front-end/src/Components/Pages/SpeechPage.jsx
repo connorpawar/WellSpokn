@@ -1,14 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 
 import NavBar from './../NavBar';
 import BarGraph from './../BarGraph';
 import SpeechEditor from './../SpeechEditor';
+import NewSpeech from '../NewSpeech';
 
 const useStyles = makeStyles({
 	card: {
@@ -45,20 +44,49 @@ export default function SpeechPage(props) {
 							<CardContent>
 								<b>{props.history.location.state.name}</b><br />
 								{/*<p className={classes.p} align="left">{props.history.location.state.content}</p>*/}
-								<SpeechEditor Content={props.history.location.state.content}/>
+								<SpeechEditor Content={props.history.location.state.content} />
 							</CardContent>
 						</Card>
 					</Grid>
-					<Grid item sm={"auto"} xs={"auto"}>
-						<Card className={classes.card}>
-							<CardContent>
-								<b>Error Metrics</b>
-								<BarGraph data={data} />
-							</CardContent>
-						</Card>
+					<Grid item sm={6} xs={"auto"}>
+						<Grid container spacing={2}>
+							<Grid item sm={"auto"} xs={"auto"}>
+								<Card className={classes.card}>
+									<CardContent>
+										<b>Placeholder Error Metrics</b>
+										<BarGraph data={data} />
+									</CardContent>
+								</Card>
+							</Grid>
+							<Grid item sm={"auto"} xs={"auto"}>
+								<Card className={classes.card}>
+									<CardContent>
+										<b>Placeholder Error Metrics</b>
+										<BarGraph data={data} />
+									</CardContent>
+								</Card>
+							</Grid>
+							<Grid item sm={"auto"} xs={"auto"}>
+								<Card className={classes.card}>
+									<CardContent>
+										<b>Placeholder Error Metrics</b>
+										<BarGraph data={data} />
+									</CardContent>
+								</Card>
+							</Grid>
+							<Grid item sm={"auto"} xs={"auto"}>
+								<Card className={classes.card}>
+									<CardContent>
+										<b>Placeholder Error Metrics</b>
+										<BarGraph data={data} />
+									</CardContent>
+								</Card>
+							</Grid>
+						</Grid>
 					</Grid>
 				</Grid>
 			</div>
+			<NewSpeech />
 		</div>
 	);
 }
