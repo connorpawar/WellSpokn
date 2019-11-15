@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './Components/Pages/HomePage';
 import Settings from './Components/Pages/Settings';
 import Login from './Components/Pages/Login';
+import Landing from './Components/Pages/LandingPage';
 import SpeechPage from './Components/Pages/SpeechPage'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -41,6 +42,7 @@ export default function App() {
 					<CssBaseline />
 					<Route exact path='/' component={HomePage} />
 					<Route exact path='/Login' component={Login}/>
+					<Route exact path='/Landing' component={Landing}/>
 					<Route exact path='/Settings' render={() => <Settings Mode={Mode} IsThemeLight={isThemeLight} />} />
 					<Route exact path="/speech/:SpeechId" component={SpeechPage} />
 				</ThemeProvider>
