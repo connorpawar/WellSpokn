@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sql = require('../models/db');
+//const sql = require('../models/db');
 const Multer = require('multer')
 
 const upload = Multer({dest : __dirname})
@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-
+/*
 app.post('/register',  function (req, res) {
     const json_data = req.body
     var email = json_data.email
@@ -92,7 +92,7 @@ app.get('/speech',  function (req, res) {
         res.send(e)
     })
 });
-
+*/
 app.post('/upload_blob', upload.single('audio'), (req,res) =>{
     console.log(req.file)
     res.send("Hi")

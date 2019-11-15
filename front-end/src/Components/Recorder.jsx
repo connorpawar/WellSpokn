@@ -33,7 +33,17 @@ export default class Recorder extends React.Component {
  	reader.readAsDataURL(recordedBlob.blob); 
  	reader.onloadend = function() {
     	var base64data = reader.result;                
-    	console.log("base64: ", base64data);
+      console.log("base64: ", base64data);
+		  var form_data = new FormData();
+		  form_data.append('audio', new Blob([base64data], {type:"text/plain"}), "abc.b64");
+		  fetch('http://localhost:8080/upload_blob', {
+		    method : 'POST',
+		    body: form_data
+		  }).then(r =>{
+        r.text().then(a =>{
+          console.log(a)
+        })
+		  })
  	}
     //audio.play();
   }
