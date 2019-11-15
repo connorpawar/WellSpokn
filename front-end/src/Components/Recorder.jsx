@@ -29,7 +29,13 @@ export default class Recorder extends React.Component {
   onStop(recordedBlob) {
 	console.log('recordedBlob is: ', recordedBlob);
 	const audio = new Audio(recordedBlob.blobURL);
-    audio.play();
+	var reader = new FileReader();
+ 	reader.readAsDataURL(recordedBlob.blob); 
+ 	reader.onloadend = function() {
+    	var base64data = reader.result;                
+    	console.log("base64: ", base64data);
+ 	}
+    //audio.play();
   }
  
   render() {
