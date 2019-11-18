@@ -33,7 +33,7 @@ export default class Recorder extends React.Component {
  	reader.readAsDataURL(recordedBlob.blob); 
  	reader.onloadend = function() {
     	var base64data = reader.result;                
-    	console.log("base64: ", base64data);
+		console.log("base64: ", base64data);
  	}
     //audio.play();
   }
