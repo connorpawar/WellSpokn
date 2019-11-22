@@ -1,3 +1,4 @@
+import { resolve } from "dns";
 
 const speech = require('@google-cloud/speech');
 const language = require('@google-cloud/language');
@@ -6,63 +7,59 @@ const fs = require('fs');
 
 
 class GoogleCloudData{
+  speechClient
+  langClient
+  private _transcript: string = "N/A"
+
   constructor(){
-    
-  }
-  
-  async init(fileName){
-  
-    // Reads a local audio file and converts it to base64
-    const file = fs.readFileSync(fileName);
-    const audioBytes = file.toString('base64');
-  
-    var command_promise = new Promise((resolve,reject) =>{
-      ffmpeg({
-        source: fileName
-      }).audioChannels(1)
-      .on('error',reject)
-      .on('end',resolve)
-      .output("out.wav")
-      .run()
-    }).then(() =>{
-      //TODO: Initialize the data
-    }).catch(() =>{
-      //TODO: Do something with the error
-      console.log("error")
-    })
-    
-    /*
-    const speechClient = new speech.SpeechClient();
-    const langClient = new language.LanguageServiceClient();
-    // The audio file's encoding, sample rate in hertz, and BCP-47 language code
-    const audio = {
-      content: audioBytes,
-    };
-    const config = {
-      encoding: 'LINEAR16',
-      sampleRateHertz: 44100,
-      languageCode: 'en-US',
-      audio_channel_count: 2,
-      enableAutomaticPunctuation: true,
-    };
-    const request = {
-      audio: audio,
-      config: config,
-    };
-    const [response] = await speechClient.recognize(request);
-    const transcription = response.results
-      .map(result => result.alternatives[0].transcript)
-      .join('\n');
-    console.log(`Transcription: ${transcription}`);
-    */
+    this.speechClient = new speech.SpeechClient();
+    this.langClient = new language.LanguageServiceClient();
   }
 
-  get Transcript(){
-    return "you will never reach the truth.";
+  async init(fileName) : Promise<any>{
+    return new Promise(async (resolve,reject) =>{
+      // Reads a local audio file and converts it to base64
+      const file = fs.readFileSync(fileName);
+      const audioBytes = file.toString('base64');
+      
+      // The audio file's encoding, sample rate in hertz, and BCP-47 language code
+      const audio = {
+        content: audioBytes,
+      };
+      const config = {
+        encoding: 'OGG_OPUS',
+        sampleRateHertz: 48000,
+        languageCode: 'en-US',
+        audio_channel_count: 1,
+        enableAutomaticPunctuation: true,
+      };
+      const request = {
+        audio: audio,
+        config: config,
+      };
+      const [response] = await this.speechClient.recognize(request);
+      const transcription = response.results
+        .map(result => result.alternatives[0].transcript)
+        .join('\n');
+      console.log(transcription)
+      this.Transcript = transcription
+      resolve(transcription)
+    })
+  }
+
+  get Transcript(): string{
+    return this._transcript
+  }
+  set Transcript(new_transcript: string){
+    this._transcript = new_transcript
   }
 
 }
-
+module.exports=GoogleCloudData;
+/* //EXAMPLE USAGE
 var k = new GoogleCloudData()
-k.init("./talk_about_api_here.wav")
-console.log(k.Transcript)
+k.init("./7a9335d45f651efa2f0ff0cc8e82a007").then(transcript => {
+  console.log(transcript)
+  console.log(k.Transcript)
+})
+*/
