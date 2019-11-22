@@ -40,8 +40,8 @@ export default class Recorder extends React.Component {
           method : 'POST',
           body: form_data
         }).then(r =>{
-          r.text().then(a =>{
-            console.log(a)
+          r.text().then(transcript =>{
+            console.log(transcript)
           })
         })
     }
