@@ -16,8 +16,8 @@ import { request } from "https";
 // module.exports = pool;
 
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('test','postgres','pw',{
-  host: 'localhost',
+var sequelize = new Sequelize('test','postgres','0kj9h8g7v6fvybunimoijuhygtfr5t6y7uhbgvfrd5t6y7uhygtfrd56tg7huybvgcrd5f6gt7hubyvtcrd5r6tg7ubhvgcyrds54erxtryt',{
+  host: '165.227.29.217',
   dialect: 'postgres'
 })
 

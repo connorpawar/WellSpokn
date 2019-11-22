@@ -41,6 +41,7 @@ export default class Recorder extends React.Component {
           body: form_data
         }).then(r =>{
           r.text().then(transcript =>{
+            //TODO: do something with transcript.
             console.log(transcript)
           })
         })
