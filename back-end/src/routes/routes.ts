@@ -101,6 +101,7 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
         console.log(transcript)
         //TODO: Send the transcript to SQL
         sql.createSpeech("sc","example_title",transcript)
+        res.send(transcript)
     })
 });
 
