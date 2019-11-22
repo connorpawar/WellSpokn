@@ -1,103 +1,83 @@
 import React from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import { makeStyles } from '@material-ui/core/styles';
 import { Editor, EditorState, ContentState, CompositeDecorator } from 'draft-js';
 
 
 const errors = {
-	"errorsArr": [{ "Type": "Filler", "Start": "10", "End": "34" },
-	{ "Type": "Tempo", "Start": "200", "End": "286" },
-	{ "Type": "Grammar", "Start": "452", "End": "534" },
-	{ "Type": "Grammar", "Start": "850", "End": "936" },
-	{ "Type": "Tone", "Start": "1149", "End": "1236" }]
+	"errorsArr": [{ "Type": "Filler", "Start": "10", "End": "34", "Description": "This is a description #1" },
+	{ "Type": "Tempo", "Start": "200", "End": "286", "Description": "This is a description #2" },
+	{ "Type": "Grammar", "Start": "452", "End": "534", "Description": "This is a description #3" },
+	{ "Type": "Grammar", "Start": "850", "End": "936", "Description": "This is a description #4" },
+	{ "Type": "Tone", "Start": "1149", "End": "1236", "Description": "This is a description #5" }]
 };
 
-//const errors = JSON.parse(errorsJSON);
+const useStyles = makeStyles(theme => ({
+	button: {
+		margin: theme.spacing(0),
+	},
+	input: {
+		display: 'none',
+	},
+}));
 
-const Filler = (props) => {
-	return <span style={{ background: "SkyBlue" }}>{props.children}</span>;
+const HighlightedErrors = (props) => {
+	const classes = useStyles();
+
+	let highlightColor = "red"
+	let description = ""
+	let text = ""
+
+	props.errors.errorsArr.forEach(error => { //can't break/return out of foreach should change later
+		if (props.start == parseInt(error.Start) && props.end == parseInt(error.End)) {
+			if (error.Type == "Tone") {
+				highlightColor = "PaleGoldenRod"
+			} else if (error.Type == "Tempo") {
+				highlightColor = "LightSalmon"
+			} else if (error.Type == "Grammar") {
+				highlightColor = "Pink"
+			} else if (error.Type == "Filler") {
+				highlightColor = "SkyBlue"
+			}
+			description = error.Description;
+			text = props.children;
+		}
+	})
+	return (
+		<Tooltip title={
+			<React.Fragment>
+				<IconButton className={classes.button} color="primary">
+					<PlayCircleFilledIcon />
+				</IconButton>
+				{description}
+			</React.Fragment>
+	} placement = "top" interactive>
+	<span style={{ background: highlightColor }}>{text}</span>
+		</Tooltip >
+	)
 };
 
-function highlightFiller(errors, contentBlock, callback) {
+function highlightErrors(errors, contentBlock, callback) {
 	const text = contentBlock.getText();
 	errors.errorsArr.forEach(error => {
-		if(error.Type == "Filler"){
-			callback(parseInt(error.Start), parseInt(error.End));
-		}
+		callback(parseInt(error.Start), parseInt(error.End));
 	});
 }
 
-function handleFiller(contentBlock, callback) {
-	highlightFiller(errors, contentBlock, callback);
+function handleErrors(contentBlock, callback) {
+	highlightErrors(errors, contentBlock, callback);
 }
 
 
-const Grammar = (props) => {
-	return <span style={{ background: "pink" }}>{props.children}</span>;
-};
-
-function highlightGrammar(errors, contentBlock, callback) {
-	const text = contentBlock.getText();
-	errors.errorsArr.forEach(error => {
-		if(error.Type == "Grammar"){
-			callback(parseInt(error.Start), parseInt(error.End));
-		}
-	});
-}
-
-function handleGrammar(contentBlock, callback) {
-	highlightGrammar(errors, contentBlock, callback);
-}
-
-const Tempo = (props) => {
-	return <span style={{ background: "LightSalmon" }}>{props.children}</span>;
-};
-
-function highlightTempo(errors, contentBlock, callback) {
-	const text = contentBlock.getText();
-	errors.errorsArr.forEach(error => {
-		if(error.Type == "Tempo"){
-			callback(parseInt(error.Start), parseInt(error.End));
-		}
-	});
-}
-
-function handleTempo(contentBlock, callback) {
-	highlightTempo(errors, contentBlock, callback);
-}
-
-const Tone = (props) => {
-	return <span style={{ background: "PaleGoldenRod" }}>{props.children}</span>;
-};
-
-function highlightTone(errors, contentBlock, callback) {
-	const text = contentBlock.getText();
-	errors.errorsArr.forEach(error => {
-		if(error.Type == "Tone"){
-			callback(parseInt(error.Start), parseInt(error.End));
-		}
-	});
-}
-
-function handleTone(contentBlock, callback) {
-	highlightTone(errors, contentBlock, callback);
-}
 
 const createDecorator = () =>
 	new CompositeDecorator([
 		{
-			strategy: handleFiller,
-			component: Filler
-		},
-		{
-			strategy: handleGrammar,
-			component: Grammar
-		},
-		{
-			strategy: handleTempo,
-			component: Tempo
-		},
-		{
-			strategy: handleTone,
-			component: Tone
+			strategy: handleErrors,
+			component: HighlightedErrors,
+			props: { errors }
 		},
 	]);
 
