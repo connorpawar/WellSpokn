@@ -2,7 +2,6 @@ import { resolve } from "dns";
 
 const speech = require('@google-cloud/speech');
 const language = require('@google-cloud/language');
-const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 
 
