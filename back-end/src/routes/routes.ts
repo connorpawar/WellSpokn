@@ -100,6 +100,7 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
     gcloudData.init(req.file.path).then(transcript => {
         console.log(transcript)
         //TODO: Send the transcript to SQL
+        sql.createSpeech("sc","example_title",transcript)
     })
 });
 
