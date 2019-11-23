@@ -3,11 +3,18 @@ const bodyParser = require('body-parser');
 const sql = require('../models/db');
 const Multer = require('multer')
 const GoogleCloudData = require('../GoogleCloudData.js')
+const fs = require('fs')
+
+const https = require('https')
+
+const privateKey = fs.readFileSync('sslCerts/server.key','utf8')
+const cerificate = fs.readFileSync('sslCerts/server.crt','utf8')
+const credentials = {key:privateKey,cert:cerificate}
 
 const upload = Multer({dest : __dirname})
 
 const app = express();
-const port = 8080;
+const port = 443;
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -106,5 +113,5 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
 });
 
 
-
-app.listen(port || 3000, () => console.log(`running on port ${port}!`))
+var server = https.createServer(credentials,app)
+server.listen(443, () => console.log(`running on port ${port}!`))
