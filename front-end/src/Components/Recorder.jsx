@@ -36,7 +36,7 @@ export default class Recorder extends React.Component {
         //console.log("base64: ", base64data);
         var form_data = new FormData();
         form_data.append('audio',recordedBlob.blob);
-        fetch('https://wellspokn.com/upload_blob', {
+        fetch('/upload_blob', {
           method : 'POST',
           body: form_data
         }).then(r =>{
