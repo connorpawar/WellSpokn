@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc; webpack",
+    "build-production": "npm run build; npm run build --prefix=../front-end && mv ../front-end/build ./",
     "server": "nodemon ./routes/routes.js"
   },
   "repository": {
@@ -24,6 +25,7 @@
     "@types/express": "^4.17.1",
     "@types/node": "^12.11.7",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "multer": "^1.4.2",
     "mysql": "^2.17.1",
