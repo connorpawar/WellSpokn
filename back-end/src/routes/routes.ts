@@ -4,40 +4,22 @@ const sql = require('../models/db');
 const Multer = require('multer')
 const GoogleCloudData = require('../GoogleCloudData.js')
 const fs = require('fs')
-
+const cors = require('cors')
+const path = require('path')
 const https = require('https')
 
-const privateKey = fs.readFileSync('sslCerts/server.key','utf8')
-const cerificate = fs.readFileSync('sslCerts/server.crt','utf8')
-const credentials = {key:privateKey,cert:cerificate}
 
 const upload = Multer({dest : __dirname})
 
 const app = express();
-const port = 443;
+const port = 8080;
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(path.join('build')));
 
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
+app.use(cors());
 
 app.post('/register',  function (req, res) {
     const json_data = req.body
@@ -103,6 +85,7 @@ app.get('/speech',  function (req, res) {
 
 app.post('/upload_blob', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
+    console.log("uploading blob")
     var gcloudData = new GoogleCloudData()
     gcloudData.init(req.file.path).then(transcript => {
         console.log(transcript)
@@ -113,5 +96,9 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
 });
 
 
-var server = https.createServer(credentials,app)
-server.listen(443, () => console.log(`running on port ${port}!`))
+app.get('*', (req,res) => {
+ res.sendFile(path.join(__dirname, 'build','index.html'));
+});
+
+
+app.listen(8080)
