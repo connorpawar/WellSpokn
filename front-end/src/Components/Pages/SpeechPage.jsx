@@ -23,6 +23,8 @@ export default function SpeechPage(props) {
 		//will eventually look for word and highlight
 	}
 
+	const [transcript, setTranscript] = useState(props.history.location.state.content);
+
 	const data = [
 		{ "y": 8, "x": "Tempo" },
 		{ "y": 4, "x": "Grammar" },
@@ -44,7 +46,7 @@ export default function SpeechPage(props) {
 							<CardContent>
 								<b>{props.history.location.state.name}</b><br />
 								{/*<p className={classes.p} align="left">{props.history.location.state.content}</p>*/}
-								<SpeechEditor Content={props.history.location.state.content} />
+								<SpeechEditor Content={transcript} />
 							</CardContent>
 						</Card>
 					</Grid>
@@ -86,7 +88,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
-			<NewSpeech />
+			<NewSpeech setTranscript={setTranscript}/>
 		</div>
 	);
 }
