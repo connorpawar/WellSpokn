@@ -17,7 +17,6 @@ const port = 8080;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(path.join('build')));
 
 app.use(cors());
 
@@ -92,13 +91,11 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
         //TODO: Send the transcript to SQL
         sql.createSpeech("sc","example_title",transcript)
         res.send(transcript)
+    }).catch( e =>{
+        console.log(e)
     })
 });
 
-
-app.get('*', (req,res) => {
- res.sendFile(path.join(__dirname, 'build','index.html'));
-});
 
 
 app.listen(8080)
