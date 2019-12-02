@@ -1,3 +1,4 @@
+import { resolve } from "dns"; //TODO: Discover why this is needed?
 const fs = require('fs');
 const path = require('path')
 const Ffmpeg = require('fluent-ffmpeg')
