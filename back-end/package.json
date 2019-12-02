@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc; webpack",
-    "build-production": "npm run build; npm run build --prefix=../front-end && mv ../front-end/build ./",
-    "server": "nodemon ./routes/routes.js"
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -30,7 +29,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "multer": "^1.4.2",
     "mysql": "^2.17.1",
-    "nodemon": "^1.19.3",
     "passport-local": "^1.0.0",
     "pg": "^7.14.0",
     "pg-hstore": "^2.3.3",
@@ -40,6 +38,7 @@
     "webpack": "^4.41.2"
   },
   "devDependencies": {
+    "nodemon": "^1.19.4",
     "webpack-cli": "^3.3.10",
     "webpack-node-externals": "^1.7.2"
   }
