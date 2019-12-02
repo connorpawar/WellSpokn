@@ -75,7 +75,7 @@ function SimpleDialog(props) {
 			{record &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
-					<Recorder />
+					<Recorder setTranscript={props.setTranscript}/>
 				</div>
 			}
 			{upload &&
