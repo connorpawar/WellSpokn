@@ -20,7 +20,9 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.post('/register',  function (req, res) {
+var Router = express.Router();
+
+Router.post('/register',  function (req, res) {
     const json_data = req.body
     var email = json_data.email
     var username = json_data.username
@@ -35,7 +37,7 @@ app.post('/register',  function (req, res) {
         res.send("NO NO NO");
     })
 });
-app.post('/speech',  function (req, res) {
+Router.post('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var title = json_data.title
@@ -49,7 +51,7 @@ app.post('/speech',  function (req, res) {
     })
 });
 
-app.post('/login',  function (req, res) {
+Router.post('/login',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var raw_password = json_data.password
@@ -66,13 +68,13 @@ app.post('/login',  function (req, res) {
     })
 });
 
-app.post('/logout',  function (req, res) {
+Router.post('/logout',  function (req, res) {
     const json_data = req.body
     var token = json_data.token
     //TODO: Authentcation stuff
 });
 
-app.get('/speech',  function (req, res) {
+Router.get('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     sql.getAllSpeechesForASpecificUser(username).then(data => {
@@ -82,7 +84,7 @@ app.get('/speech',  function (req, res) {
     })
 });
 
-app.post('/upload_blob', upload.single('audio'), (req,res) =>{
+Router.post('/upload_blob', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
     console.log("uploading blob")
     var gcloudData = new GoogleCloudData()
@@ -96,6 +98,8 @@ app.post('/upload_blob', upload.single('audio'), (req,res) =>{
     })
 });
 
-
+//TODO: Is this okay?
+app.use("/api",Router) 
+app.use("/",Router)
 
 app.listen(8080)
