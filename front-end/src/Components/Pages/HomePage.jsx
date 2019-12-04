@@ -12,6 +12,8 @@ import Chip from '@material-ui/core/Chip';
 import NavBar from '../NavBar';
 import NewSpeech from '../NewSpeech';
 
+import Grow from '@material-ui/core/Grow';
+
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
@@ -104,7 +106,12 @@ export default function HomePage() {
 					direction="row"
 					justify="flex-start"
 					alignItems="baseline">
-					{speechCards.map(speech => (
+					{speechCards.map((speech, index) => (
+						 <Grow
+						 in={true}
+						 style={{ transformOrigin: '0 0 0' }}
+						 timeout={index*500 }
+					   >
 						<Grid key={speech.id} item sm={3} xs={"auto"} zeroMinWidth>
 							<Link style={{ textDecoration: 'none' }} to={{
 								pathname: `/speech/${speech.id}`,
@@ -124,6 +131,7 @@ export default function HomePage() {
 								</Card>
 							</Link>
 						</Grid>
+						</Grow>
 					))}
 				</Grid>
 			</div>
