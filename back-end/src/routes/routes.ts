@@ -2,7 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sql = require('../models/db');
 const Multer = require('multer')
-const GoogleCloudData = require('../GoogleCloudData.js')
+const GoogleCloudData = require('../GoogleCloudData')
+const fs = require('fs')
+const cors = require('cors')
+const path = require('path')
+const https = require('https')
+
 
 const upload = Multer({dest : __dirname})
 
@@ -13,26 +18,11 @@ const port = 8080;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
+app.use(cors());
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+var Router = express.Router();
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
-
-app.post('/register',  function (req, res) {
+Router.post('/register',  function (req, res) {
     const json_data = req.body
     var email = json_data.email
     var username = json_data.username
@@ -47,7 +37,7 @@ app.post('/register',  function (req, res) {
         res.send("NO NO NO");
     })
 });
-app.post('/speech',  function (req, res) {
+Router.post('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var title = json_data.title
@@ -61,7 +51,7 @@ app.post('/speech',  function (req, res) {
     })
 });
 
-app.post('/login',  function (req, res) {
+Router.post('/login',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var raw_password = json_data.password
@@ -78,13 +68,13 @@ app.post('/login',  function (req, res) {
     })
 });
 
-app.post('/logout',  function (req, res) {
+Router.post('/logout',  function (req, res) {
     const json_data = req.body
     var token = json_data.token
     //TODO: Authentcation stuff
 });
 
-app.get('/speech',  function (req, res) {
+Router.get('/speech',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     sql.getAllSpeechesForASpecificUser(username).then(data => {
@@ -94,16 +84,22 @@ app.get('/speech',  function (req, res) {
     })
 });
 
-app.post('/upload_blob', upload.single('audio'), (req,res) =>{
+Router.post('/upload_blob', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
+    console.log("uploading blob")
     var gcloudData = new GoogleCloudData()
     gcloudData.init(req.file.path).then(transcript => {
         console.log(transcript)
         //TODO: Send the transcript to SQL
         sql.createSpeech("sc","example_title",transcript)
+        res.send(transcript)
+    }).catch( e =>{
+        console.log(e)
     })
 });
 
+//TODO: Is this okay?
+app.use("/api",Router) 
+app.use("/",Router)
 
-
-app.listen(port || 3000, () => console.log(`running on port ${port}!`))
+app.listen(8080)
