@@ -27,21 +27,18 @@ export default class Recorder extends React.Component {
   }
  
   onStop(recordedBlob) {
-    //console.log('recordedBlob is: ', recordedBlob);
-    //const audio = new Audio(recordedBlob.blobURL);
     var reader = new FileReader();
+
     reader.readAsDataURL(recordedBlob.blob); 
     reader.onloadend = function() {
-        //var base64data = reader.result;                
-        //console.log("base64: ", base64data);
         var form_data = new FormData();
         form_data.append('audio',recordedBlob.blob);
-        fetch('http://localhost:8080/upload_blob', {
+        fetch('api/upload_blob', {
           method : 'POST',
           body: form_data
         }).then(r =>{
           r.text().then(a =>{
-			this.props.setTranscript(a)
+			      //this.props.setTranscript(a) //TODO: Temporarily commented out. This has an error regarding undefined somehting.
             console.log(a)
           })
         })
