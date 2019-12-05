@@ -32,7 +32,6 @@ async function sendToGoogleCloud(fileName) : Promise<string>{
     const transcription = response.results
       .map(result => result.alternatives[0].transcript)
       .join('\n');
-    console.log(transcription)
     resolve(transcription)
   })
 }
@@ -60,11 +59,13 @@ class GoogleCloudData{
         .output(newFileName)
         .on('end', function(){
           sendToGoogleCloud(newFileName).then(transcript =>{
-            //this.Transcript = transcript //TODO: This setter actually doesn't work.
+            fs.unlink(fileName,() => {})
+            fs.unlink(newFileName,() => {})
             resolve(transcript);
           });
         })
         .on('error', e => {
+          fs.unlink(fileName,() => {})
           reject(e)
         });
       command.run()

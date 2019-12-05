@@ -6,7 +6,8 @@ const uploadDir : string = path.join(__dirname,'uploads')
 
 function emptyFolder(){
     fs.readdirSync(uploadDir).forEach( (file,index) => {
-        fs.unlink(file)
+        var unlinkThis = path.join(uploadDir,file)
+        fs.unlink(unlinkThis, () => {})
     })
 }
 

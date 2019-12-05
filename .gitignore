@@ -12,6 +12,7 @@
 */build/**
 /back-end/backend.js
 /back-end/ts-built
+/back-end/uploads
 
 # misc
 .DS_Store
