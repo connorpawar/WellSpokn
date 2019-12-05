@@ -11,7 +11,7 @@ function emptyFolder(){
 }
 
 function initializeFolder(){
-    if (!path.existsSync(uploadDir)){
+    if (!fs.existsSync(uploadDir)){
         fs.mkdirSync(uploadDir)
     }else{
         emptyFolder()
