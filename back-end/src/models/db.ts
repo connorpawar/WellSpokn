@@ -1,5 +1,3 @@
-import { request } from "https";
-
 // // const Pool = require('pg').Pool
 // // const pool = new Pool({
 // // //   user: 'me',
@@ -111,7 +109,7 @@ class SQL{
       }
     })
   }
-  static createSpeech(_username:String,_title:String,_transcript:String){
+  static createSpeech(_username:String,_title:String,_transcript:String) : Speeches{
     return new Promise((resolve,reject) =>{
       SQL.getUser(_username).then(u => {
         if(u == null){
@@ -181,4 +179,4 @@ class SQL{
   }
 }
 
-module.exports = SQL
+export default SQL;

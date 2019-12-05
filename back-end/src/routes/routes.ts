@@ -1,15 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sql = require('../models/db');
-const Multer = require('multer')
-const GoogleCloudData = require('../GoogleCloudData')
 const fs = require('fs')
 const cors = require('cors')
 const path = require('path')
 const https = require('https')
 
 
-const upload = Multer({dest : __dirname})
+import sql from '../models/db';
+import storage from '../storage';
+import GoogleCloudData from '../GoogleCloudData';
+
+const upload = storage
+
 
 const app = express();
 const port = 8080;

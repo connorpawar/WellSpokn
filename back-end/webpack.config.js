@@ -8,6 +8,9 @@ module.exports = {
 		path:path.resolve(__dirname)
 	},
 	target: 'node',
+	node: {
+		__dirname : false
+	},
 	externals: [externals()]
 };
 	

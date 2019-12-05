@@ -1,5 +1,3 @@
-import { resolve } from "dns";
-
 const speech = require('@google-cloud/speech');
 const language = require('@google-cloud/language');
 const fs = require('fs');
@@ -81,7 +79,7 @@ class GoogleCloudData{
   }
 
 }
-module.exports=GoogleCloudData;
+export default GoogleCloudData;
 
 /*
 //EXAMPLE USAGE
