@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -23,7 +23,27 @@ export default function SpeechPage(props) {
 		//will eventually look for word and highlight
 	}
 
-	const [transcript, setTranscript] = useState(props.history.location.state.content);
+	const temp = {
+		"id": "0",
+		"name": "Something Went Wrong",
+		"transcript": "Something went really wrong",
+		"date_created": "2019-12-04",
+		"date_last_modified": "2019-12-04",
+		"previous_attempts": "0",
+		"errors_by_attempt": [],
+		"latest_error_count": "0",
+		"errors":[]
+	}
+
+	const [speech, setSpeech] = useState(temp);
+
+	//props.history.location.state.id
+	useEffect(() => {
+		fetch('/api/speech?'+props.history.location.state.id)
+		.then(response => response.json())
+		.then(JSONresponse => setSpeech(JSONresponse))
+		.catch(error => console.log("fetch error", error));
+	}, [])
 
 	const data = [
 		{ "y": 8, "x": "Tempo" },
@@ -44,9 +64,9 @@ export default function SpeechPage(props) {
 					<Grid item sm={6} xs={"auto"}>
 						<Card className={classes.card}>
 							<CardContent>
-								<b>{props.history.location.state.name}</b><br />
+								<b>{speech.name}</b><br />
 								{/*<p className={classes.p} align="left">{props.history.location.state.content}</p>*/}
-								<SpeechEditor Content={transcript} />
+								<SpeechEditor Content={speech.transcript} />
 							</CardContent>
 						</Card>
 					</Grid>
@@ -88,7 +108,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
-			<NewSpeech setTranscript={setTranscript}/>
+			<NewSpeech setTranscript={speech.transcript}/>
 		</div>
 	);
 }
