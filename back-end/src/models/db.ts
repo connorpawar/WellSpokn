@@ -1,23 +1,6 @@
-// // const Pool = require('pg').Pool
-// // const pool = new Pool({
-// // //   user: 'me',
-// // //   host: 'localhost',
-// // //   database: 'api',
-// // //   password: 'password',
-// // //   port: 5432,
-// // })
-
-// // pool.connect(function(err) {
-// // 	if (err) throw err;
-// // });
-  
-// module.exports = pool;
-
+const config = require('config');
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('test','postgres','0kj9h8g7v6fvybunimoijuhygtfr5t6y7uhbgvfrd5t6y7uhygtfrd56tg7huybvgcrd5f6gt7hubyvtcrd5r6tg7ubhvgcyrds54erxtryt',{
-  host: '165.227.29.217',
-  dialect: 'postgres'
-})
+var sequelize = new Sequelize(config.get('Database'))
 
 class Users extends Sequelize.Model{}
 Users.init({
