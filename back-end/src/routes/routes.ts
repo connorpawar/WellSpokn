@@ -1,9 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs')
-const cors = require('cors')
-const path = require('path')
-const https = require('https')
 
 
 import sql from '../models/db';
@@ -11,16 +6,6 @@ import storage from '../storage';
 import GoogleCloudData from '../GoogleCloudData';
 
 const upload = storage
-
-
-const app = express();
-const port = 8080;
-
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.use(cors());
 
 var Router = express.Router();
 
@@ -100,8 +85,4 @@ Router.post('/upload_blob', upload.single('audio'), (req,res) =>{
     })
 });
 
-//TODO: Is this okay?
-app.use("/api",Router) 
-app.use("/",Router)
-
-app.listen(8080)
+export default Router;
