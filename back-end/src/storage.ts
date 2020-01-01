@@ -11,7 +11,7 @@ function emptyFolder(){
     })
 }
 
-function initializeFolder(){
+export function initializeFolder(){
     if (!fs.existsSync(uploadDir)){
         fs.mkdirSync(uploadDir)
     }else{
@@ -19,7 +19,6 @@ function initializeFolder(){
     }
 }
 
-initializeFolder()
 const upload = Multer({dest : uploadDir})
 
 export default upload;
