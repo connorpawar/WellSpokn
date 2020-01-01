@@ -3,9 +3,9 @@ const express = require('express');
 
 import sql from '../models/db';
 import GoogleCloudData from '../GoogleCloudData';
-import storage, { initializeFolder } from '../storage';
+import storage, { Storage } from '../storage';
 
-initializeFolder();
+Storage.initializeFolder();
 
 const upload = storage
 
