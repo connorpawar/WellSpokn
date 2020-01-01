@@ -74,10 +74,14 @@ Attempts.init({
   modelName : 'attempt'
 });
 
-
-sequelize.sync();
-
 class SQL{
+  static softInitialize(){
+    sequelize.sync({force:false});
+  }
+  static hardInitialize(){
+    sequelize.sync({force:true});
+  }
+
   static registerUser(_username:String,_password:String,_email:String){
     return Users.create({
       username:_username,

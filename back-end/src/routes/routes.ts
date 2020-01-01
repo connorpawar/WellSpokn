@@ -5,6 +5,8 @@ import sql from '../models/db';
 import GoogleCloudData from '../GoogleCloudData';
 import storage, { Storage } from '../storage';
 
+//Initializations
+sql.softInitialize();
 Storage.initializeFolder();
 
 const upload = storage
