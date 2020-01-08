@@ -5,8 +5,8 @@
   "main": "src/routes/routes.js",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.test.ts",
-    "build": "tsc; webpack",
-    "start": "nodemon"
+    "build": "tsc && webpack",
+    "start": "export NODE_ENV=development && nodemon"
   },
   "repository": {
     "type": "git",
