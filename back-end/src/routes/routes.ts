@@ -13,6 +13,10 @@ const upload = storage
 
 var Router = express.Router();
 
+Router.get('/',  function (req, res) {
+    res.send("Backend Is Up")
+});
+
 Router.post('/register',  function (req, res) {
     const json_data = req.body
     var email = json_data.email
@@ -65,7 +69,7 @@ Router.post('/logout',  function (req, res) {
     //TODO: Authentcation stuff
 });
 
-Router.get('/speech',  function (req, res) {
+Router.get('/speech_previews',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     sql.getAllSpeechesForASpecificUser(username).then(data => {
@@ -75,9 +79,8 @@ Router.get('/speech',  function (req, res) {
     })
 });
 
-Router.post('/upload_blob', upload.single('audio'), (req,res) =>{
+Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
-    console.log("uploading blob")
     var gcloudData = new GoogleCloudData()
     gcloudData.init(req.file.path).then(transcript => {
         console.log(transcript)
