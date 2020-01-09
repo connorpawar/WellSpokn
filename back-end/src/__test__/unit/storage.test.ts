@@ -3,7 +3,7 @@ const path = require('path')
 
 jest.mock('fs')
 
-import { Storage } from '../../src/storage';
+import { Storage } from '../../storage';
 
 describe('storage module', () => {
     var fs : any = require('fs')
