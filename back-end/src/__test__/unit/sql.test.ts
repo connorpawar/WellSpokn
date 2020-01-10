@@ -18,4 +18,19 @@ describe('sql module', () => {
         expect(Models.default.sync).toBeCalledWith({force:true})
         expect(Models.default.sync).toBeCalledTimes(1)
     })
+
+    test("registerUser", () => {
+        var _username : string = "dan";
+        var _password : string = "p@ssW0rd";
+        var _email : string = "something@somewhere.com";
+
+        SQL.registerUser(_username,_password,_email);
+
+        expect(Models.Users.create).toBeCalledWith({
+            username:_username,
+            password:_password,
+            email:_email
+        });
+        expect(Models.Users.create).toBeCalledTimes(1)
+    })
 });
