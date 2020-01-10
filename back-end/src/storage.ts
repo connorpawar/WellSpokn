@@ -5,6 +5,7 @@ const path = require('path')
 
 export class Storage {
     static uploadDir : string = path.join(__dirname,'uploads')
+    static upload = Multer({dest : Storage.uploadDir})
 
     static emptyFolder(){
         fs.readdirSync(this.uploadDir).forEach( (file) => {
@@ -22,6 +23,4 @@ export class Storage {
 };
 
 
-const upload = Multer({dest : Storage.uploadDir})
-
-export default upload;
+export default Storage.upload;

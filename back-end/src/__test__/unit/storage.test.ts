@@ -2,6 +2,7 @@ const path = require('path')
 
 
 jest.mock('fs')
+jest.mock('multer')
 
 import { Storage } from '../../storage';
 
