@@ -10,7 +10,6 @@ describe('storage module', () => {
     var expectedPath : string = "";
 
     beforeEach(() => {
-        fs = require('fs')
         expectedPath = "";
     })
 
