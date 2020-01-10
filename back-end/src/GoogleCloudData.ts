@@ -81,14 +81,3 @@ class GoogleCloudData{
 
 }
 export default GoogleCloudData;
-
-/*
-//EXAMPLE USAGE
-var k = new GoogleCloudData()
-k.init("./23de671c9994cb999a1cb057c3aeab66").then(transcript => {
-  console.log(transcript)
-  console.log(k.Transcript)
-}).catch( e =>{
-  console.log(e)
-});
-*/
