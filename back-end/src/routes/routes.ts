@@ -1,7 +1,7 @@
 const express = require('express');
 
 
-import sql from '../models/db';
+import sql from '../database/sql';
 import GoogleCloudData from '../GoogleCloudData';
 import storage, { Storage } from '../storage';
 
