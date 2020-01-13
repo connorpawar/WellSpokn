@@ -7,6 +7,27 @@ import SQL from '../../database/sql';
 import * as Models from '../../database/models'
 
 
+const expectedErrorArrayVal = [
+    {
+        type : "javascript",
+        start : 1,
+        end : 23,
+        description : "Testing is annoying"
+    },
+    {
+        type : "csharp",
+        start : 51,
+        end : 5523,
+        description : "This isn't csharp"
+    },
+    {
+        type : "python",
+        start : 1,
+        end : 465,
+        description : "huh?"
+    }
+];
+
 function resolveWrap(arg){
     return new Promise((resolve,reject) =>{
         resolve(arg)
@@ -153,5 +174,120 @@ describe('sql module', () => {
 
         expect(returnVal).toEqual(expectedReturnVal)
         done()
+    })
+
+    test("getSpecificSpeech", async (done) => {
+        const expectedId = 1;
+        const expectedReturnSpeechVal = {
+            id: 1,
+            name: 'Worry',
+            transcript: 'I will need help with this later.',
+            date_created: '12-12-19',
+            date_last_modified: '10-12-20',
+            error_count: 22
+        };
+        const map1 = {
+            javascript : 3,
+            csharp : 9999,
+            python : 2,
+        }
+        const map2 = {
+            javascript : 293,
+            csharp : 3,
+            python : 345,
+        }
+        const map3 = {
+            javascript : 1,
+            csharp : 1,
+            python : 1,
+        }
+        const findAllAttemptReturnVal = [
+            {
+                id: 1,
+                mapping: JSON.stringify(map1),
+            },
+            {
+                id: 2,
+                mapping: JSON.stringify(map2),
+            },
+            {
+                id: 3,
+                mapping: JSON.stringify(map3),
+            }
+        ];
+
+        Models.Speeches.findOne.mockImplementation(arg =>{
+            if(arg.where.id === expectedId){
+                return resolveWrap(expectedReturnSpeechVal);
+            }else{
+                fail();
+            }
+        });
+        //TODO: OKay, why does this work but using mock implementation override each other!?
+        Models.Attempts.findAll = arg => {
+            if(arg.where.speech_id === expectedId){
+                return resolveWrap(findAllAttemptReturnVal);
+            }else{
+                fail();
+            }
+        }
+        Models.Errors.findAll = arg => {
+            if(arg.where.speech_id === expectedId){
+                return resolveWrap(expectedErrorArrayVal);
+            }else{
+                fail();
+            }
+        };
+
+        var actualDataReturn = await SQL.getSpecificSpeech(expectedId);
+        var expectedDataReturn = {
+            "date_created": "12-12-19",
+            "date_last_modified": "10-12-20",
+            "error_count": 22,
+            "errors": [
+              {
+                "description": "Testing is annoying",
+                "end": 23,
+                "start": 1,
+                "type": "javascript",
+              },
+              {
+                "description": "This isn't csharp",
+                "end": 5523,
+                "start": 51,
+                "type": "csharp",
+              },
+              {
+                "description": "huh?",
+                "end": 465,
+                "start": 1,
+                "type": "python",
+              },
+            ],
+            "errors_by_attempt": [
+              {
+                "csharp": 9999,
+                "javascript": 3,
+                "python": 2,
+              },
+              {
+                "csharp": 3,
+                "javascript": 293,
+                "python": 345,
+              },
+              {
+                "csharp": 1,
+                "javascript": 1,
+                "python": 1,
+              },
+            ],
+            "id": 1,
+            "latest_error_count": 3,
+            "name": "Worry",
+            "previous_attempts": 2,
+            "transcript": "I will need help with this later.",
+          };
+        expect(actualDataReturn).toEqual(expectedDataReturn)
+        done();
     })
 });

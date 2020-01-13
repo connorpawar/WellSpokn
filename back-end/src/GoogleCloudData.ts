@@ -1,21 +1,16 @@
-const speech = require('@google-cloud/speech');
-const language = require('@google-cloud/language');
 const fs = require('fs');
 const path = require('path')
 const Ffmpeg = require('fluent-ffmpeg')
+const speech : any = require('@google-cloud/speech');
+const language : any = require('@google-cloud/language');
 
 var speechClient = new speech.SpeechClient();
 var langClient = new language.LanguageServiceClient();
 
-
-//TODO: Clean up if possible
 async function sendToGoogleCloud(fileName) : Promise<string>{
   return new Promise(async (resolve,reject) =>{
-    // Reads a local audio file and converts it to base64
     const file = fs.readFileSync(fileName);
     const audioBytes = file.toString('base64');
-    
-    // The audio file's encoding, sample rate in hertz, and BCP-47 language code
     const audio = {
       content: audioBytes,
     };
@@ -39,30 +34,27 @@ async function sendToGoogleCloud(fileName) : Promise<string>{
 class GoogleCloudData{
   private _transcript: string = "N/A"
 
-  constructor(){
-
-  }
+  constructor(){ }
 
   replaceExtension(fileName) : string{
     var fileNameExt : string = path.parse(fileName).ext;
-    fileName.replace("."+fileNameExt,"");
+    fileName = fileName.replace(fileNameExt,"");
     fileName += ".wav";
     return fileName;
   }
 
-  async init(fileName) : Promise<string>{
+  async init(fileName) : Promise<String>{
     return new Promise((resolve,reject) => {
-      var newFileName : string = this.replaceExtension(fileName);
+      var newFileName : String = this.replaceExtension(fileName);
       var command = new Ffmpeg()
         .input(fileName)
         .audioChannels(1)
         .output(newFileName)
-        .on('end', function(){
-          sendToGoogleCloud(newFileName).then(transcript =>{
-            fs.unlink(fileName,() => {})
-            fs.unlink(newFileName,() => {})
-            resolve(transcript);
-          });
+        .on('end', async function(){
+          var transcript : String = await sendToGoogleCloud(newFileName)
+          fs.unlink(fileName,() => {})
+          fs.unlink(newFileName,() => {})
+          resolve(transcript);
         })
         .on('error', e => {
           fs.unlink(fileName,() => {})
