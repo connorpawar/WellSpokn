@@ -5,6 +5,7 @@ jest.mock('../../database/models')
 
 import SQL from '../../database/sql';
 import * as Models from '../../database/models'
+import { response } from 'express';
 
 describe('sql module', () => {
     test("softInitialize", () => {
@@ -32,5 +33,47 @@ describe('sql module', () => {
             email:_email
         });
         expect(Models.Users.create).toBeCalledTimes(1)
+    })
+
+    test("getUser", async (done) => {
+        var _username : string = "dan";
+
+        await SQL.getUser(_username);
+
+        expect(Models.Users.findOne).toBeCalledWith({
+            where:{
+                username:_username
+            }
+        });
+        expect(Models.Users.findOne).toBeCalledTimes(1)
+        done()
+    })
+
+    test("createSpeech", async (done) => {
+        var _username : string = "drake";
+        var _title : string = "something something";
+        var _transcript : string = "This is a short speech";
+
+        Models.Users.findOne.mockReturnValueOnce(
+            new Promise((resolve,reject) => {
+                resolve({id:2})
+            }));
+        Models.Speeches.create.mockReturnValueOnce(
+            new Promise((resolve,reject) => {
+                resolve("Correct return")
+            }));
+        //TODO: Research argument matching
+        Models.default.literal.mockReturnValueOnce("I can't believe its not undefined!");
+
+        var returnVal = await SQL.createSpeech(_username,_title,_transcript)
+        expect(returnVal).toEqual("Correct return")
+        expect(Models.Speeches.create).toBeCalledWith({
+            user_id:2,
+            title:_title,
+            last_edited: "I can't believe its not undefined!",
+            transcript:_transcript
+        });
+        expect(Models.Speeches.create).toBeCalledTimes(1)
+        done()
     })
 });
