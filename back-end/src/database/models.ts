@@ -54,12 +54,7 @@ Errors.init({
 
 export class Attempts extends Sequelize.Model{}
 Attempts.init({
-  grammar: Sequelize.INTEGER,
-  total_errors: Sequelize.INTEGER,
-  grammar_errors: Sequelize.INTEGER,
-  redundancy_errors: Sequelize.INTEGER,
-  diction_errors: Sequelize.INTEGER,
-  repetition_errors: Sequelize.INTEGER,
+  mapping: Sequelize.TEXT,
   speech_id:{
     type: Sequelize.INTEGER,
     allowNull:false,
