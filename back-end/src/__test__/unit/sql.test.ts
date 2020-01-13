@@ -79,41 +79,68 @@ describe('sql module', () => {
         done()
     })
 
+    //TODO: If this test is not good enough, fix it.
     test("getAllSpeechesForASpecificUser", async (done) => {
+        const expectedReturnVal = {
+            speeches: [
+              {
+                id: 1,
+                name: 'Worry',
+                transcript: 'I will need help with this later.',
+                date_created: '12-12-19',
+                date_last_modified: '10-12-20',
+                error_count: 22
+              },
+              {
+                id: 2,
+                name: 'Anger',
+                transcript: 'This test is how many lines!?',
+                date_created: '12-12-19',
+                date_last_modified: '11-12-20',
+                error_count: 33
+              },
+              {
+                id: 3,
+                name: 'Distress',
+                transcript: 'Javascript testing annoys me.',
+                date_created: '12-12-19',
+                date_last_modified: '12-12-20',
+                error_count: 44
+              }
+            ]
+          };
         var _username : string = "drake";
         var mock_speech_arrays = [
             {
-                id:1
+                id:1,
+                title:"Worry",
+                last_edited:"10-12-20",
+                createdAt:"12-12-19",
+                transcript: "I will need help with this later.",
             },
             {
-                id:2
+                id:2,
+                title:"Anger",
+                last_edited:"11-12-20",
+                createdAt:"12-12-19",
+                transcript: "This test is how many lines!?",
             },
             {
-                id:3
+                id:3,
+                title:"Distress",
+                last_edited:"12-12-20",
+                createdAt:"12-12-19",
+                transcript: "Javascript testing annoys me.",
             },
         ];
-
-        Models.Attempts.findAll.mockImplementation(arg =>{
-            switch(arg.where.speech_id){
-                case 1:
-                    return resolveWrap("do re mi")
-                case 2:
-                    return resolveWrap("abc")
-                case 3:
-                    return resolveWrap("123")
-                default:
-                    fail()
-            }
-        });
-
         Models.Errors.findAll.mockImplementation(arg =>{
             switch(arg.where.speech_id){
                 case 1:
-                    return resolveWrap("22")
+                    return resolveWrap(22)
                 case 2:
-                    return resolveWrap("33")
+                    return resolveWrap(33)
                 case 3:
-                    return resolveWrap("44")
+                    return resolveWrap(44)
                 default:
                     fail()
             }
@@ -124,7 +151,7 @@ describe('sql module', () => {
 
         var returnVal = await SQL.getAllSpeechesForASpecificUser(_username)
 
-        console.log(returnVal)
+        expect(returnVal).toEqual(expectedReturnVal)
         done()
     })
 });

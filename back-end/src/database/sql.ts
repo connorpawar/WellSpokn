@@ -45,7 +45,7 @@ class SQL{
   //TODO: Clean up later.
   static async getAllSpeechesForASpecificUser(_username:String){
     return new Promise((resolve,reject) =>{
-      var requested_data = {};
+      var speeches_data : Array<Object> = [];
       SQL.getUser(_username).then(u =>{
         if(u != null){
           var user_id = u.id
@@ -54,28 +54,30 @@ class SQL{
               user_id: user_id
             }
           }).then(async all_speeches => {
-            var speeches_data : Array<Object> = [{
-              transcript:String,
-              attempts:Array,
-              errors:Array
-            }];
             for(const s of all_speeches){
-              requested_data[s.id] = {}
-              requested_data[s.id].transcript = s.transcript
-    
-              requested_data[s.id].attempts = await Models.Attempts.findAll({
+              var speech_data = {
+                id:Number,
+                name:String,
+                transcript:String,
+                date_created:String,
+                date_last_modified:String,
+                error_count:Number
+              }
+
+              speech_data.id = s.id
+              speech_data.name = s.title
+              speech_data.transcript = s.transcript
+              speech_data.date_created = s.createdAt
+              speech_data.date_last_modified = s.last_edited
+              speech_data.error_count = await Models.Errors.findAll({
                 where: {
                   speech_id: s.id
                 }
               })
-              
-              requested_data[s.id].errors = await Models.Errors.findAll({
-                where: {
-                  speech_id: s.id
-                }
-              })
+
+              speeches_data.push(speech_data)
             }
-            resolve({speeches:requested_data})
+            resolve({speeches:speeches_data})
           })
         }else{
           reject("User not found")
