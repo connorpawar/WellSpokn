@@ -17,14 +17,14 @@ class SQL{
       email:_email
     });
   }
-  static getUser(_username:String){
+  static getUser(_username:String) : Promise<Models.Users>{
     return Models.Users.findOne({
       where: {
         username: _username
       }
     })
   }
-  static createSpeech(_username:String,_title:String,_transcript:String) : Models.Speeches{
+  static createSpeech(_username:String,_title:String,_transcript:String) : Promise<Models.Speeches>{
     return new Promise((resolve,reject) =>{
       SQL.getUser(_username).then(u => {
         if(u == null){
