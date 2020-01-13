@@ -5,7 +5,13 @@ jest.mock('../../database/models')
 
 import SQL from '../../database/sql';
 import * as Models from '../../database/models'
-import { response } from 'express';
+
+
+function resolveWrap(arg){
+    return new Promise((resolve,reject) =>{
+        resolve(arg)
+    })
+}
 
 describe('sql module', () => {
     test("softInitialize", () => {
@@ -54,16 +60,12 @@ describe('sql module', () => {
         var _title : string = "something something";
         var _transcript : string = "This is a short speech";
 
-        Models.Users.findOne.mockReturnValueOnce(
-            new Promise((resolve,reject) => {
-                resolve({id:2})
-            }));
-        Models.Speeches.create.mockReturnValueOnce(
-            new Promise((resolve,reject) => {
-                resolve("Correct return")
-            }));
-        //TODO: Research argument matching
-        Models.default.literal.mockReturnValueOnce("I can't believe its not undefined!");
+        Models.Users.findOne.mockReturnValueOnce(resolveWrap({id:2}));
+        Models.Speeches.create.mockReturnValueOnce(resolveWrap("Correct return"));
+        //TODO: Research a better way to do argument matching for return values
+        Models.default.literal.mockImplementation(arg =>
+            arg == "CURRENT_TIMESTAMP" ? "I can't believe its not undefined!" : undefined
+        );
 
         var returnVal = await SQL.createSpeech(_username,_title,_transcript)
         expect(returnVal).toEqual("Correct return")
@@ -74,6 +76,55 @@ describe('sql module', () => {
             transcript:_transcript
         });
         expect(Models.Speeches.create).toBeCalledTimes(1)
+        done()
+    })
+
+    test("getAllSpeechesForASpecificUser", async (done) => {
+        var _username : string = "drake";
+        var mock_speech_arrays = [
+            {
+                id:1
+            },
+            {
+                id:2
+            },
+            {
+                id:3
+            },
+        ];
+
+        Models.Attempts.findAll.mockImplementation(arg =>{
+            switch(arg.where.speech_id){
+                case 1:
+                    return resolveWrap("do re mi")
+                case 2:
+                    return resolveWrap("abc")
+                case 3:
+                    return resolveWrap("123")
+                default:
+                    fail()
+            }
+        });
+
+        Models.Errors.findAll.mockImplementation(arg =>{
+            switch(arg.where.speech_id){
+                case 1:
+                    return resolveWrap("22")
+                case 2:
+                    return resolveWrap("33")
+                case 3:
+                    return resolveWrap("44")
+                default:
+                    fail()
+            }
+        });
+
+        Models.Speeches.findAll.mockReturnValueOnce(resolveWrap(mock_speech_arrays));
+        Models.Users.findOne.mockReturnValueOnce(resolveWrap({id:2}));
+
+        var returnVal = await SQL.getAllSpeechesForASpecificUser(_username)
+
+        console.log(returnVal)
         done()
     })
 });
