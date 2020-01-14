@@ -4,10 +4,10 @@ const Ffmpeg = require('fluent-ffmpeg')
 const speech : any = require('@google-cloud/speech');
 const language : any = require('@google-cloud/language');
 
-var speechClient = new speech.SpeechClient();
-var langClient = new language.LanguageServiceClient();
 
 async function sendToGoogleCloud(fileName) : Promise<string>{
+  var speechClient = new speech.SpeechClient();
+  var langClient = new language.LanguageServiceClient();
   return new Promise(async (resolve,reject) =>{
     const file = fs.readFileSync(fileName);
     const audioBytes = file.toString('base64');
