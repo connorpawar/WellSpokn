@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { useHighlight } from './../CustomHooks/useHighlight'
+import { useFileDisplay } from './../CustomHooks/useFileDisplay'
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -46,42 +48,16 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default function LoginBanner() {
+export default function Dropzone() {
 	const classes = useStyles();
 
 	const upload = React.useRef(null)
 
-	const [highlight, setHighlight] = React.useState(false);
-	const [fileDisplay, setFileDisplay] = React.useState(false);
-	const [file, setFile] = React.useState(null);
+	const { highlight, onDragOver, onDragLeave } = useHighlight();
+	const { file, fileDisplay, onFileAdded, onDrop } = useFileDisplay();
 
 	const handleClick = event => {
 		upload.current.click()
-	};
-
-	const onFileAdded = event => {
-		event.preventDefault();
-		const file = event.target.files
-		setFile(file);
-		setFileDisplay(true);
-		console.log(file);
-	};
-
-	const onDragOver = event => {
-		event.preventDefault();
-		setHighlight(true);
-	};
-
-	const onDragLeave = event => {
-		setHighlight(false);
-	};
-
-	const onDrop = event => {
-		event.preventDefault();
-		const file = event.dataTransfer.files
-		setFile(file);
-		setFileDisplay(true);
-		console.log(file)
 	};
 
 	return (
