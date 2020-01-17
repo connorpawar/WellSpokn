@@ -8,7 +8,7 @@ export const useHighlight = () => {
 		setHighlight(true);
 	};
 
-	const onDragLeave = event => {
+	const onDragLeave = () => {
 		setHighlight(false);
 	};
 
