@@ -43,7 +43,7 @@ export default function SpeechPage(props) {
 		.then(response => response.json())
 		.then(JSONresponse => setSpeech(JSONresponse))
 		.catch(error => console.log("fetch error", error));
-	}, [])
+	}, [props.history.location.state.id])
 
 	const data = [
 		{ "y": 8, "x": "Tempo" },
