@@ -31,14 +31,14 @@ const HighlightedErrors = (props) => {
 	let text = ""
 
 	props.errors.errorsArr.forEach(error => { //can't break/return out of foreach should change later
-		if (props.start == parseInt(error.Start) && props.end == parseInt(error.End)) {
-			if (error.Type == "Tone") {
+		if (props.start === parseInt(error.Start) && props.end === parseInt(error.End)) {
+			if (error.Type === "Tone") {
 				highlightColor = "PaleGoldenRod"
-			} else if (error.Type == "Tempo") {
+			} else if (error.Type === "Tempo") {
 				highlightColor = "LightSalmon"
-			} else if (error.Type == "Grammar") {
+			} else if (error.Type === "Grammar") {
 				highlightColor = "Pink"
-			} else if (error.Type == "Filler") {
+			} else if (error.Type === "Filler") {
 				highlightColor = "SkyBlue"
 			}
 			description = error.Description;
