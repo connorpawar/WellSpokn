@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { useHighlight } from '../CustomHooks/useHighlight'
 import { act, renderHook } from '@testing-library/react-hooks'
 import { createEvent } from "@testing-library/react";
