@@ -13,6 +13,7 @@ module.exports = {
 	node: {
 		__dirname : false
 	},
+	mode:'production',
 	externals: [externals()]
 };
 	
