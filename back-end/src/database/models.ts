@@ -1,6 +1,6 @@
 const config = require('config');
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(config.get('Database'))
+var sequelize = new Sequelize(config.get('DATABASE'))
 
 export class Users extends Sequelize.Model{}
 Users.init({
