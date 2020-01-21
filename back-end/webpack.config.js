@@ -3,7 +3,7 @@ const externals = require('webpack-node-externals')
 
 module.exports = {
 	entry: {
-		main: './ts-built/routes/routes.js',
+		main: './ts-built/app.js',
 	},
 	output: {
 		filename:'backend.js',
