@@ -1,9 +1,11 @@
 {
-    "Database":{
+    "DATABASE":{
         "database":"test",
         "username":"postgres",
         "password": "0kj9h8g7v6fvybunimoijuhygtfr5t6y7uhbgvfrd5t6y7uhygtfrd56tg7huybvgcrd5f6gt7hubyvtcrd5r6tg7ubhvgcyrds54erxtryt",
         "host": "165.227.29.217",
         "dialect": "postgres"
-    }
+    },
+    "PORT":8080,
+    "ROOT_ROUTE":"/"
 }
