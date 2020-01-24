@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactMic } from 'react-mic';
 import Button from '@material-ui/core/Button'
- 
+
 export default class Recorder extends React.Component {
   constructor(props) {
     super(props);
@@ -9,31 +9,31 @@ export default class Recorder extends React.Component {
       record: false
 	}
   }
- 
+
   startRecording = () => {
     this.setState({
       record: true
     });
   }
- 
+
   stopRecording = () => {
     this.setState({
       record: false
     });
   }
- 
+
   onData(recordedBlob) {
     console.log('chunk of real-time data is: ', recordedBlob);
   }
- 
+
   onStop(recordedBlob) {
     var reader = new FileReader();
 
-    reader.readAsDataURL(recordedBlob.blob); 
+    reader.readAsDataURL(recordedBlob.blob);
     reader.onloadend = function() {
         var form_data = new FormData();
         form_data.append('audio',recordedBlob.blob);
-        fetch('api/upload_blob', {
+        fetch('api/upload_speech', {
           method : 'POST',
           body: form_data
         }).then(r =>{
@@ -45,7 +45,7 @@ export default class Recorder extends React.Component {
     }
     //audio.play();
   }
- 
+
   render() {
     return (
       <div style={{margin: '20px', textAlign: 'center', display: 'block'}}>
