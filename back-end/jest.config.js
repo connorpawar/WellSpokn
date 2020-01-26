@@ -9,5 +9,10 @@ module.exports = {
   "transform": {
     "^.+\\.(ts)$": "ts-jest"
   },
+  "modulePaths": [
+    "/"
+  ],
   "resetMocks" : true,
+  "resetModules" : true,
+  "restoreMocks":true
 }
