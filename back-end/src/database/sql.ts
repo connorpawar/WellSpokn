@@ -146,6 +146,17 @@ class SQL{
       resolve(speechData)
     });
   }
+
+  static async addError(_speech_id:Number,_type:String,_start:Number,_end:Number,_description:String){
+    //TODO: Check if speech exists first.
+    return Models.Errors.create({
+      speech_id:_speech_id,
+      type:_type,
+      start:_start,
+      end: _end,
+      description:_description,
+    });
+  }
 }
 
 export default SQL;
