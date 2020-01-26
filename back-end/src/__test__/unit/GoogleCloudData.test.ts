@@ -1,7 +1,7 @@
 jest.mock('fluent-ffmpeg')
 jest.mock('@google-cloud/speech')
 jest.mock('@google-cloud/language')
-jest.requireMock('fs')
+jest.requireActual('fs')
 
 
 import GoogleCloudData from '../../GoogleCloudData';
