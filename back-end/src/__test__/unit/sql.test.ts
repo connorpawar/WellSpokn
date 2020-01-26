@@ -1,6 +1,3 @@
-const path = require('path')
-
-
 jest.mock('../../database/models')
 
 import SQL from '../../database/sql';
@@ -288,6 +285,30 @@ describe('sql module', () => {
             "transcript": "I will need help with this later.",
           };
         expect(actualDataReturn).toEqual(expectedDataReturn)
+        done();
+    })
+
+
+
+    test("addError", async (done) => {
+        var ActualType = "Opinion"
+        var ActualStart = 13
+        var ActualEnd = 44
+        var ActualDescription = "I don't like this part."
+        var ActualSpeechId = 9999;
+        
+        Models.Errors.create = jest.fn();
+        var errorInput = SQL.addError(ActualSpeechId,ActualType, ActualStart, ActualEnd, ActualDescription);
+
+        var Result = await errorInput;
+
+        expect(Models.Errors.create).toBeCalledWith({
+            speech_id:ActualSpeechId,
+            type:ActualType,
+            start:ActualStart,
+            end:ActualEnd,
+            description:ActualDescription
+        })
         done();
     })
 });
