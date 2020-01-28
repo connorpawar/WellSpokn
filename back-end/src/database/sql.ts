@@ -1,13 +1,14 @@
 
 
 import * as Models from "./models";
+import { stringify } from "querystring";
 
 class SQL{
   static softInitialize(){
-    Models.default.sync({force:false});
+    return Models.default.sync({force:false});
   }
   static hardInitialize(){
-    Models.default.sync({force:true});
+    return Models.default.sync({force:true});
   }
 
   static registerUser(_username:String,_password:String,_email:String){
@@ -155,6 +156,21 @@ class SQL{
       start:_start,
       end: _end,
       description:_description,
+    });
+  }
+
+  static async finalizeAttempt(_speech_id:Number){
+    //TODO: Check if speech exists first.
+    return Models.Errors.findAll({where:{speech_id:_speech_id}}).then(errors =>{
+      var attemptData = {};
+      errors.forEach(err => {
+        if(attemptData[err.type] == undefined){
+          attemptData[err.type] = 1
+        }else{
+          attemptData[err.type] += 1
+        }
+      });
+      Models.Attempts.create({mapping:JSON.stringify(attemptData),speech_id:_speech_id})
     });
   }
 }

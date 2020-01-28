@@ -311,4 +311,27 @@ describe('sql module', () => {
         })
         done();
     })
+
+    test("finalizeAttempt", async (done) =>{
+        var actualSpeechId = 2
+        var DataMock : Array<any> = []
+        DataMock.push({type:"Descript"})
+        DataMock.push({type:"Abba"})
+        DataMock.push({type:"Repeated"})
+        DataMock.push({type:"Repeated"})
+        Models.Attempts.create = jest.fn();
+        Models.Errors.findAll = jest.fn();
+        Models.Errors.findAll.mockImplementationOnce((whereObj) =>{
+            if(whereObj.where.speech_id == actualSpeechId){
+                return resolveWrap(DataMock)
+            }else{
+                fail("Find all called with wrong arguement")
+            }
+        })
+        var funcReturn = await SQL.finalizeAttempt(actualSpeechId)
+        var actualDatabaseInput = JSON.parse(Models.Attempts.create.mock.calls[0][0].mapping);
+        var expectedDatabaseInput = {"Descript":1,"Abba":1,"Repeated":2};
+        expect(actualDatabaseInput).toEqual(expectedDatabaseInput);
+        done();
+    })
 });
