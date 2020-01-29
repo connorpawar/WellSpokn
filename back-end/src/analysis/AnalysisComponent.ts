@@ -5,7 +5,6 @@ export abstract class AnalysisComponent<I,O>{
 
   process(analyzer : Object, inputData: I, aggregateObject? : Object)  : any {
     var newData = this.analyze(inputData)
-    console.log(analyzer)
     this.publish(analyzer,newData,aggregateObject)
   };
 
