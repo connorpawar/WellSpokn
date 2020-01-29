@@ -1,32 +1,21 @@
-
-
+import { AnalysisComponent } from "./AnalysisComponent";
 
 class AnalysisCore{
   analyzer = {}
 
-  intialize(dataObj : Object, intialTopic? : string){
-
-  }
-
-  addAnalysisComponent<T>(ac : AnalysisComponent<T>){
-
-  }
-
-  publish(topic : string, data : T) : void{
-    if(analyzer[topic] == undefined){
-      throw "No one is subscribed to this"
+  intialize(intialTopic : string, aggregateData : Object){
+    if(this.analyzer[intialTopic] == undefined){
+      // "No one is subscribed to this" Throw error?
     }else{
-        analyzer[topic].array.forEach(ac => {
-            ac(data)
-        });
+      this.analyzer[intialTopic].forEach(processFunc => {
+        processFunc(this.analyzer,aggregateData[intialTopic],aggregateData)
+      });
     }
-  };
+  }
 
-  subscribe(topic : string) : void{
-    if(analyzer[topic] == undefined){
-      analyzer[topic] = [];
-    }
-    analyzer[topic].push((data) => this.analyze(data))
-  };
+  addAnalysisComponent<I,O>(ac : AnalysisComponent<I,O>){
+    ac.subscribe(this.analyzer)
+  }
 }
 
+export default AnalysisCore;
