@@ -1,14 +1,26 @@
 
-abstract class AnalysisComponent<T>{
+export abstract class AnalysisComponent<I,O>{
   inputTopic : string;
   outputTopic : string;
 
-  abstract analyze :  (data: T) => any;
+  process(analyzer : Object, inputData: I, aggregateObject? : Object)  : any {
+    var newData = this.analyze(inputData)
+    console.log(analyzer)
+    this.publish(analyzer,newData,aggregateObject)
+  };
 
-  publish(analyzer : Object, data : T) : any{
+  abstract analyze(data: I) : O;
+
+  publish(analyzer : Object, newData : O, aggregateData? : Object) : any{
     if(analyzer[this.outputTopic] == undefined){
-      throw "No one is subscribed to this"
+      // "No one is subscribed to this" Throw error?
     }else{
+      analyzer[this.outputTopic].forEach(processFunc => {
+        processFunc(analyzer,newData,aggregateData)
+      });
+    }
+    if(aggregateData != undefined){
+      aggregateData[this.outputTopic] = newData;
     }
   };
 
@@ -16,7 +28,7 @@ abstract class AnalysisComponent<T>{
     if(analyzer[this.inputTopic] == undefined){
       analyzer[this.inputTopic] = [];
     }
-    analyzer[this.inputTopic].push((data) => this.analyze(data))
+    analyzer[this.inputTopic].push((analyzer,newData,aggregateObject?) => this.process(analyzer,newData,aggregateObject))
   };
 }
 
