@@ -5,7 +5,7 @@ const path = require('path')
 const Ffmpeg = require('fluent-ffmpeg')
 
 class FileToAudioBytesComponent extends AnalysisComponent<string,string>{
-  inputTopic = "audioFile";
+  inputTopic = new Set("audioFile");
   outputTopic = "audioBytes";
 
   replaceExtension(fileName) : string{

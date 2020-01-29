@@ -5,7 +5,7 @@ const speech : any = require('@google-cloud/speech');
 
 class GoogleTextToSpeechComponent extends AnalysisComponent<string,string>{
   speechClient = new speech.SpeechClient();
-  inputTopic = "audioBytes";
+  inputTopic = new Set("audioBytes");
   outputTopic = "transcript";
 
   analyze(audioBytes : string) : Promise<string>{
