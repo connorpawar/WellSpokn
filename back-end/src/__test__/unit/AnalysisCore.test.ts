@@ -1,7 +1,5 @@
 import { AnalysisComponent } from "../../analysis/AnalysisComponent";
 import AnalysisCore from '../../analysis/AnalysisCore';
-import { StringifyOptions } from "querystring";
-
 
 function resolveWrap<T>(data : T) : Promise<T> {
     return new Promise((resolve,reject) =>{
@@ -10,7 +8,7 @@ function resolveWrap<T>(data : T) : Promise<T> {
 }
 
 class StubAB extends AnalysisComponent<string,string>{
-    inputTopic = "A";
+    inputTopic = new Set("A");
     outputTopic = "B";
 
     analyze(data: string) : Promise<string> {
@@ -19,7 +17,7 @@ class StubAB extends AnalysisComponent<string,string>{
 }
 
 class StubBC extends AnalysisComponent<string,string>{
-    inputTopic = "B";
+    inputTopic = new Set("B");
     outputTopic = "C";
 
     analyze(data: string) : Promise<string> {
@@ -28,7 +26,7 @@ class StubBC extends AnalysisComponent<string,string>{
 }
 
 class StubASplit extends AnalysisComponent<string,string>{
-    inputTopic = "B";
+    inputTopic = new Set("B");
     outputTopic = "ASplit";
 
     analyze(data: string) : Promise<string> {
@@ -37,7 +35,7 @@ class StubASplit extends AnalysisComponent<string,string>{
 }
 
 class StubBSplit extends AnalysisComponent<string,string>{
-    inputTopic = "B";
+    inputTopic = new Set("B");
     outputTopic = "BSplit";
 
     analyze(data: string) : Promise<string> {
@@ -46,11 +44,11 @@ class StubBSplit extends AnalysisComponent<string,string>{
 }
 
 class Stub extends AnalysisComponent<string,string>{
-    inputTopic = "";
+    inputTopic = new Set("");
     outputTopic = "";
 
     analyze(data: string) : Promise<string> {
-        return resolveWrap<string>(this.inputTopic + this.outputTopic);
+        return resolveWrap<string>(this.outputTopic);
     };
 }
 describe('AnalysisCore class', () => {
@@ -79,16 +77,17 @@ describe('AnalysisCore class', () => {
     var stringy = "QAZXSWEDCVFRTGBNHYUJMKIOPL"
     for (var i = 1; i < stringy.length; i++) {
         var component = new Stub();
-        component.inputTopic = stringy.substring(i-1,i)
+        component.inputTopic = new Set(stringy.substring(i-1,i))
         component.outputTopic = stringy.substring(i,i+1)
         core.addAnalysisComponent<string,string>(component)
     }
 
-    var initialInput = {"Q": "QA"};
+    var initialInput = {"Q": "DummyStart"};
     var actualOutput = await core.intialize("Q",initialInput);
-    
+    //TODO: Promise does not guarantee end.
+
     for (var i = 2; i < stringy.length; i++) {
-        expect(actualOutput[stringy.substring(i-1,i)]).toEqual(stringy.substring(i-2,i))
+        expect(actualOutput[stringy.substring(i,i+1)]).toEqual(stringy.substring(i,i+1))
     }
 
     done()

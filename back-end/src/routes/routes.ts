@@ -2,7 +2,7 @@ const express = require('express');
 
 
 import sql from '../database/sql';
-import analysisCore from '../analysis/Analysis';
+import generateAnalysisCore from '../analysis/Analysis';
 import storage, { Storage } from '../storage';
 
 //Initializations
@@ -82,9 +82,9 @@ Router.get('/speech_previews',  function (req, res) {
 Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
     var initialData = {"audioFile" : req.file.path};
+    var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {
         sql.createSpeech("sc","example_title",allData.transcript)
-
         res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)

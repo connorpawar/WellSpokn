@@ -1,7 +1,9 @@
 
 export abstract class AnalysisComponent<I,O>{
-  inputTopic : string;
+  inputTopic : Set<string>;
   outputTopic : string;
+
+
 
   process(analyzer : Object, inputData: I, aggregateObject? : Object)  : Promise<any> {
     return new Promise((resolve,reject) => {
@@ -29,10 +31,19 @@ export abstract class AnalysisComponent<I,O>{
   };
 
   subscribe(analyzer : Object) : any{
-    if(analyzer[this.inputTopic] == undefined){
-      analyzer[this.inputTopic] = [];
-    }
-    analyzer[this.inputTopic].push((analyzer,newData,aggregateObject?) => this.process(analyzer,newData,aggregateObject))
+    this.inputTopic.forEach(topic => {
+      if(analyzer[topic] == undefined){
+        analyzer[topic] = [];
+      }
+      analyzer[topic].push((analyzer,newData,aggregateObject?) :  Promise<any>  => {
+        this.inputTopic.delete(topic)
+        if(this.inputTopic.size == 0){
+          return this.process(analyzer,newData,aggregateObject)
+        }else{
+          return Promise.resolve();
+        }
+      });
+    })
   };
 }
 

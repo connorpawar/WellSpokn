@@ -1,10 +1,13 @@
 import AnalysisCore from "./AnalysisCore";
-
-//TODO: Is this the best place to initialize everything?
-var analysisCore = new AnalysisCore();
 import FileToAudioBytesComponent from './FileToAudioBytesComponent'
 import GoogleTextToSpeechComponent from './GoogleTextToSpeechComponent'
-analysisCore.addAnalysisComponent<string,string>(new FileToAudioBytesComponent())
-analysisCore.addAnalysisComponent<string,string>(new GoogleTextToSpeechComponent())
 
-export default analysisCore;
+//TODO: Is this the best place to initialize everything?
+function generateAnalysisCore() : AnalysisCore{
+    var analysisCore = new AnalysisCore();
+    analysisCore.addAnalysisComponent<string,string>(new FileToAudioBytesComponent())
+    analysisCore.addAnalysisComponent<string,string>(new GoogleTextToSpeechComponent())
+    return analysisCore
+}
+
+export default generateAnalysisCore;
