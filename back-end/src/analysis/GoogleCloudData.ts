@@ -31,19 +31,11 @@ async function sendToGoogleCloud(fileName) : Promise<string>{
   })
 }
 
-class GoogleCloudData{
-  private _transcript: string = "N/A"
+class GoogleCloudData extends AnalysisComponent<string>{
+  inputTopic = "audioBytes";
+  outputTopic = "transcript";
 
-  constructor(){ }
-
-  replaceExtension(fileName) : string{
-    var fileNameExt : string = path.parse(fileName).ext;
-    fileName = fileName.replace(fileNameExt,"");
-    fileName += ".wav";
-    return fileName;
-  }
-
-  async init(fileName) : Promise<String>{
+  analyze = async (fileName) : Promise<String>{
     return new Promise((resolve,reject) => {
       var newFileName : String = this.replaceExtension(fileName);
       var command = new Ffmpeg()
@@ -64,12 +56,14 @@ class GoogleCloudData{
     });
   }
 
-  get Transcript(): string{
-    return this._transcript
-  }
-  set Transcript(new_transcript: string){
-    this._transcript = new_transcript;
+  replaceExtension(fileName) : string{
+    var fileNameExt : string = path.parse(fileName).ext;
+    fileName = fileName.replace(fileNameExt,"");
+    fileName += ".wav";
+    return fileName;
   }
 
+
 }
+
 export default GoogleCloudData;

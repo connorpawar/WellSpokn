@@ -4,7 +4,7 @@ jest.mock('@google-cloud/language')
 jest.requireActual('fs')
 
 
-import GoogleCloudData from '../../GoogleCloudData';
+import GoogleCloudData from '../../analysis/GoogleCloudData';
 
 function resolveWrap(arg){
   return new Promise((resolve,reject) =>{
@@ -96,7 +96,7 @@ describe('GoogleCloudData class', () => {
     });
     
 
-    var actualReturnVal = await gcd.init(dummyFilename)
+    var actualReturnVal = await gcd.analyze(dummyFilename)
 
     expect(ffmpegMock.input).toBeCalledWith(dummyFilename)
     expect(ffmpegMock.audioChannels).toBeCalledWith(1)
