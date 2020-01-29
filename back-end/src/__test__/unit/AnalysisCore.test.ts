@@ -54,20 +54,6 @@ class Stub extends AnalysisComponent<string,string>{
     };
 }
 describe('AnalysisCore class', () => {
-  test('initialize path', async (done) => {
-    var core = new AnalysisCore()
-    var abPart = new StubAB();
-    var bcPart = new StubBC();
-    var initialInput = {"A": "Data"};
-    core.addAnalysisComponent<string,string>(abPart)
-    core.addAnalysisComponent<string,string>(bcPart)
-    await core.intialize("A",initialInput);
-    
-    expect(initialInput["A"]).toEqual("Data")
-    expect(initialInput["B"]).toEqual("Data\nAB-Proccesed")
-    expect(initialInput["C"]).toEqual("Data\nAB-Proccesed\nBC-Proccesed")
-    done()
-  });
   test('initialize path with splits', async (done) => {
     var core = new AnalysisCore()
     var abPart = new StubAB();
@@ -79,13 +65,13 @@ describe('AnalysisCore class', () => {
     core.addAnalysisComponent<string,string>(bcPart)
     core.addAnalysisComponent<string,string>(aSplitPart)
     core.addAnalysisComponent<string,string>(bSplitPart)
-    await core.intialize("A",initialInput);
+    var actualOutput = await core.intialize("A",initialInput);
     
-    expect(initialInput["A"]).toEqual("Data")
-    expect(initialInput["B"]).toEqual("Data\nAB-Proccesed")
-    expect(initialInput["C"]).toEqual("Data\nAB-Proccesed\nBC-Proccesed")
-    expect(initialInput["ASplit"]).toEqual("ASplit")
-    expect(initialInput["BSplit"]).toEqual("BSplit")
+    expect(actualOutput["A"]).toEqual("Data")
+    expect(actualOutput["B"]).toEqual("Data\nAB-Proccesed")
+    expect(actualOutput["C"]).toEqual("Data\nAB-Proccesed\nBC-Proccesed")
+    expect(actualOutput["ASplit"]).toEqual("ASplit")
+    expect(actualOutput["BSplit"]).toEqual("BSplit")
     done()
   });
   test('initialize long path', async (done) => {
@@ -99,10 +85,10 @@ describe('AnalysisCore class', () => {
     }
 
     var initialInput = {"Q": "QA"};
-    await core.intialize("Q",initialInput);
+    var actualOutput = await core.intialize("Q",initialInput);
     
     for (var i = 2; i < stringy.length; i++) {
-        expect(initialInput[stringy.substring(i-1,i)]).toEqual(stringy.substring(i-2,i))
+        expect(actualOutput[stringy.substring(i-1,i)]).toEqual(stringy.substring(i-2,i))
     }
 
     done()

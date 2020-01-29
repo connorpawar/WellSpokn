@@ -2,7 +2,7 @@ const express = require('express');
 
 
 import sql from '../database/sql';
-import GoogleCloudData from '../analysis/GoogleCloudData';
+import analysisCore from '../analysis/Analysis';
 import storage, { Storage } from '../storage';
 
 //Initializations
@@ -81,12 +81,11 @@ Router.get('/speech_previews',  function (req, res) {
 
 Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
-    var gcloudData = new GoogleCloudData()
-    gcloudData.analyze(req.file.path).then(transcript => {
-        console.log(transcript)
-        //TODO: Send the transcript to SQL
-        sql.createSpeech("sc","example_title",transcript)
-        res.send(transcript)
+    var initialData = {"audioFile" : req.file.path};
+    analysisCore.intialize("audioFile",initialData).then((allData : any) => {
+        sql.createSpeech("sc","example_title",allData.transcript)
+
+        res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
     })
