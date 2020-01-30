@@ -3,24 +3,40 @@ import { AnalysisComponent } from "./AnalysisComponent";
 class AnalysisCore{
   analyzer = {}
 
-  intialize(intialTopic : string, aggregateData : Object) : Promise<object>{
-    var promisesArr = []
-    if(this.analyzer[intialTopic] == undefined){
-    // "No one is subscribed to this" Throw error?
-    }else{
-        this.analyzer[intialTopic].forEach(processFunc => {
-            promisesArr.push(processFunc(this.analyzer,aggregateData[intialTopic],aggregateData))
-        });
-    }
+  intialize(intialTopic : string, aggregateData : Object) : Promise<any>{
     return new Promise((resolve,reject) => {
-      Promise.all(promisesArr).then(() => {
+      this.publish(intialTopic,aggregateData[intialTopic],aggregateData).then(() =>{
         resolve(aggregateData);
-      })
+      });
     })
   }
 
+  publish(outputTopic : string, newData : any, aggregateData : Object) : Promise<any[]>{
+    var promisesArr = []
+    aggregateData[outputTopic] = newData;
+    if(this.analyzer[outputTopic] != undefined){
+      this.analyzer[outputTopic].forEach(processFunc => {
+        promisesArr.push(processFunc(newData,aggregateData))
+      });
+    }
+    return Promise.all(promisesArr);
+  };
+
   addAnalysisComponent<I,O>(ac : AnalysisComponent<I,O>){
-    ac.subscribe(this.analyzer)
+    ac.analysisCore = this;
+    ac.inputTopic.forEach(topic => {
+      if(this.analyzer[topic] == undefined){
+        this.analyzer[topic] = [];
+      }
+      this.analyzer[topic].push((newData,aggregateObject) :  Promise<any>  => {
+        ac.inputTopic.delete(topic)
+        if(ac.inputTopic.size == 0){
+          return ac.process(newData,aggregateObject)
+        }else{
+          return Promise.resolve();
+        }
+      });
+    })
   }
 }
 
