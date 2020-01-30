@@ -4,8 +4,5 @@
         "moduleResolution" : "node",
         "outDir": "ts-built",
         "rootDir": "src"
-    },
-    "exclude": [
-        "**/*.test.ts"
-    ]
+    }
 }
