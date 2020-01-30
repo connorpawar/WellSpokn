@@ -1,5 +1,6 @@
 import { AnalysisComponent } from "../../analysis/AnalysisComponent";
 import AnalysisCore from '../../analysis/AnalysisCore';
+import { resolve } from "dns";
 
 function resolveWrap<T>(data : T) : Promise<T> {
     return new Promise((resolve,reject) =>{
@@ -104,7 +105,12 @@ describe('AnalysisCore class', () => {
     core.addAnalysisComponent<string>(QuickStub(["Q"], "A"))
     core.addAnalysisComponent<string>(QuickStub(["Q"], "X"))
     core.addAnalysisComponent<string>(QuickStub(["Q"], "S"))
-    core.addAnalysisComponent<string>(QuickStub(["A","X","S"], "V"))
+    var SpecialStub = QuickStub(["A","X","S"], "V");
+    SpecialStub.analyze = (data : Object) : Promise<string> => {
+        return resolveWrap("COMBINED:"+data['A']+data['X']+data['S'])
+    };
+
+    core.addAnalysisComponent<string>(SpecialStub)
     var initialInput = {"Q": "Q"};
     var actualOutput = await core.intialize("Q",initialInput);
 
@@ -112,7 +118,7 @@ describe('AnalysisCore class', () => {
     expect(actualOutput["A"]).toEqual("A")
     expect(actualOutput["X"]).toEqual("X")
     expect(actualOutput["S"]).toEqual("S")
-    expect(actualOutput["V"]).toEqual("V")
+    expect(actualOutput["V"]).toEqual("COMBINED:AXS")
 
     done()
   });
