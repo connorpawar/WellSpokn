@@ -3,7 +3,7 @@ import { AnalysisComponent } from "./AnalysisComponent"
 
 const speech : any = require('@google-cloud/speech');
 
-class GoogleTextToSpeechComponent extends AnalysisComponent<string,string>{
+class GoogleTextToSpeechComponent extends AnalysisComponent<string>{
   speechClient = new speech.SpeechClient();
   inputTopic = new Set("audioBytes");
   outputTopic = "transcript";

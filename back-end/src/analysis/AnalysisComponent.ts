@@ -1,18 +1,18 @@
 import AnalysisCore from "./AnalysisCore";
 
-export abstract class AnalysisComponent<I,O>{
+export abstract class AnalysisComponent<O>{
   inputTopic : Set<string>;
   outputTopic : string;
   analysisCore : AnalysisCore;
 
-  process(inputData: I, aggregateObject : Object)  : Promise<any> {
+  process(aggregateObject : Object)  : Promise<any> {
     return new Promise((resolve,reject) => {
-      this.analyze(inputData).then(newData => {
+      this.analyze(aggregateObject).then(newData => {
         resolve(this.analysisCore.publish(this.outputTopic,newData,aggregateObject))
       })
     })
   };
 
-  abstract analyze(data: I) : Promise<O>;
+  abstract analyze(data: Object) : Promise<O>;
 }
 
