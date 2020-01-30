@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc && webpack",
-    "start": "export NODE_ENV=development && nodemon"
+    "start": "NODE_ENV=development nodemon"
   },
   "repository": {
     "type": "git",
