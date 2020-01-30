@@ -15,7 +15,8 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
     return fileName;
   }s
 
-  analyze(fileName : string) : Promise<string>{
+  analyze(data : Object) : Promise<string>{
+    var fileName = data["audioFile"];
     return new Promise((resolve,reject) => {
       var newFileName : String = this.replaceExtension(fileName);
       var command = new Ffmpeg()

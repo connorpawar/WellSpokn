@@ -34,7 +34,7 @@ describe('GoogleCloudData class', () => {
       return resolveWrap(resultsMock)
     })
 
-    var analyzeResult = await component.analyze(MockAudioBytes)
+    var analyzeResult = await component.analyze({audioBytes:MockAudioBytes})
 
     expect(analyzeResult).toEqual("Why\nis\nthis\nso\nbloated?")
 

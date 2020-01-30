@@ -8,7 +8,8 @@ class GoogleTextToSpeechComponent extends AnalysisComponent<string>{
   inputTopic = new Set("audioBytes");
   outputTopic = "transcript";
 
-  analyze(audioBytes : string) : Promise<string>{
+  analyze(data: Object) : Promise<string>{
+    var audioBytes = data["audioBytes"];
     return new Promise((resolve,reject) => {
       const audio = {
         content: audioBytes,
