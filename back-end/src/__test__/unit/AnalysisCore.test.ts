@@ -84,7 +84,6 @@ describe('AnalysisCore class', () => {
 
     var initialInput = {"Q": "DummyStart"};
     var actualOutput = await core.intialize("Q",initialInput);
-    //TODO: Promise does not guarantee end.
 
     for (var i = 2; i < stringy.length; i++) {
         expect(actualOutput[stringy.substring(i,i+1)]).toEqual(stringy.substring(i,i+1))
