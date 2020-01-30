@@ -22,7 +22,7 @@ class AnalysisCore{
     return Promise.all(promisesArr);
   };
 
-  addAnalysisComponent<I,O>(ac : AnalysisComponent<I,O>){
+  addAnalysisComponent<O>(ac : AnalysisComponent<O>){
     ac.analysisCore = this;
     ac.inputTopic.forEach(topic => {
       if(this.analyzer[topic] == undefined){
@@ -31,7 +31,7 @@ class AnalysisCore{
       this.analyzer[topic].push((newData,aggregateObject) :  Promise<any>  => {
         ac.inputTopic.delete(topic)
         if(ac.inputTopic.size == 0){
-          return ac.process(newData,aggregateObject)
+          return ac.process(aggregateObject)
         }else{
           return Promise.resolve();
         }
