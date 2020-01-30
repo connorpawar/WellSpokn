@@ -69,7 +69,7 @@ describe('FileToAudioBytesComponent class', () => {
     });
     
 
-    var actualReturnVal = await component.analyze(dummyFilename)
+    var actualReturnVal = await component.analyze({audioFile:dummyFilename})
 
     expect(ffmpegMock.input).toBeCalledWith(dummyFilename)
     expect(ffmpegMock.audioChannels).toBeCalledWith(1)
