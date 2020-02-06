@@ -39,7 +39,7 @@ export default function SpeechPage(props) {
 
 	//props.history.location.state.id
 	useEffect(() => {
-		fetch('/api/speech?'+props.history.location.state.id)
+		fetch('/api/speech/'+props.history.location.state.id)
 		.then(response => response.json())
 		.then(JSONresponse => setSpeech(JSONresponse))
 		.catch(error => console.log("fetch error", error));

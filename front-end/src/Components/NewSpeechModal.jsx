@@ -13,6 +13,7 @@ import { blue } from '@material-ui/core/colors';
 
 import Recorder from './Recorder';
 import Dropzone from './Dropzone';
+import NewSpeechForm from './NewSpeechForm';
 
 import {useNewSpeechModal} from '../CustomHooks/useNewSpeechModal';
 
@@ -21,6 +22,10 @@ const useStyles = makeStyles(theme => ({
 	avatar: {
 		backgroundColor: blue[100],
 		color: blue[600],
+	},
+	form: {
+		marginLeft: 50,
+		marginRight: 50,
 	},
 }));
 
@@ -31,10 +36,11 @@ export default function NewSpeechModal(props) {
 	const { record, upload, handleClose, handleListItemClick } = useNewSpeechModal(onClose, selectedValue);
 
 	return (
-		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" maxWidth={'sm'} open={open}>
+		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
 			{!record && !upload &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
+					<NewSpeechForm className={classes.form} />
 					<List>
 						{options.map(option => (
 								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
