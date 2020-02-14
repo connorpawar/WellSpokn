@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: wellspokn-frontend
-        image: wellspokn-frontend:latest
+        image: wellspokn-frontend
         imagePullPolicy: Never
         ports:
         - containerPort: 5000

@@ -16,5 +16,6 @@ spec:
       containers:
       - name: wellspokn-backend
         image: wellspokn-backend
+        imagePullPolicy: Never
         ports:
         - containerPort: 8080
