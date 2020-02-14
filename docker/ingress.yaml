@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: wellspokn-backend-service
+          servicePort: 8080
+      - path: /
+        backend:
+          serviceName: wellspokn-frontend-service
+          servicePort: 5000
