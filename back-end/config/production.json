@@ -1,6 +1,6 @@
 {
     "DATABASE":{
-        "database":"test",
+        "database":"wellspokn",
         "username":"postgres",
         "password": "ARandomSetOfWordsArrangedLikeThis45678736478930948576748",
         "host": "localhost",

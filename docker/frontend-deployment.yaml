@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wellspokn-frontend
+  labels:
+    app: wellspokn-frontend
+spec:
+  selector:
+    matchLabels:
+      app: wellspokn-frontend
+  template:
+    metadata:
+      labels:
+        app: wellspokn-frontend
+    spec:
+      containers:
+      - name: wellspokn-frontend
+        image: wellspokn-frontend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000

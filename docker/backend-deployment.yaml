@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wellspokn-backend
+  labels:
+    app: wellspokn-backend
+spec:
+  selector:
+    matchLabels:
+      app: wellspokn-backend
+  template:
+    metadata:
+      labels:
+        app: wellspokn-backend
+    spec:
+      containers:
+      - name: wellspokn-backend
+        image: wellspokn-backend
+        ports:
+        - containerPort: 8080

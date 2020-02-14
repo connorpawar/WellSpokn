@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wellspokn-frontend-service
+spec:
+  selector:
+    app: wellspokn-frontend
+  type: NodePort
+  ports:
+    - nodePort: 30000
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
