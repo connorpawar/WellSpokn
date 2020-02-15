@@ -1,14 +1,19 @@
 
 
 import * as Models from "./models";
-import { stringify } from "querystring";
 
 class SQL{
   static softInitialize(){
-    return Models.default.sync({force:false});
+    return Models.default.sync({force:false}).catch(e =>{
+      console.log(e)
+      process.exit(1);
+    });
   }
   static hardInitialize(){
-    return Models.default.sync({force:true});
+    return Models.default.sync({force:true}).catch(e =>{
+      console.log(e)
+      process.exit(1);
+    });
   }
 
   static registerUser(_username:String,_password:String,_email:String){
