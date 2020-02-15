@@ -1,11 +1,8 @@
 const config = require('config');
 var Sequelize = require('sequelize');
 var sequelize;
-try{
-  sequelize = new Sequelize(config.get('DATABASE'))
-}catch(e){
-  process.exit(1)
-}
+
+sequelize = new Sequelize(config.get('DATABASE'))
 
 export class Users extends Sequelize.Model{}
 Users.init({
