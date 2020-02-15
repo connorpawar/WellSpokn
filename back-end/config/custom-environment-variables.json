@@ -1,0 +1,6 @@
+{
+    "DATABASE":{
+        "host": "DATABASE_SERVICE_HOST",
+        "port": "DATABASE_SERVICE_PORT"
+    }
+}
