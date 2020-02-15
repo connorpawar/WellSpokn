@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - imagePullPolicy: Never
-        image: database
+        image: wellspokn-database
         name: database
         ports:
         - containerPort: 5432
