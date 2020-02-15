@@ -1,9 +1,10 @@
-FROM node AS wellspokn-frontend-packages
-COPY package*.json /
+FROM node AS frontend-compiler
+COPY . /
 RUN npm install
-RUN npm install -g serve
+RUN npm run build
 
-FROM wellspokn-frontend-packages
-COPY build /build
+FROM frontend-compiler
+RUN npm install -g serve
 EXPOSE 5000
+COPY --from=frontend-compiler /build /
 CMD serve -p 5000 -s /build
