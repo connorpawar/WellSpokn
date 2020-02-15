@@ -1,11 +1,17 @@
-FROM node AS wellspokn-backend-packages
+FROM node AS production-only-packages
 COPY package*.json /
 RUN npm install --only=prod
 RUN npm install pg
 
-FROM wellspokn-backend-packages
-COPY config/production.json /config/production.json
-COPY backend.js /
+FROM production-only-packages AS compiler
+COPY . /
+RUN npm install --only=dev
+RUN npm run build
+
+FROM production-only-packages
+COPY config/* /config/
+COPY --from=compiler backend.js /
 ENV NODE_ENV production
+RUN npm install pg
 EXPOSE 8080
 CMD node backend.js
