@@ -1,4 +1,3 @@
-jest.mock('@google-cloud/speech')
 jest.requireActual('fs')
 
 import GoogleTextToSpeechComponent from '../../analysis/GoogleTextToSpeechComponent';
