@@ -37,8 +37,5 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
       command.run()
     });
   }
-
-
-
 }
 export default FileToAudioBytesComponent;
