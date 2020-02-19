@@ -27,7 +27,7 @@ describe('GoogleNaturalLanguageComponent class', () => {
     var component = new GoogleNaturalLanguageComponent();
     component.languageClient.analyzeSentiment = jest.fn(
       (opt) => {
-        if(opt.content == inputData.transcript && opt.content == 'PLAIN_TEXT'){
+        if(opt.document.content == inputData.transcript && opt.document.type == 'PLAIN_TEXT'){
           return resolveWrap(expectedReturn)
         }else{
           fail("Options not correct")
