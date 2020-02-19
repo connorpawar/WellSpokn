@@ -2,6 +2,7 @@ FROM node AS production-only-packages
 COPY package*.json /
 RUN npm install --only=prod
 RUN npm install pg
+RUN apt-get update && apt-get install -y ffmpeg
 
 FROM production-only-packages AS backend-compiler
 COPY . /
