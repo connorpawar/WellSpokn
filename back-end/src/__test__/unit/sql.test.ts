@@ -33,13 +33,15 @@ function resolveWrap(arg){
 
 describe('sql module', () => {
     test("softInitialize", () => {
-        SQL.softInitialize();
+        Models.default.sync = jest.fn(a => resolveWrap(undefined))
+        SQL.softInitialize().then(() =>{});
         expect(Models.default.sync).toBeCalledWith({force:false})
         expect(Models.default.sync).toBeCalledTimes(1)
     })
 
     test("hardInitialize", () => {
-        SQL.hardInitialize();
+        Models.default.sync = jest.fn(a => resolveWrap(undefined))
+        SQL.hardInitialize().then(() =>{});
         expect(Models.default.sync).toBeCalledWith({force:true})
         expect(Models.default.sync).toBeCalledTimes(1)
     })

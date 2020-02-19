@@ -13,8 +13,10 @@ class WordsPerMinuteComponent extends AnalysisComponent<Number>{
         mm.parseFile(fileName, {duration:true}).then(metadata =>{
             var Minutes : number = metadata.format.duration
             var Words : number = transcript.split(" ").length
-            resolve(Minutes/Words)
+            resolve(Words/Minutes)
         })
       });
   }
 }
+
+export default WordsPerMinuteComponent;
