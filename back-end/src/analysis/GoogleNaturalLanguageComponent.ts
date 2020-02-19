@@ -1,7 +1,7 @@
 
 import { AnalysisComponent } from "./AnalysisComponent"
 
-interface Sentiment{
+export interface Sentiment{
   magnitude : number,
   score : number
 }

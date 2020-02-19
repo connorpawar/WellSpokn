@@ -2,11 +2,11 @@ import { AnalysisComponent } from "./AnalysisComponent"
 import * as mm from 'music-metadata';
 
 
-class WordsPerMinuteComponent extends AnalysisComponent<Number>{
+class WordsPerMinuteComponent extends AnalysisComponent<number>{
     inputTopic = new Set(["audioFile","transcript"]);
     outputTopic = "wordsPerMinute";
   
-    analyze(data : Object) : Promise<Number>{
+    analyze(data : Object) : Promise<number>{
       var fileName = data["audioFile"];
       var transcript = data["transcript"];
       return new Promise((resolve,reject) => {
