@@ -16,7 +16,14 @@ class GoogleNaturalLanguageComponent extends AnalysisComponent<Sentiment>{
   analyze(data: Object) : Promise<Sentiment>{
     var transcript = data["transcript"];
     return new Promise((resolve,reject) => {
-      reject("Stub")
+      const document = {
+        content: transcript,
+        type: 'PLAIN_TEXT',
+      };
+      this.languageClient.analyzeSentiment({document: document})
+      .then(allData => {
+        resolve(allData.documentSentiment)
+      })
     });
   }
 }

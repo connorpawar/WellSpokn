@@ -10,7 +10,6 @@ function resolveWrap(arg){
 
 describe('GoogleCloudData class', () => {
   test('GoogleCloudData analyze works', async (done) => {
-    var speech = require('@google-cloud/speech');
     var component = new GoogleTextToSpeechComponent();
     var MockAudioBytes = "Hi I am stub."
 
