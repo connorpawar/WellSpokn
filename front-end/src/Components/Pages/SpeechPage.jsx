@@ -8,6 +8,7 @@ import NavBar from './../NavBar';
 import BarGraph from './../BarGraph';
 import SpeechEditor from './../SpeechEditor';
 import NewSpeech from '../NewSpeech';
+import TotalErrors from './../TotalErrors';
 
 const useStyles = makeStyles({
 	card: {
@@ -76,8 +77,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={"auto"} xs={"auto"}>
 								<Card className={classes.card}>
 									<CardContent>
-										<b>Placeholder Error Metrics</b>
-										<BarGraph data={data} />
+										<TotalErrors count="12" date="02/20/2020"/>
 									</CardContent>
 								</Card>
 							</Grid>
