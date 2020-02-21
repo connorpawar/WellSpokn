@@ -38,7 +38,7 @@ export default class Recorder extends React.Component {
           body: form_data
         }).then(r =>{
           r.text().then(a =>{
-			      this.props.setTranscript(a)
+			      //this.props.setTranscript(a) //TODO: Temporarily commented out. This has an error regarding undefined somehting.
             console.log(a)
           })
         })
