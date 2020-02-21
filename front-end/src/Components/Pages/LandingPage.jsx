@@ -11,6 +11,7 @@ import StarIcon from '@material-ui/icons/StarBorder';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import { Link as RouteLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -95,7 +96,7 @@ const useStyles = makeStyles(theme => ({
 		display: 'block',
 		marginLeft: 'auto',
 		marginRight: 'auto',
-	  },
+	},
 }));
 
 const tiers = [
@@ -123,11 +124,11 @@ const tiers = [
 const footers = [
 	{
 		title: 'Company',
-		description: ['Team', 'Contact us', 'Locations'],
+		description: ['Team', 'Contact us'],
 	},
 	{
 		title: 'Features',
-		description: ['Feature 1', 'Feature 2', 'Feature 3'],
+		description: ['Feature 1', 'Feature 2'],
 	},
 	{
 		title: 'Legal',
@@ -184,9 +185,9 @@ export default function LandingPage() {
             				</Link>
 						</LinkScroll>
 					</nav>
-					<Button href="#" color="primary" variant="outlined" className={classes.link}>
-						Login
-          </Button>
+						<Button component={RouteLink} to="/login" color="primary" variant="outlined" className={classes.link}>
+							Login
+          				</Button>
 				</Toolbar>
 			</AppBar>
 			{/* Description */}

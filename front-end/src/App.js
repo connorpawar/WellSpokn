@@ -2,6 +2,7 @@ import React,  { useState } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './Components/Pages/HomePage';
 import Settings from './Components/Pages/Settings';
+import SignUp from './Components/Pages/SignUp';
 import Login from './Components/Pages/Login';
 import Landing from './Components/Pages/LandingPage';
 import SpeechPage from './Components/Pages/SpeechPage'
@@ -40,8 +41,10 @@ export default function App() {
 			<div>
 				<ThemeProvider theme={isThemeLight ? themeLight : themeDark}>
 					<CssBaseline />
-					<Route exact path='/' component={HomePage} />
+					<Route exact path='/' component={Landing} />
+					<Route exact path='/speeches' component={HomePage} />
 					<Route exact path='/Login' component={Login}/>
+					<Route exact path='/SignUp' component={SignUp}/>
 					<Route exact path='/Landing' component={Landing}/>
 					<Route exact path='/Settings' render={() => <Settings Mode={Mode} IsThemeLight={isThemeLight} />} />
 					<Route exact path="/speech/:SpeechId" component={SpeechPage} />
