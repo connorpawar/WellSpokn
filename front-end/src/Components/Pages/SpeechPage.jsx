@@ -87,6 +87,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
+										{//change to pie chart}
 										<TotalErrors count="12" date="02/20/2020" />
 									</CardContent>
 								</Card>
@@ -94,6 +95,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
+										{//line graph}
 										<b>Placeholder Error Metrics</b>
 										<BarGraph data={data} />
 									</CardContent>
