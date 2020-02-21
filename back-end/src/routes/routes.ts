@@ -1,26 +1,21 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const sql = require('../models/db');
-const Multer = require('multer')
-const GoogleCloudData = require('../GoogleCloudData')
-const fs = require('fs')
-const cors = require('cors')
-const path = require('path')
-const https = require('https')
 
 
-const upload = Multer({dest : __dirname})
+import sql from '../database/sql';
+import generateAnalysisCore from '../analysis/Analysis';
+import storage, { Storage } from '../storage';
 
-const app = express();
-const port = 8080;
+//Initializations
+sql.softInitialize();
+Storage.initializeFolder();
 
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.use(cors());
+const upload = storage
 
 var Router = express.Router();
+
+Router.get('/',  function (req, res) {
+    res.send("Backend Is Up")
+});
 
 Router.post('/register',  function (req, res) {
     const json_data = req.body
@@ -74,7 +69,7 @@ Router.post('/logout',  function (req, res) {
     //TODO: Authentcation stuff
 });
 
-Router.get('/speech',  function (req, res) {
+Router.get('/speech_previews',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     sql.getAllSpeechesForASpecificUser(username).then(data => {
@@ -84,22 +79,16 @@ Router.get('/speech',  function (req, res) {
     })
 });
 
-Router.post('/upload_blob', upload.single('audio'), (req,res) =>{
+Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
-    console.log("uploading blob")
-    var gcloudData = new GoogleCloudData()
-    gcloudData.init(req.file.path).then(transcript => {
-        console.log(transcript)
-        //TODO: Send the transcript to SQL
-        sql.createSpeech("sc","example_title",transcript)
-        res.send(transcript)
+    var initialData = {"audioFile" : req.file.path};
+    var analysisCore = generateAnalysisCore()
+    analysisCore.intialize("audioFile",initialData).then((allData : any) => {
+        sql.createSpeech("sc","example_title",allData.transcript)
+        res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
     })
 });
 
-//TODO: Is this okay?
-app.use("/api",Router) 
-app.use("/",Router)
-
-app.listen(8080)
+export default Router;

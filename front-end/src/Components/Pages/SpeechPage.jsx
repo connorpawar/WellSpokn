@@ -21,6 +21,7 @@ export default function SpeechPage(props) {
 
 	const searchSpeeches = (searchTerm) => {
 		//will eventually look for word and highlight
+		
 	}
 
 	const temp = {
