@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import NavBar from './../NavBar';
 import BarGraph from './../BarGraph';
 import SpeechEditor from './../SpeechEditor';
 import NewSpeech from '../NewSpeech';
 import TotalErrors from './../TotalErrors';
+import ListOfErrors from './../ListOfErrors';
 
 const useStyles = makeStyles({
 	card: {
@@ -22,7 +24,7 @@ export default function SpeechPage(props) {
 
 	const searchSpeeches = (searchTerm) => {
 		//will eventually look for word and highlight
-		
+
 	}
 
 	const temp = {
@@ -34,17 +36,17 @@ export default function SpeechPage(props) {
 		"previous_attempts": "0",
 		"errors_by_attempt": [],
 		"latest_error_count": "0",
-		"errors":[]
+		"errors": []
 	}
 
 	const [speech, setSpeech] = useState(temp);
 
 	//props.history.location.state.id
 	useEffect(() => {
-		fetch('/api/speech/'+props.history.location.state.id)
-		.then(response => response.json())
-		.then(JSONresponse => setSpeech(JSONresponse))
-		.catch(error => console.log("fetch error", error));
+		fetch('/api/speech/' + props.history.location.state.id)
+			.then(response => response.json())
+			.then(JSONresponse => setSpeech(JSONresponse))
+			.catch(error => console.log("fetch error", error));
 	}, [props.history.location.state.id])
 
 	const data = [
@@ -66,22 +68,30 @@ export default function SpeechPage(props) {
 					<Grid item sm={6} xs={"auto"}>
 						<Card className={classes.card}>
 							<CardContent>
-								<b>{speech.name}</b><br />
-								{/*<p className={classes.p} align="left">{props.history.location.state.content}</p>*/}
+								<Typography component="h1" variant="h5" color="primary" gutterBottom>
+									{speech.name}
+								</Typography>
 								<SpeechEditor Content={speech.transcript} />
 							</CardContent>
 						</Card>
 					</Grid>
 					<Grid item sm={6} xs={"auto"}>
 						<Grid container spacing={2}>
-							<Grid item sm={"auto"} xs={"auto"}>
+							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<TotalErrors count="12" date="02/20/2020"/>
+										<TotalErrors count="12" date="02/20/2020" />
 									</CardContent>
 								</Card>
 							</Grid>
-							<Grid item sm={"auto"} xs={"auto"}>
+							<Grid item sm={6} xs={12}>
+								<Card className={classes.card}>
+									<CardContent>
+										<TotalErrors count="12" date="02/20/2020" />
+									</CardContent>
+								</Card>
+							</Grid>
+							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
 										<b>Placeholder Error Metrics</b>
@@ -89,19 +99,10 @@ export default function SpeechPage(props) {
 									</CardContent>
 								</Card>
 							</Grid>
-							<Grid item sm={"auto"} xs={"auto"}>
+							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<b>Placeholder Error Metrics</b>
-										<BarGraph data={data} />
-									</CardContent>
-								</Card>
-							</Grid>
-							<Grid item sm={"auto"} xs={"auto"}>
-								<Card className={classes.card}>
-									<CardContent>
-										<b>Placeholder Error Metrics</b>
-										<BarGraph data={data} />
+										<ListOfErrors />
 									</CardContent>
 								</Card>
 							</Grid>
@@ -109,7 +110,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
-			<NewSpeech setTranscript={speech.transcript}/>
+			<NewSpeech setTranscript={speech.transcript} />
 		</div>
 	);
 }
