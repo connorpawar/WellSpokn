@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Chip from '@material-ui/core/Chip';
 
-import NavBar from '../NavBar';
-import NewSpeech from '../NewSpeech';
+import NavBar from '../Layout/NavBar';
+import NewSpeech from '../Layout/NewSpeech';
 
 import Grow from '@material-ui/core/Grow';
 

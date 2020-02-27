@@ -5,12 +5,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import NavBar from './../NavBar';
-import BarGraph from './../BarGraph';
-import SpeechEditor from './../SpeechEditor';
-import NewSpeech from '../NewSpeech';
-import TotalErrors from './../TotalErrors';
-import ListOfErrors from './../ListOfErrors';
+import NavBar from '../Layout/NavBar';
+import BarGraph from '../Dashboard/BarGraph';
+import SpeechEditor from '../Dashboard/SpeechEditor';
+import NewSpeech from '../Layout/NewSpeech';
+import TotalErrors from '../Dashboard/TotalErrors';
+import ListOfErrors from '../Dashboard/ListOfErrors';
 
 const useStyles = makeStyles({
 	card: {
@@ -87,7 +87,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{//change to pie chart}
+										{/*change to pie chart*/}
 										<TotalErrors count="12" date="02/20/2020" />
 									</CardContent>
 								</Card>
@@ -95,7 +95,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{//line graph}
+										{/*line graph*/}
 										<b>Placeholder Error Metrics</b>
 										<BarGraph data={data} />
 									</CardContent>
