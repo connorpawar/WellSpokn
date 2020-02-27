@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 
-import NavBar from './../NavBar';
+import NavBar from '../Layout/NavBar';
 
 const useStyles = makeStyles({
 	card: {

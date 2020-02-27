@@ -15,7 +15,7 @@ import Recorder from './Recorder';
 import Dropzone from './Dropzone';
 import NewSpeechForm from './NewSpeechForm';
 
-import {useNewSpeechModal} from '../CustomHooks/useNewSpeechModal';
+import {useNewSpeechModal} from '../../CustomHooks/useNewSpeechModal';
 
 const options = ['Record New Speech', 'Upload Existing Speech'];
 const useStyles = makeStyles(theme => ({
