@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import NavBar from '../Layout/NavBar';
 import BarGraph from '../Dashboard/BarGraph';
 import SpeechEditor from '../Dashboard/SpeechEditor';
-import NewSpeech from '../Layout/NewSpeech';
+import NewAttempt from '../Layout/NewAttempt';
 import TotalErrors from '../Dashboard/TotalErrors';
 import ListOfErrors from '../Dashboard/ListOfErrors';
 
@@ -112,7 +112,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
-			<NewSpeech setTranscript={speech.transcript} />
+			<NewAttempt setTranscript={speech.transcript} />
 		</div>
 	);
 }
