@@ -1,5 +1,3 @@
-
-
 import GoogleNaturalLanguageComponent from '../../analysis/GoogleNaturalLanguageComponent';
 const sentimentData = require("./mockdata/sentiment")
 
@@ -11,9 +9,6 @@ function resolveWrap(arg){
 }
 
 describe('GoogleNaturalLanguageComponent class', () => {
-  var fs : any = require('fs')
-  var Ffmpeg = require('fluent-ffmpeg')
-
   test('GoogleNaturalLanguageComponent analyze works', async (done) => {
     var expectedReturn = sentimentData.documentSentiment;
     const inputData = {
