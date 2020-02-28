@@ -1,8 +1,5 @@
 module.exports = {
   "testEnvironment": "node",
-  "roots": [
-    "./src/__test__",
-  ],  
   "testMatch": [
     "**/*.+(unit.test.ts)",
   ],

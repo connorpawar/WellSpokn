@@ -15,7 +15,7 @@ describe('Can send file to Google Cloud', () => {
     analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
     var initialData = {"audioFile" : "src/__test__/integration/files/loveChocolate.wav"};
 
-    analysisCore.intialize("audioFile",initialData).then((allData : any) => {
+    analysisCore.intialize("audioFile",initialData).then((allData) => {
       console.log(allData)
       done();
     }).catch(e =>{
