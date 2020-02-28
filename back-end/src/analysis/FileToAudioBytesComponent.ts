@@ -8,18 +8,17 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
   inputTopic = new Set(["audioFile"]);
   outputTopic = "audioBytes";
 
-  replaceExtension(fileName) : string{
+  standardizeFileName(fileName) : string{
     var fileNameExt : string = path.parse(fileName).ext;
     fileName = fileName.replace(fileNameExt,"");
-    fileName += ".wav";
+    fileName += "_standardized.wav";
     return fileName;
   }
 
 
-
   useFfmpeg(fileName) : Promise<string>{
     return new Promise((resolve,reject) => {
-      var newFileName : String = this.replaceExtension(fileName);
+      var newFileName : String = this.standardizeFileName(fileName);
       var command = new Ffmpeg()
         .input(fileName)
         .audioChannels(1)
