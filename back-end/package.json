@@ -5,9 +5,9 @@
   "scripts": {
     "test": "echo 'Please use \"npm run unit-test\" or \"npm run integration-test\"'",
     "unit-test": "jest",
-    "integration-test": "jest -c jest.integration.config.js",
+    "integration-test": "cross-env GOOGLE_APPLICATION_CREDENTIALS=auth/authKey.json jest -c jest.integration.config.js",
     "build": "tsc && webpack",
-    "start": "NODE_ENV=development nodemon"
+    "start": "cross-env NODE_ENV=development nodemon"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
     "@types/jest": "^24.0.25",
     "@types/node": "^12.11.7",
     "babel-jest": "^25.1.0",
+    "cross-env": "^7.0.0",
     "jest": "^24.9.0",
     "jest-cli": "^25.1.0",
     "music-metadata": "^6.3.4",
