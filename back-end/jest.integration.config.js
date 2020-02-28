@@ -7,8 +7,8 @@ module.exports = {
     "^.+\\.(ts)$": "ts-jest"
   },
   "modulePaths": [
-    "<rootDir>"
-  ], 
+    "/"
+  ],
   "resetMocks" : true,
   "resetModules" : true,
   "restoreMocks":true
