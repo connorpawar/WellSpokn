@@ -13,10 +13,11 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
     fileName = fileName.replace(fileNameExt,"");
     fileName += ".wav";
     return fileName;
-  }s
+  }
 
-  analyze(data : Object) : Promise<string>{
-    var fileName = data["audioFile"];
+
+
+  useFfmpeg(fileName) : Promise<string>{
     return new Promise((resolve,reject) => {
       var newFileName : String = this.replaceExtension(fileName);
       var command = new Ffmpeg()
@@ -36,6 +37,20 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
         });
       command.run()
     });
+
+  }
+
+  analyze(data : Object) : Promise<string>{
+    var fileName = data["audioFile"];
+    var fileNameExt : string = path.parse(fileName).ext;
+    if(fileNameExt != ".wav"){
+      return this.useFfmpeg(fileName);
+    }else{
+      const file = fs.readFileSync(fileName);
+      const audioBytes = file.toString('base64');
+      fs.unlink(fileName,() => {})
+      return Promise.resolve(audioBytes)
+    }
   }
 }
 export default FileToAudioBytesComponent;
