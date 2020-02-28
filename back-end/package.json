@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest",
+    "test": "echo 'Please use \"npm run unit-test\" or \"npm run integration-test\"'",
+    "unit-test": "jest",
+    "integration-test": "jest -c jest.integration.config.js",
     "build": "tsc && webpack",
     "start": "NODE_ENV=development nodemon"
   },

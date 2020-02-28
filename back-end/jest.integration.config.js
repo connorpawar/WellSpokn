@@ -4,7 +4,7 @@ module.exports = {
     "./src/__test__",
   ],  
   "testMatch": [
-    "**/*.+(unit.test.ts)",
+    "**/*.+(integration.test.ts)",
   ],
   "transform": {
     "^.+\\.(ts)$": "ts-jest"
