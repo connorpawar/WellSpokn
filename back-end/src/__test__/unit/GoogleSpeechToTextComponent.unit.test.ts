@@ -1,5 +1,3 @@
-jest.requireActual('fs')
-
 import GoogleSpeechToTextComponent from '../../analysis/GoogleSpeechToTextComponent';
 
 function resolveWrap(arg){

@@ -1,11 +1,12 @@
 
+const fs = require('fs')
+
 jest.mock('fluent-ffmpeg')
-jest.requireActual('fs')
+jest.mock('fs')
 
 import FileToAudioBytesComponent from '../../analysis/FileToAudioBytesComponent';
 
 describe('FileToAudioBytesComponent class', () => {
-  var fs : any = require('fs')
   var Ffmpeg = require('fluent-ffmpeg')
 
   test('GoogleCloudData replaceExtension works', async (done) => {

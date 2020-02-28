@@ -1,13 +1,13 @@
 const path = require('path')
 
 
+const fs = require('fs')
 jest.mock('fs')
 jest.mock('multer')
 
 import { Storage } from '../../storage';
 
 describe('storage module', () => {
-    var fs : any = require('fs')
     var expectedPath : string = "";
 
     beforeEach(() => {
