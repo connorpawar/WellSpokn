@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo 'Please use \"npm run unit-test\" or \"npm run integration-test\"'",
     "unit-test": "jest",
-    "integration-test": "jest -c jest.integration.config.js",
+    "integration-test": "GOOGLE_APPLICATION_CREDENTIALS=./auth/authKey.json jest -c jest.integration.config.js",
     "build": "tsc && webpack",
     "start": "NODE_ENV=development nodemon"
   },

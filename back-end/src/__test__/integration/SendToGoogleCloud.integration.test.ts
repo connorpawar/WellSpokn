@@ -1,22 +1,34 @@
 import AnalysisCore from '../../analysis/AnalysisCore';
-import FileToAudioBytesComponent from '../../analysis/FileToAudioBytesComponent';
 import GoogleSpeechToTextComponent from '../../analysis/GoogleSpeechToTextComponent';
 import GoogleNaturalLanguageComponent, {Sentiment} from '../../analysis/GoogleNaturalLanguageComponent';
 
-var fs = require("fs")
+const LoveChocolate = require('./files/LoveChoclate')
+
 
 describe('Can send file to Google Cloud', () => {  
-  test('GoogleCloudData replaceExtension works', async (done) => {
-    fs.unlink = jest.fn();
+  test('GoogleCloudData Speech-To-Text works', async (done) => {
 
     var analysisCore = new AnalysisCore();
-    analysisCore.addAnalysisComponent<string>(new FileToAudioBytesComponent())
     analysisCore.addAnalysisComponent<string>(new GoogleSpeechToTextComponent())
-    analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
-    var initialData = {"audioFile" : "src/__test__/integration/files/loveChocolate.wav"};
+    var initialData = {"audioBytes" : LoveChocolate};
 
-    analysisCore.intialize("audioFile",initialData).then((allData) => {
-      console.log(allData)
+    analysisCore.intialize("audioBytes",initialData).then((allData : any) => {
+      expect(allData.transcript).toEqual("I love chocolate.")
+      done();
+    }).catch(e =>{
+      fail(e)
+    })
+  });  
+  test('GoogleCloudData Natural Language works', async (done) => {
+
+    var analysisCore = new AnalysisCore();
+    analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
+    var initialData = {"transcript" : "I love chocolate."};
+
+    analysisCore.intialize("transcript",initialData).then((allData : any) => {
+      var sentimentData = allData.sentiment[0].documentSentiment
+      expect(sentimentData.magnitude).toBeCloseTo(0.9)
+      expect(sentimentData.score).toBeCloseTo(0.9)
       done();
     }).catch(e =>{
       fail(e)
