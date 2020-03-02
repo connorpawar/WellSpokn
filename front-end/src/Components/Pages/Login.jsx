@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -15,6 +16,8 @@ import { Link as RouteLink } from 'react-router-dom';
 import logo from '../../Images/WellSpoknCropped.png';
 
 import useLogin from '../../CustomHooks/useLogin';
+import { loginUser } from '../../actions';
+
 
 function Copyright() {
 	return (
@@ -52,6 +55,9 @@ const useStyles = makeStyles(theme => ({
 export default function Login() {
 	const classes = useStyles();
 
+	const user = useSelector(state => state.user);
+	const dispatch = useDispatch();
+
 	const loginSubmit = () => {
 		fetch('api/login', {
 			method: 'POST',
@@ -63,8 +69,11 @@ export default function Login() {
 			.then(response => response.json())
 			.then((data) => {
 				console.log('Success:', data);
-				//this is where JWT needs to be implemented
-			  })
+				localStorage.setItem("token", data.token);
+				dispatch(loginUser(data))
+				console.log(user);
+				//need to redirect to correct homepage
+			})
 			.catch(error => console.log("fetch error", error));
 	}
 
@@ -114,12 +123,12 @@ export default function Login() {
 						className={classes.submit}
 					>
 						Sign In
-          </Button>
+          			</Button>
 					<Grid container>
 						<Grid item xs>
 							<Link href="#" variant="body2">
 								Forgot password?
-              </Link>
+              				</Link>
 						</Grid>
 						<Grid item>
 							<Link component={RouteLink} to="/SignUp" variant="body2">

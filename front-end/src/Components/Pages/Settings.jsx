@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -20,10 +20,6 @@ const useStyles = makeStyles({
 export default function Settings(props) {
 	const classes = useStyles();
 
-	const searchSpeeches = (searchTerm) => {
-		//will eventually look for word and highlight
-	}
-
 	const [state, setState] = React.useState({
 		dark: !props.IsThemeLight,
 	});
@@ -35,7 +31,7 @@ export default function Settings(props) {
 
 	return (
 		<div>
-			<NavBar SearchSpeeches={searchSpeeches} />
+			<NavBar />
 			<div id="cards">
 				<Grid container spacing={2}
 					direction="row"

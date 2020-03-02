@@ -22,11 +22,6 @@ const useStyles = makeStyles({
 export default function SpeechPage(props) {
 	const classes = useStyles();
 
-	const searchSpeeches = (searchTerm) => {
-		//will eventually look for word and highlight
-
-	}
-
 	const temp = {
 		"id": "0",
 		"name": "Something Went Wrong",
@@ -59,7 +54,7 @@ export default function SpeechPage(props) {
 
 	return (
 		<div>
-			<NavBar SearchSpeeches={searchSpeeches} />
+			<NavBar />
 			<div id="cards">
 				<Grid container spacing={2}
 					direction="row"
