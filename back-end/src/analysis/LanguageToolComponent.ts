@@ -8,30 +8,33 @@ class LanguageToolComponent extends AnalysisComponent<Object>{
 
 	analyze(data: Object) : Promise<Object>{
 			var transcript : string = data["transcript"];
+			console.log(transcript)
+			var languageToolErrors : Object = {};
+			var fileName = Math.floor(Math.random() * 1000000000);
 			return new Promise((resolve, reject) => {
-			var languageToolErrors : Object = {}
-			var fileName = Math.floor(Math.random() * 1000000000)
-			fs.writeFile(fileName.toString() + '.txt', transcript, (err) => {
+				fs.writeFile(fileName.toString() + '.txt', transcript, (err) => {
 
-	            if (err){
-					resolve(languageToolErrors)
-				}
-	            var child = cp.spawn(
-	                'java', ['-jar', 'LanguageTool-4.7/languagetool-commandline.jar', '-l', 'en-US', '--json', 'langtool.txt']
-	            );
-	            child.stdout.on('data', function(data){
-					languageToolErrors = JSON.parse(data.toString())
-					fs.unlink(fileName.toString() + '.txt', (err) => {
-			            if (err) throw err;
-			        });
-					console.log(data.toString());
-					resolve(languageToolErrors)
-	            })
-	            child.stderr.on('data', function(data){
-	                console.log(data.toString());
-					resolve(languageToolErrors)
-	            })
-	        });
+		            if (err){
+						console.log(err);
+						resolve(languageToolErrors);
+					}
+		            var child = cp.spawn('java', ['-jar', 'LanguageTool-4.7/languagetool-commandline.jar', '-l', 'en-US', '--json', 'langtool.txt']);
+		            child.stdout.on('data', function(data){
+						languageToolErrors = JSON.parse(data.toString())
+						fs.unlink(fileName.toString() + '.txt', (err) => {
+				            if (err) throw err;
+				        });
+						console.log(data.toString());
+						resolve(languageToolErrors);
+		            });
+		            child.stderr.on('data', function(data){
+		                console.log(data.toString());
+						fs.unlink(fileName.toString() + '.txt', (err) => {
+				            if (err) throw err;
+				        });
+						resolve(languageToolErrors);
+		            });
+		        });
 
 		});
 	}
