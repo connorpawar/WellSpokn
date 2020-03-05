@@ -30,7 +30,7 @@ export default function DrawerList() {
 
 	return (
 		<List component="nav" className={classes.root} aria-label="mailbox folders">
-			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/` }}>
+			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/Login` }}>
 				<ListItem button>
 					<ListItemAvatar>
 						<Avatar className={classes.bigAvatar}>
@@ -41,7 +41,7 @@ export default function DrawerList() {
 				</ListItem>
 			</Link>
 			<Divider />
-			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/` }}>
+			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/Speeches` }}>
 				<ListItem button>
 					<ListItemAvatar>
 						<Avatar className={classes.avatar}>
@@ -62,7 +62,7 @@ export default function DrawerList() {
 					<ListItemText primary="Settings" />
 				</ListItem>
 			</Link>
-			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/` }}>
+			<Link style={{ textDecoration: 'none', color: 'inherit' }} to={{ pathname: `/Login` }}>
 				<ListItem button divider>
 					<ListItemAvatar>
 						<Avatar className={classes.avatar}>
