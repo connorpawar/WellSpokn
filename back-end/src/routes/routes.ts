@@ -50,7 +50,7 @@ Router.post('/login',  function (req, res) {
     const json_data = req.body
     var username = json_data.username
     var raw_password = json_data.password
-    var hashed_password = raw_password //TODO: Add hashing and authentication here. 
+    var hashed_password = raw_password //TODO: Add hashing and authentication here.
 
     sql.getUser(username)
     .then(u => {
@@ -85,6 +85,9 @@ Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {
         sql.createSpeech("sc","example_title",allData.transcript)
+		for(var x of allData.languageToolErrors.matches){
+			sql.addError(1234, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+		}
         res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
