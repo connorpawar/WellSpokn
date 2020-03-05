@@ -5,12 +5,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import NavBar from './../NavBar';
-import BarGraph from './../BarGraph';
-import SpeechEditor from './../SpeechEditor';
-import NewSpeech from '../NewSpeech';
-import TotalErrors from './../TotalErrors';
-import ListOfErrors from './../ListOfErrors';
+import NavBar from '../Layout/NavBar';
+import BarGraph from '../Dashboard/BarGraph';
+import SpeechEditor from '../Dashboard/SpeechEditor';
+import NewAttempt from '../Layout/NewAttempt';
+import TotalErrors from '../Dashboard/TotalErrors';
+import ListOfErrors from '../Dashboard/ListOfErrors';
 
 const useStyles = makeStyles({
 	card: {
@@ -21,11 +21,6 @@ const useStyles = makeStyles({
 });
 export default function SpeechPage(props) {
 	const classes = useStyles();
-
-	const searchSpeeches = (searchTerm) => {
-		//will eventually look for word and highlight
-
-	}
 
 	const temp = {
 		"id": "0",
@@ -59,7 +54,7 @@ export default function SpeechPage(props) {
 
 	return (
 		<div>
-			<NavBar SearchSpeeches={searchSpeeches} />
+			<NavBar />
 			<div id="cards">
 				<Grid container spacing={2}
 					direction="row"
@@ -112,7 +107,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
-			<NewSpeech setTranscript={speech.transcript} />
+			<NewAttempt setTranscript={speech.transcript} />
 		</div>
 	);
 }

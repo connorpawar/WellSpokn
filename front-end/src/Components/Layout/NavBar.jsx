@@ -116,7 +116,7 @@ export default function NavBar(props) {
 						WellSpokn
           			</Typography>
 					{props.SortSpeeches != null && <FilterSpeeches Sort={props.SortSpeeches}/>}
-					<div className={classes.search}>
+					{props.SearchSpeeches != null && <div className={classes.search}>
 						<div className={classes.searchIcon}>
 							<SearchIcon />
 						</div>
@@ -129,7 +129,7 @@ export default function NavBar(props) {
 							inputProps={{ 'aria-label': 'search' }}
 							onChange={handleSearch}
 						/>
-					</div>
+					</div>}
 				</Toolbar>
 			</AppBar>
 		</div>

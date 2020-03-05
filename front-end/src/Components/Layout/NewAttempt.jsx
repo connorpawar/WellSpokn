@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import { useNewSpeech } from '../CustomHooks/useNewSpeech';
-import NewSpeechModal from './NewSpeechModal'
+import { useNewSpeech } from '../../CustomHooks/useNewSpeech';
+import NewAttemptModal from '../Speech_Creation/NewAttemptModal'
 
 const useStyles = makeStyles(theme => ({
 	fab: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function NewSpeech() {
+export default function NewAttempt() {
 	const classes = useStyles();
 	
 	const { open, selectedValue, handleClickOpen, handleClose } = useNewSpeech();
@@ -24,7 +24,7 @@ export default function NewSpeech() {
 			<Fab color="primary" aria-label="add" className={classes.fab} onClick={handleClickOpen}>
 				<AddIcon />
 			</Fab>
-			<NewSpeechModal selectedValue={selectedValue} open={open} onClose={handleClose} />
+			<NewAttemptModal selectedValue={selectedValue} open={open} onClose={handleClose} />
 		</div>
 	);
 }
