@@ -11,6 +11,7 @@ import SpeechEditor from '../Dashboard/SpeechEditor';
 import NewAttempt from '../Layout/NewAttempt';
 import TotalErrors from '../Dashboard/TotalErrors';
 import ListOfErrors from '../Dashboard/ListOfErrors';
+import Loader from '../Layout/Loader';
 
 const useStyles = makeStyles({
 	card: {
@@ -35,14 +36,15 @@ export default function SpeechPage(props) {
 	}
 
 	const [speech, setSpeech] = useState(temp);
+	const [isBusy, setBusy] = useState(true);
 
 	//props.history.location.state.id
 	useEffect(() => {
 		fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
-			.then(JSONresponse => setSpeech(JSONresponse))
+			.then(JSONresponse => {setSpeech(JSONresponse); setBusy(false)})
 			.catch(error => console.log("fetch error", error));
-	}, [props.history.location.state.id])
+	})
 
 	const data = [
 		{ "y": 8, "x": "Tempo" },
@@ -55,6 +57,7 @@ export default function SpeechPage(props) {
 	return (
 		<div>
 			<NavBar />
+			{ isBusy ? <Loader/> :
 			<div id="cards">
 				<Grid container spacing={2}
 					direction="row"
@@ -107,6 +110,7 @@ export default function SpeechPage(props) {
 					</Grid>
 				</Grid>
 			</div>
+			}
 			<NewAttempt setTranscript={speech.transcript} />
 		</div>
 	);
