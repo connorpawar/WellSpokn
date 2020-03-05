@@ -2,8 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { useHighlight } from './../CustomHooks/useHighlight'
-import { useFileDisplay } from './../CustomHooks/useFileDisplay'
+import { useHighlight } from '../../CustomHooks/useHighlight'
+import { useFileDisplay } from '../../CustomHooks/useFileDisplay'
 
 const useStyles = makeStyles(theme => ({
 	root: {

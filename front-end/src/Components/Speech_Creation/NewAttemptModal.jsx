@@ -13,9 +13,8 @@ import { blue } from '@material-ui/core/colors';
 
 import Recorder from './Recorder';
 import Dropzone from './Dropzone';
-import NewSpeechForm from './NewSpeechForm';
 
-import {useNewSpeechModal} from '../CustomHooks/useNewSpeechModal';
+import {useNewSpeechModal} from '../../CustomHooks/useNewSpeechModal';
 
 const options = ['Record New Speech', 'Upload Existing Speech'];
 const useStyles = makeStyles(theme => ({
@@ -29,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function NewSpeechModal(props) {
+export default function NewAttemptModal(props) {
 	const classes = useStyles();
 	const { onClose, selectedValue, open } = props;
 
@@ -39,8 +38,7 @@ export default function NewSpeechModal(props) {
 		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
 			{!record && !upload &&
 				<div>
-					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
-					<NewSpeechForm className={classes.form} />
+					<DialogTitle id="simple-dialog-title">Create New Attempt</DialogTitle>
 					<List>
 						{options.map(option => (
 								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
@@ -57,7 +55,7 @@ export default function NewSpeechModal(props) {
 				</div>}
 			{record &&
 				<div>
-					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
+					<DialogTitle id="simple-dialog-title">Record New Attempt</DialogTitle>
 					<Recorder setTranscript={props.setTranscript}/>
 				</div>
 			}
