@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -17,6 +18,7 @@ import logo from '../../Images/WellSpoknCropped.png';
 
 import useLogin from '../../CustomHooks/useLogin';
 import { loginUser } from '../../actions';
+import { useHomePage } from '../../CustomHooks/useHompage'
 
 
 function Copyright() {
@@ -54,9 +56,17 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const user = useSelector(state => state.user);
 	const dispatch = useDispatch();
+	const { onLogin, onPageLoad } = useHomePage(); 
+
+	useEffect(() => {
+		if(localStorage.token){
+			history.push((onPageLoad(localStorage.token)));
+		}
+	  });
 
 	const loginSubmit = () => {
 		fetch('api/login', {
@@ -68,11 +78,10 @@ export default function Login() {
 		})
 			.then(response => response.json())
 			.then((data) => {
-				console.log('Success:', data);
 				localStorage.setItem("token", data.token);
-				dispatch(loginUser(data))
-				console.log(user);
-				//need to redirect to correct homepage
+				dispatch(loginUser(data));
+				
+				history.push((onLogin(data.token)));
 			})
 			.catch(error => console.log("fetch error", error));
 	}
