@@ -2,7 +2,31 @@ version: "3.7"
 services:
   front-end:
     build: ./front-end
-    image: wellspokn-front-end
+    image: wellspokn-frontend
     ports:
     - "5000:5000"
+    network_mode: "host"
+  back-end:
+    build: ./back-end
+    image: wellspokn-backend
+    ports:
+    - "8080:8080"
+    network_mode: "host"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+  load-balancer:
+    build: ./docker/load-balancer
+    image: load-balancer
+    ports:
+    - "80:80"
+    network_mode: "host"
+  wellspokn-database:
+    build: ./docker/database
+    image: wellspokn-database
+    ports:
+    - "5432:5432"
     
