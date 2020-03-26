@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  front-end:
+    build: ./front-end
+    image: wellspokn-front-end
+    ports:
+    - "5000:5000"
+    
