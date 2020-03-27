@@ -12,12 +12,7 @@ services:
     ports:
     - "8080:8080"
     network_mode: "host"
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+    restart: always
   load-balancer:
     build: ./docker/load-balancer
     image: load-balancer
@@ -27,6 +22,10 @@ services:
   wellspokn-database:
     build: ./docker/database
     image: wellspokn-database
+    volumes:
+     - db-data:/var/lib/postgresql/data
     ports:
     - "5432:5432"
     
+volumes:
+  db-data:
