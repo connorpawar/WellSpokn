@@ -35,12 +35,15 @@ export default function NewSpeechModal(props) {
 
 	const { record, upload, handleClose, handleListItemClick } = useNewSpeechModal(onClose, selectedValue);
 
+	const [title, setTitle] = React.useState("");
+
+
 	return (
 		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
 			{!record && !upload &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Create New Project</DialogTitle>
-					<NewSpeechForm className={classes.form} />
+					<NewSpeechForm setSpeechTitle={setTitle} className={classes.form} />
 					<List>
 						{options.map(option => (
 								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
@@ -58,12 +61,12 @@ export default function NewSpeechModal(props) {
 			{record &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
-					<Recorder setTranscript={props.setTranscript}/>
+					<Recorder title={title} setTranscript={props.setTranscript}/>
 				</div>
 			}
 			{upload &&
 				<div>
-					<Dropzone onFilesAdded={console.log} />
+					<Dropzone title={title} onFilesAdded={console.log} />
 				</div>
 			}
 		</Dialog>
