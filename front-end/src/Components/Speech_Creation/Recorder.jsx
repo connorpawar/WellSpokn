@@ -21,6 +21,12 @@ export default class Recorder extends React.Component {
       record: false
     });
   }
+
+  sendRecording = () => {
+    this.setState({
+      record: false
+    });
+  }
  
   onData(recordedBlob) {
     console.log('chunk of real-time data is: ', recordedBlob);
@@ -31,7 +37,8 @@ export default class Recorder extends React.Component {
 
     reader.readAsDataURL(recordedBlob.blob); 
     reader.onloadend = function() {
-        var form_data = new FormData();
+		var form_data = new FormData();
+		form_data.append('title', this.props.title);
         form_data.append('audio',recordedBlob.blob);
         fetch('api/upload_blob', {
           method : 'POST',
@@ -43,7 +50,6 @@ export default class Recorder extends React.Component {
           })
         })
     }
-    //audio.play();
   }
  
   render() {
@@ -58,7 +64,7 @@ export default class Recorder extends React.Component {
 		  backgroundColor="white"
 		  width="500" />
         <Button onClick={this.startRecording} >Start</Button>
-        <Button onClick={this.stopRecording} >Stop</Button>
+		<Button onClick={this.stopRecording} >Send</Button>
       </div>
     );
   }
