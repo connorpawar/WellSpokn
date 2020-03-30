@@ -33,19 +33,20 @@ Router.post('/register', async function (req, res) {
             .then(() =>{
                 res.send("User Registered");
             }).catch(() => {
-                //TODO: Properly make an error
                 res.send("Registration Failed");
             })
         })
     })
 });
 
-Router.post('/login', passport.authenticate('local', {
-    failureRedirect : loginPageRoute
-}));
+Router.post('/login', passport.authenticate('local', {failureRedirect : loginPageRoute}), function (req, res) {
+    res.send(req.sessionID)
+});
 
 Router.post('/logout', AuthenticationFunction, function (req, res) {
+    var deletedID = req.sessionID;
     req.logout();
+    res.send(deletedID)
 });
 
 export default Router;
