@@ -5,8 +5,12 @@ const config = require('config');
 
 
 import Router from './routes/routes';
+import passport from './routes/passport';
 
 const app = express();
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 app.use(bodyParser.urlencoded({ extended: false }));

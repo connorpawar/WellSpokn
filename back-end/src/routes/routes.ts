@@ -1,9 +1,11 @@
 const express = require('express');
-
+const bcrypt = require('bcryptjs');
 
 import sql from '../database/sql';
 import generateAnalysisCore from '../analysis/Analysis';
 import storage, { Storage } from '../storage';
+import passport from './passport';
+
 
 //Initializations
 sql.softInitialize();
@@ -16,20 +18,30 @@ var Router = express.Router();
 Router.get('/',  function (req, res) {
     res.send("Backend Is Up")
 });
+Router.get('/no',  function (req, res) {
+    res.send("No")
+});
 
-Router.post('/register',  function (req, res) {
+Router.post('/register', async function (req, res) {
     const json_data = req.body
     var email = json_data.email
     var username = json_data.username
     var raw_password = json_data.password
-    //TODO: Hash password for authenitication
     var hashed_password = raw_password
-    sql.registerUser(username,hashed_password,email)
-    .then(() =>{
-        res.send("YES YES YES");
-    }).catch(() => {
-        //TODO: Properly make an error
-        res.send("NO NO NO");
+    
+    bcrypt.genSalt(10, (err,salt) => {
+        bcrypt.hash(raw_password,salt, (err,hashed_password) =>{
+            if(err){
+                console.log(err);
+            }
+            sql.registerUser(username,hashed_password,email)
+            .then(() =>{
+                res.send("YES YES YES");
+            }).catch(() => {
+                //TODO: Properly make an error
+                res.send("NO NO NO");
+            })
+        })
     })
 });
 Router.post('/speech',  function (req, res) {
@@ -46,21 +58,12 @@ Router.post('/speech',  function (req, res) {
     })
 });
 
-Router.post('/login',  function (req, res) {
-    const json_data = req.body
-    var username = json_data.username
-    var raw_password = json_data.password
-    var hashed_password = raw_password //TODO: Add hashing and authentication here.
-
-    sql.getUser(username)
-    .then(u => {
-        if (u.password == hashed_password){
-            //TODO: What to do if authentication succeeds
-
-        }else{
-            //TODO: What to do if authentication fails
-        }
-    })
+Router.post('/login',  function (req, res,next) {
+    passport.authenticate('local',{
+        successRedirect : '/',
+        failureRedirect : '/no',
+        failureFlash: false
+    })(req,res,next)
 });
 
 Router.post('/logout',  function (req, res) {
