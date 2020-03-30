@@ -16,8 +16,11 @@ const upload = storage
 var Router = express.Router();
 
 Router.get('/',  function (req, res) {
+    console.log(req.isAuthenticated())
+    console.log(req.user)
     res.send("Backend Is Up")
 });
+
 Router.get('/no',  function (req, res) {
     res.send("No")
 });
@@ -58,18 +61,14 @@ Router.post('/speech',  function (req, res) {
     })
 });
 
-Router.post('/login',  function (req, res,next) {
-    passport.authenticate('local',{
-        successRedirect : '/',
-        failureRedirect : '/no',
-        failureFlash: false
-    })(req,res,next)
-});
+Router.post('/login', passport.authenticate('local', {
+    successRedirect : '/',
+    failureRedirect : '/no',
+    failureFlash: false
+}));
 
-Router.post('/logout',  function (req, res) {
-    const json_data = req.body
-    var token = json_data.token
-    //TODO: Authentcation stuff
+Router.post('/logout',  passport.authenticate('local', { failureRedirect: '/no' }), function (req, res) {
+    req.logout();
 });
 
 Router.get('/speech_previews',  function (req, res) {
