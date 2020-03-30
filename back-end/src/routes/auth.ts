@@ -21,14 +21,15 @@ var Router = express.Router();
 Router.post('/register', async function (req, res) {
     const json_data = req.body
     var email = json_data.email
-    var username = json_data.username
+    var firstname = json_data.firstname
+    var lastname = json_data.lastname
     var raw_password = json_data.password    
     bcrypt.genSalt(10, (err,salt) => {
         bcrypt.hash(raw_password,salt, (err,hashed_password) =>{
             if(err){
                 console.log(err);
             }
-            sql.registerUser(username,hashed_password,email)
+            sql.registerUser(email,firstname,lastname,hashed_password)
             .then(() =>{
                 res.send("User Registered");
             }).catch(() => {
@@ -40,9 +41,7 @@ Router.post('/register', async function (req, res) {
 });
 
 Router.post('/login', passport.authenticate('local', {
-    successRedirect : mainPageRoute, 
-    failureRedirect : loginPageRoute,
-    failureFlash: false
+    failureRedirect : loginPageRoute
 }));
 
 Router.post('/logout', AuthenticationFunction, function (req, res) {

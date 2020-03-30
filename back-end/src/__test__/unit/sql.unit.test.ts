@@ -47,28 +47,30 @@ describe('sql module', () => {
     })
 
     test("registerUser", () => {
-        var _username : string = "dan";
         var _password : string = "p@ssW0rd";
+        var _firstname : string = "dan";
+        var _lastname : string = "sam";
         var _email : string = "something@somewhere.com";
 
-        SQL.registerUser(_username,_password,_email);
+        SQL.registerUser(_email,_firstname,_lastname,_password);
 
         expect(Models.Users.create).toBeCalledWith({
-            username:_username,
-            password:_password,
-            email:_email
+            email:_email,
+            firstname:_firstname,
+            lastname:_lastname,
+            password:_password
         });
         expect(Models.Users.create).toBeCalledTimes(1)
     })
 
     test("getUser", async (done) => {
-        var _username : string = "dan";
+        var _email : string = "something@somewhere.com";
 
-        await SQL.getUser(_username);
+        await SQL.getUser(_email);
 
         expect(Models.Users.findOne).toBeCalledWith({
             where:{
-                username:_username
+                email:_email
             }
         });
         expect(Models.Users.findOne).toBeCalledTimes(1)
