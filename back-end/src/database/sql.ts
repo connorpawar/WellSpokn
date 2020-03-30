@@ -16,9 +16,10 @@ class SQL{
     });
   }
 
-  static registerUser(_username:String,_password:String,_email:String){
+  static registerUser(_email:String,_firstname:String,_lastname:String,_password:String){
     return Models.Users.create({
-      username:_username,
+      firstname: _firstname,
+      lastname: _lastname,
       password:_password,
       email:_email
     });
@@ -30,10 +31,10 @@ class SQL{
       }
     })
   }
-  static getUser(_username:String) : Promise<Models.Users>{
+  static getUser(_email:String) : Promise<Models.Users>{
     return Models.Users.findOne({
       where: {
-        username: _username
+        email: _email
       }
     })
   }

@@ -16,7 +16,7 @@ var Router = express.Router();
 
 
 Router.post('/who',  function (req, res) {
-    res.send(req.user.username);
+    res.send(req.user.email);
 });
 
 Router.post('/speech',  function (req, res) {

@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 
 passport.use(
     new Strategy({
-            usernameField : 'username',
+            usernameField : 'email',
             passwordField : 'password'
         },
         function(username, password, cb) {
