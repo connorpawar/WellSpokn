@@ -21,8 +21,8 @@ var Router = express.Router();
 Router.post('/register', async function (req, res) {
     const json_data = req.body
     var email = json_data.email
-    var firstname = json_data.firstname
-    var lastname = json_data.lastname
+    var firstname = json_data.firstName
+    var lastname = json_data.lastName
     var raw_password = json_data.password    
     bcrypt.genSalt(10, (err,salt) => {
         bcrypt.hash(raw_password,salt, (err,hashed_password) =>{
