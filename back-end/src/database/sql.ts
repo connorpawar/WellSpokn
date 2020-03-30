@@ -23,6 +23,13 @@ class SQL{
       email:_email
     });
   }
+  static getUserById(_id:Number) : Promise<Models.Users>{
+    return Models.Users.findOne({
+      where: {
+        id: _id
+      }
+    })
+  }
   static getUser(_username:String) : Promise<Models.Users>{
     return Models.Users.findOne({
       where: {
