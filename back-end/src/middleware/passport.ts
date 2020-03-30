@@ -30,12 +30,11 @@ passport.use(
     )
 );
 
-//TODO: use ID instead of username
 passport.serializeUser(function(user, cb) {
-    cb(null, user.username);
+    cb(null, user.id);
 });
-passport.deserializeUser(function(username, cb) {
-    sql.getUser(username).then(u =>{
+passport.deserializeUser(function(id, cb) {
+    sql.getUserById(id).then(u =>{
         cb(null,u)
     }).catch(e =>{
         cb(e,false)
