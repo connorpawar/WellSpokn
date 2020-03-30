@@ -4,24 +4,17 @@ const cors = require('cors')
 const config = require('config');
 const session = require('express-session');
 
-//TODO: A lot of initialization is happening here. Move it?
-const redis = require('redis')
-let redisClient = redis.createClient({
-    password : "redisPassword98765678765676567890987654323456789abc"
-})
-let RedisStore = require('connect-redis')(session)
-
 
 import SpeechRouter from './routes/speech';
 import AuthRouter, {AuthenticationFunction} from './routes/auth';
 import passport from './middleware/passport';
-
+import getSessionStore from './middleware/sessionStore';
 const app = express();
 
 //TODO: Secret fix
 app.use(session({ 
     secret: '//TODO: Get an actual secret plz.',
-    store : new RedisStore({ client : redisClient }),
+    store : getSessionStore(session),
     cookie: { 
         secure: "auto" 
     },
