@@ -4,12 +4,15 @@ const bcrypt = require('bcryptjs');
 import sql from '../database/sql';
 import passport from '../middleware/passport';
 
+const loginPageRoute = '/login' //TODO: Determine a target
+const mainPageRoute = '/'
+
 
 export const AuthenticationFunction = function (req, res, next){
     if(req.isAuthenticated()){
         return next()
     }else{
-        res.redirect('/login')
+        res.redirect(loginPageRoute)
     }
 }
 
@@ -37,8 +40,8 @@ Router.post('/register', async function (req, res) {
 });
 
 Router.post('/login', passport.authenticate('local', {
-    successRedirect : '/', //TODO: Determine a target
-    failureRedirect : '/login',
+    successRedirect : mainPageRoute, 
+    failureRedirect : loginPageRoute,
     failureFlash: false
 }));
 
