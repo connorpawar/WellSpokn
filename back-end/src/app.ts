@@ -5,12 +5,14 @@ const config = require('config');
 const session = require('express-session');
 
 
-import Router from './routes/routes';
-import passport from './routes/passport';
+import SpeechRouter from './routes/speech';
+import AuthRouter, {AuthenticationFunction} from './routes/auth';
+import passport from './middleware/passport';
 
 const app = express();
 
-app.use(session({ secret: 'pleasework' }));
+//TODO: Secret fix
+app.use(session({ secret: '//TODO: Get an actual secret plz.' }));
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -20,5 +22,6 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.use(config.get("ROOT_ROUTE"),Router)
+app.use(config.get("ROOT_ROUTE"),AuthRouter)
+app.use(config.get("ROOT_ROUTE"),AuthenticationFunction,SpeechRouter)
 app.listen(config.get("PORT"))
