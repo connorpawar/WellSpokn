@@ -1,5 +1,4 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 
 import sql from '../database/sql';
 import generateAnalysisCore from '../analysis/Analysis';
@@ -13,9 +12,7 @@ const upload = storage
 
 var Router = express.Router();
 
-
-
-Router.post('/who',  function (req, res) {
+Router.post('/whoami',  function (req, res) {
     res.send(req.user.email);
 });
 
