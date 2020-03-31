@@ -12,28 +12,22 @@ const upload = storage
 
 var Router = express.Router();
 
-Router.post('/whoami',  function (req, res) {
-    res.send(req.user.email);
-});
-
 Router.post('/speech',  function (req, res) {
     const json_data = req.body
-    var username = json_data.username
+    var email = req.user.email
     var title = json_data.title
     var transcript = json_data.transcript
-    sql.createSpeech(username,title,transcript)
+    sql.createSpeech(email,title,transcript)
     .then(s =>{
         res.send({id:s.id});
     }).catch(() => {
-        //TODO: Properly make an error
-        res.send("NOOOOO");
+        res.send("Speech could not be created.");
     })
 });
 
 Router.get('/speech_previews',  function (req, res) {
-    const json_data = req.body
-    var username = req.user
-    sql.getAllSpeechesForASpecificUser(username).then(data => {
+    var email = req.user.email
+    sql.getAllSpeechesForASpecificUser(email).then(data => {
         res.send(data)
     }).catch(e =>{
         res.send(e)
@@ -42,13 +36,18 @@ Router.get('/speech_previews',  function (req, res) {
 
 Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     //req.file.path //Is the file path
+    const json_data = req.body
     var initialData = {"audioFile" : req.file.path};
+    var email = req.user.email
+    var title = json_data.title
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {
-        sql.createSpeech("sc","example_title",allData.transcript)
-		for(var x of allData.languageToolErrors.matches){
-			sql.addError(1234, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
-		}
+        sql.createSpeech(email,title,allData.transcript).then(s =>{
+            var id = s.id
+            for(var x of allData.languageToolErrors.matches){
+                sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            }
+        })
         res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)

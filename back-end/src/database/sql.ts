@@ -38,9 +38,9 @@ class SQL{
       }
     })
   }
-  static createSpeech(_username:String,_title:String,_transcript:String) : Promise<Models.Speeches>{
+  static createSpeech(_email:String,_title:String,_transcript:String) : Promise<Models.Speeches>{
     return new Promise((resolve,reject) =>{
-      SQL.getUser(_username).then(u => {
+      SQL.getUser(_email).then(u => {
         if(u == null){
           throw "User Not Found"
         }else{
@@ -75,10 +75,10 @@ class SQL{
   }
 
   //TODO: Clean up later.
-  static async getAllSpeechesForASpecificUser(_username:String){
+  static async getAllSpeechesForASpecificUser(_email:String){
     return new Promise(async (resolve,reject) =>{
       var speeches_data : Array<Object> = [];
-      var user = await SQL.getUser(_username);
+      var user = await SQL.getUser(_email);
       try{
         if(user != null){
           var user_id = user.id
