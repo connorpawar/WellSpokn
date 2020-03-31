@@ -110,8 +110,6 @@ export default function Dropzone(props) {
 			<Grid key={1} item sm={6} xs={"auto"} zeroMinWidth>
 				<div className={classes.description}>
 					<p>File Chosen: {fileDisplay ? file[0].name : "N/A"}</p>
-				</div>
-				<div className={classes.description}>
 					{fileDisplay? <Button onClick={sendToBackEnd}>Send</Button> : null}
 					{fileDisplay? <Button onClick={clearFile}>Clear</Button> : null}
 				</div>
