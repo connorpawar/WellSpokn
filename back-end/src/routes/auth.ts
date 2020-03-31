@@ -49,4 +49,9 @@ Router.post('/logout', AuthenticationFunction, function (req, res) {
     res.send(deletedID)
 });
 
+Router.get('/whoami', AuthenticationFunction,  function (req, res) {
+    res.send(req.user.email);
+});
+
+
 export default Router;

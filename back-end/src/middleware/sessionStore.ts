@@ -5,7 +5,9 @@ export default function getSessionStore(session){
     switch(config.get('SESSION_STORE')){
         case "redis":
             const redisClient = require('redis').createClient({
-                password : "redisPassword98765678765676567890987654323456789abc"
+                password : "redisPassword98765678765676567890987654323456789abc",
+                port: 6379,
+                host: "localhost"
             })
             let RedisStore = require('connect-redis')(session)
             return new RedisStore({ client : redisClient });
