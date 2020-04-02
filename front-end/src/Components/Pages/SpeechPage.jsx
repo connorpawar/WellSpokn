@@ -11,6 +11,7 @@ import SpeechEditor from '../Dashboard/SpeechEditor';
 import NewAttempt from '../Layout/NewAttempt';
 import TotalErrors from '../Dashboard/TotalErrors';
 import ListOfErrors from '../Dashboard/ListOfErrors';
+import CircularChart from '../Dashboard/CircularChart';
 import Loader from '../Layout/Loader';
 
 const useStyles = makeStyles({
@@ -53,6 +54,7 @@ export default function SpeechPage(props) {
 		{ "y": 10, "x": "Repetition" },
 		{ "y": 5, "x": "Monotone" },
 	];
+	
 
 	return (
 		<div>
@@ -86,7 +88,7 @@ export default function SpeechPage(props) {
 								<Card className={classes.card}>
 									<CardContent>
 										{/*change to pie chart*/}
-										<TotalErrors count="12" date="02/20/2020" />
+										<CircularChart data={data} />
 									</CardContent>
 								</Card>
 							</Grid>
