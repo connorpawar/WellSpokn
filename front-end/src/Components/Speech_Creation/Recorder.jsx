@@ -36,19 +36,19 @@ export default class Recorder extends React.Component {
     var reader = new FileReader();
 
     reader.readAsDataURL(recordedBlob.blob);
-    reader.onloadend = function() {
-		var form_data = new FormData();
-		form_data.append('title', this.props.title);
-        form_data.append('audio',recordedBlob.blob);
-        fetch('api/upload_speech', {
-          method : 'POST',
-          body: form_data
-        }).then(r =>{
-          r.text().then(a =>{
-			      //this.props.setTranscript(a) //TODO: Temporarily commented out. This has an error regarding undefined somehting.
-            console.log(a)
-          })
+      reader.onloadend = function() {
+      var form_data = new FormData();
+      form_data.append('title', this.props.title);
+      form_data.append('audio',recordedBlob.blob);
+      fetch('api/speech', {
+        method : 'POST',
+        body: form_data
+      }).then(r =>{
+        r.text().then(a =>{
+          //this.props.setTranscript(a) //TODO: Temporarily commented out. This has an error regarding undefined somehting.
+          console.log(a)
         })
+      })
     }
   }
 
