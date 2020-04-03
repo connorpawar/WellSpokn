@@ -12,6 +12,17 @@ const upload = storage
 
 var Router = express.Router();
 
+Router.get('/speech/:id',  function (req, res) {
+    var userId = req.user.id
+    var speechId = req.params.id
+    sql.getSpeechDataById(userId,speechId).then(data => {
+        res.send(data)
+    }).catch(e =>{
+        res.send(e)
+    })
+});
+
+
 Router.post('/speech',  function (req, res) {
     const json_data = req.body
     var email = req.user.email
