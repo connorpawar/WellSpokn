@@ -1,6 +1,7 @@
 
 
 import * as Models from "./models";
+import { resolve } from "dns";
 
 class SQL{
   static softInitialize(){
@@ -23,6 +24,20 @@ class SQL{
       password:_password,
       email:_email
     });
+  }
+  static getSpeechDataById(_user_id : Number, _speech_id:Number) : Promise<any>{
+    return new Promise((resolve,reject) => {
+      Models.Speeches.findOne({
+        where: {
+          user_id : _user_id,
+          id: _speech_id
+        }
+      }).then(s =>{
+        resolve(this.massageSpeechData(s))
+      }).error(e =>{
+        reject(e)
+      })
+    }) 
   }
   static getUserById(_id:Number) : Promise<Models.Users>{
     return Models.Users.findOne({

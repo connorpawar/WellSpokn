@@ -18,7 +18,17 @@ export const AuthenticationFunction = function (req, res, next){
 
 var Router = express.Router();
 
-Router.post('/register', async function (req, res) {
+function loginFunction (req, res) {
+    var response_json = {
+        status:"success",
+        token: req.sessionID,
+        userid : req.user.id,
+        user_name : req.user.email
+    }
+    res.send(response_json)
+}
+
+Router.post('/register', function (req, res, next) {
     const json_data = req.body
     var email = json_data.email
     var firstname = json_data.firstName
@@ -31,22 +41,20 @@ Router.post('/register', async function (req, res) {
             }
             sql.registerUser(email,firstname,lastname,hashed_password)
             .then(() =>{
-                res.send("User Registered");
+                next();
             }).catch(() => {
                 res.send("Registration Failed");
             })
         })
     })
-});
+},passport.authenticate('local', {failureRedirect : loginPageRoute}),loginFunction);
 
-Router.post('/login', passport.authenticate('local', {failureRedirect : loginPageRoute}), function (req, res) {
-    res.send(req.sessionID)
-});
+Router.post('/login', passport.authenticate('local', {failureRedirect : loginPageRoute}), loginFunction);
 
 Router.post('/logout', AuthenticationFunction, function (req, res) {
     var deletedID = req.sessionID;
     req.logout();
-    res.send(deletedID)
+    res.send("success")
 });
 
 Router.get('/whoami', AuthenticationFunction,  function (req, res) {
