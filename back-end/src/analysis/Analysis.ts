@@ -12,7 +12,8 @@ function generateAnalysisCore() : AnalysisCore{
     analysisCore.addAnalysisComponent<string>(new GoogleSpeechToTextComponent())
     analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
     analysisCore.addAnalysisComponent<number>(new WordsPerMinuteComponent())
-    analysisCore.addAnalysisComponent<Object>(new LanguageToolComponent())
+    //TODO Uncomment when languageTool is better configured for a production env
+    //analysisCore.addAnalysisComponent<Object>(new LanguageToolComponent())
     return analysisCore
 }
 
