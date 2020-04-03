@@ -5,7 +5,7 @@ import GoogleNaturalLanguageComponent, {Sentiment} from '../../analysis/GoogleNa
 const LoveChocolate = require('./files/LoveChoclate')
 
 
-describe.skip('Can send file to Google Cloud', () => {  
+describe('Can send file to Google Cloud', () => {  
   test('GoogleCloudData Speech-To-Text works', async (done) => {
 
     var analysisCore = new AnalysisCore();
