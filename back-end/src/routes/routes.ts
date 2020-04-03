@@ -85,9 +85,9 @@ Router.post('/upload_speech', upload.single('audio'), (req,res) =>{
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {
         sql.createSpeech("sc","example_title",allData.transcript)
-		for(var x of allData.languageToolErrors.matches){
-			sql.addError(1234, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
-		}
+        for(var x of allData.languageToolErrors["matches"]){
+          sql.addError(1234, x["rule"]["category"]["name"], x["context"]["offset"], x["context"]["offset"] + x["context"]["length"], x["rule"]["description"]);
+        }
         res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
