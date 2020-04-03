@@ -74,7 +74,7 @@ export default function Login() {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: inputs,
+			body: JSON.stringify(inputs),
 		})
 			.then(response => response.json())
 			.then((data) => {

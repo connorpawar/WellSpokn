@@ -7,8 +7,8 @@ const useStyles = makeStyles({
 		flex: 1,
 	},
 	count: {
-		marginTop: 30,
-		marginBottom: 30
+		marginTop: 65,
+		marginBottom: 65
 	},
 });
 

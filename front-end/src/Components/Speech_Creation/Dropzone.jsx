@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { useHighlight } from '../../CustomHooks/useHighlight'
 import { useFileDisplay } from '../../CustomHooks/useFileDisplay'
+import { Button } from '@material-ui/core';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -48,17 +50,35 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default function Dropzone() {
+export default function Dropzone(props) {
 	const classes = useStyles();
 
 	const upload = React.useRef(null)
 
 	const { highlight, onDragOver, onDragLeave } = useHighlight();
-	const { file, fileDisplay, onFileAdded, onDrop } = useFileDisplay();
+	const { file, fileDisplay, onFileAdded, onDrop, clearFile } = useFileDisplay();
+
+	useEffect(() => {
+		
+	  },[file]);
 
 	const handleClick = event => {
 		upload.current.click()
 	};
+
+	const sendToBackEnd = () => {
+		var form_data = new FormData();
+		form_data.append('title', props.title);
+        form_data.append('file',file[0]);
+        fetch('api/upload_blob', {
+          method : 'POST',
+          body: form_data
+        }).then(r =>{
+          r.text().then(a =>{
+            console.log(a)
+          })
+        })
+	}
 
 	return (
 		<Grid container spacing={0}
@@ -90,6 +110,8 @@ export default function Dropzone() {
 			<Grid key={1} item sm={6} xs={"auto"} zeroMinWidth>
 				<div className={classes.description}>
 					<p>File Chosen: {fileDisplay ? file[0].name : "N/A"}</p>
+					{fileDisplay? <Button onClick={sendToBackEnd}>Send</Button> : null}
+					{fileDisplay? <Button onClick={clearFile}>Clear</Button> : null}
 				</div>
 			</Grid>
 		</Grid>
