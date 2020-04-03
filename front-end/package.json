@@ -21,7 +21,7 @@
     "react-vis": "^1.11.7",
     "redux": "^4.0.5"
   },
-  "proxy": "http://localhost:5000/",
+  "proxy": "http://localhost:80/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
