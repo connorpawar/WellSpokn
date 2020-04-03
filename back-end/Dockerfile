@@ -10,6 +10,8 @@ FROM has_ffmpeg AS production-only-packages
 COPY package*.json /
 #TODO: Dependency Folder?
 COPY --from=LangaugeToolDownloader /LanguageTool-4.8/languagetool.jar /languagetool/
+COPY ./auth/authKey.json /authKey.json
+ENV GOOGLE_APPLICATION_CREDENTIALS '/authKey.json'
 RUN npm install --only=prod
 RUN npm install pg
 
@@ -17,10 +19,8 @@ FROM production-only-packages AS backend-compiler
 COPY ./src /src
 COPY ./config /config
 COPY *.js* /
-COPY ./auth /auth
 RUN npm install --only=dev
 RUN npm run unit-test
-ENV GOOGLE_APPLICATION_CREDENTIALS /auth/authKey.json
 RUN npm run integration-test
 RUN npm run build
 
