@@ -26,12 +26,14 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
         .on('end', async function(){
           const file = fs.readFileSync(newFileName);
           const audioBytes = file.toString('base64');
-          fs.unlink(fileName,() => {})
-          fs.unlink(newFileName,() => {})
+          //TODO: figure out why unlinking happens prematurely.
+          //fs.unlink(fileName,() => {})
+          //fs.unlink(newFileName,() => {})
           resolve(audioBytes);
         })
         .on('error', e => {
-          fs.unlink(fileName,() => {})
+          //TODO: figure out why unlinking happens prematurely.
+          //fs.unlink(fileName,() => {})
           reject(e)
         });
       command.run()
