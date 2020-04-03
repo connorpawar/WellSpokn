@@ -48,13 +48,12 @@ Router.get('/speech_previews',  function (req, res) {
     })
 });
 
-Router.post('/speech', upload.single('audio'), (req,res) =>{
-    //req.file.path //Is the file path
-    console.log(req.file)
+Router.post('/speech', upload.single('audio'), async (req,res) =>{
     const json_data = req.body
     var initialData = {"audioFile" : req.file.path};
     var email = req.user.email
     var title = json_data.title
+    console.log(email,title,initialData)
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {    
         sql.createSpeech(email,title,allData.transcript)
