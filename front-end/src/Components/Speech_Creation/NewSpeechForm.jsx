@@ -9,6 +9,7 @@ export default function NewSpeechForm(props) {
 
 	const handleChange = event => {
 		setTitle(event.target.value);
+		props.setSpeechTitle(event.target.value);
 	};
 
 	return (
