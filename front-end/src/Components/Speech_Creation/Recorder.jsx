@@ -38,7 +38,12 @@ export default class Recorder extends React.Component {
     reader.readAsDataURL(recordedBlob.blob);
       reader.onloadend = function() {
       var form_data = new FormData();
-      form_data.append('title', this.props.title);
+      form_data.append('title', "dummy"); 
+      //TODO: Error
+      /*
+      TypeError: this.props is undefinedRecorder.jsx:41:6
+      onloadend Recorder.jsx:41
+      */
       form_data.append('audio',recordedBlob.blob);
       fetch('api/speech', {
         method : 'POST',
