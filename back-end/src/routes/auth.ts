@@ -4,9 +4,8 @@ const bcrypt = require('bcryptjs');
 import sql from '../database/sql';
 import passport from '../middleware/passport';
 
-const loginPageRoute = '/login' //TODO: Determine a target
-const mainPageRoute = '/'
-
+//TODO: Determine a target
+const loginPageRoute = '/login' 
 
 export const AuthenticationFunction = function (req, res, next){
     if(req.isAuthenticated()){
@@ -52,7 +51,6 @@ Router.post('/register', function (req, res, next) {
 Router.post('/login', passport.authenticate('local', {failureRedirect : loginPageRoute}), loginFunction);
 
 Router.post('/logout', AuthenticationFunction, function (req, res) {
-    var deletedID = req.sessionID;
     req.logout();
     res.send("success")
 });
