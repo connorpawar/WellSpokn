@@ -5,7 +5,6 @@ const path = require('path')
 
 export class Storage {
     static uploadDir : string = path.join(__dirname,'uploads')
-    static upload = Multer({dest : Storage.uploadDir})
 
     static emptyFolder(){
         fs.readdirSync(this.uploadDir).forEach( (file) => {
@@ -23,4 +22,7 @@ export class Storage {
 };
 
 
-export default Storage.upload;
+export default Multer({
+    dest : Storage.uploadDir,
+    limits: {fileSize: 999999999}
+});
