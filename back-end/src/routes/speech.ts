@@ -23,21 +23,21 @@ Router.get('/speech/:id',  function (req, res) {
 });
 
 //TODO: should be removed?
-/*
-function SpeechPlacement(req, res) {
-    const json_data = req.body
-    var email = req.user.email
-    var title = json_data.title
-    var transcript = json_data.transcript
-    sql.createSpeech(email,title,transcript)
-    .then(s =>{
-        res.send({id:s.id});
-    }).catch(() => {
-        res.send("Speech could not be created.");
-    })
+if(process.env.NODE_ENV=="development"){
+    function SpeechPlacement(req, res) {
+        const json_data = req.body
+        var email = req.user.email
+        var title = json_data.title
+        var transcript = json_data.transcript
+        sql.createSpeech(email,title,transcript)
+        .then(s =>{
+            res.send({id:s.id});
+        }).catch(() => {
+            res.send("Speech could not be created.");
+        })
+    }
+    Router.post('/dev_speech',  SpeechPlacement);
 }
-Router.post('/speech',  SpeechPlacement);
-*/
 
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
