@@ -33,7 +33,8 @@ class SQL{
           id: _speech_id
         }
       }).then(s =>{
-        resolve(this.massageSpeechData(s))
+        //TODO: Attach Error and Attempt data onto this.
+        resolve(this.massageSpeechDataForViewing(s))
       }).error(e =>{
         reject(e)
       })
@@ -72,9 +73,9 @@ class SQL{
     })
   }
 
-  static massageSpeechData(rawSpeechData:Models.Speeches){
+  static massageSpeechDataForViewing(rawSpeechData:Models.Speeches){
     var speech_data = {
-      id:Number,
+      id:-1,
       name:String,
       transcript:String,
       date_created:String,
@@ -84,12 +85,13 @@ class SQL{
     speech_data.id = rawSpeechData.id
     speech_data.name = rawSpeechData.title
     speech_data.transcript = rawSpeechData.transcript
-    speech_data.date_created = rawSpeechData.createdAt
-    speech_data.date_last_modified = rawSpeechData.last_edited
+    speech_data.date_created = rawSpeechData.createdAt.toISOString().substring(0, 10)
+    speech_data.date_last_modified = rawSpeechData.last_edited.toISOString().substring(0, 10)
     return speech_data
   }
 
   static massageSpeechDataForPreview(rawSpeechData:Models.Speeches,allErrors:Array<Models.Errors>){
+    //Needs cleanup.
     type speech_preview = {
       id:number,
       name:String,
@@ -106,10 +108,13 @@ class SQL{
       date_last_modified:null,
       error_count : null
     };
-    console.log(rawSpeechData)
     speech_preview_data.id = rawSpeechData.id
     speech_preview_data.name = rawSpeechData.title
-    speech_preview_data.transcript_preview = rawSpeechData.transcript.substring(0, 126)+"..."
+    if(rawSpeechData.transcript.length > 125){
+      speech_preview_data.transcript_preview = rawSpeechData.transcript.substring(0, 126)+"..."
+    }else{
+      speech_preview_data.transcript_preview = rawSpeechData.transcript
+    }
     speech_preview_data.date_created = rawSpeechData.createdAt.toISOString().substring(0, 10)
     speech_preview_data.date_last_modified = rawSpeechData.last_edited.toISOString().substring(0, 10)
     speech_preview_data.error_count = allErrors.length
@@ -136,7 +141,7 @@ class SQL{
               }
             })
             var all_errors = await errorsTask
-            var speech_data = this.massageSpeechDataForPreview(s.dataValues,all_errors)
+            var speech_data = this.massageSpeechDataForPreview(s,all_errors)
             //TODO: Does this work?
             speeches_data.push(speech_data)
           }
