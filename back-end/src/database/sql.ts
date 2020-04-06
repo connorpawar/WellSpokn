@@ -89,6 +89,33 @@ class SQL{
     return speech_data
   }
 
+  static massageSpeechDataForPreview(rawSpeechData:Models.Speeches,allErrors:Array<Models.Errors>){
+    type speech_preview = {
+      id:number,
+      name:String,
+      transcript_preview:String,
+      date_created:String,
+      date_last_modified:String,
+      error_count : number
+    }
+    var speech_preview_data : speech_preview = {
+      id:null,
+      name:null,
+      transcript_preview:null,
+      date_created:null,
+      date_last_modified:null,
+      error_count : null
+    };
+    console.log(rawSpeechData)
+    speech_preview_data.id = rawSpeechData.id
+    speech_preview_data.name = rawSpeechData.title
+    speech_preview_data.transcript_preview = rawSpeechData.transcript.substring(0, 126)+"..."
+    speech_preview_data.date_created = rawSpeechData.createdAt.toISOString().substring(0, 10)
+    speech_preview_data.date_last_modified = rawSpeechData.last_edited.toISOString().substring(0, 10)
+    speech_preview_data.error_count = allErrors.length
+    return speech_preview_data
+  }
+
   //TODO: Clean up later.
   static async getAllSpeechesForASpecificUser(_email:String){
     return new Promise(async (resolve,reject) =>{
@@ -108,8 +135,9 @@ class SQL{
                 speech_id: s.id
               }
             })
-            var speech_data = this.massageSpeechData(s)
-            speech_data.error_count = await errorsTask
+            var all_errors = await errorsTask
+            var speech_data = this.massageSpeechDataForPreview(s.dataValues,all_errors)
+            //TODO: Does this work?
             speeches_data.push(speech_data)
           }
           resolve({speeches:speeches_data})
@@ -117,6 +145,7 @@ class SQL{
           throw "User not found";
         }
       }catch(e){
+        console.log(e)
         reject(e)
       }
     })
