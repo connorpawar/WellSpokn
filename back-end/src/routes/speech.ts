@@ -15,7 +15,7 @@ var Router = express.Router();
 Router.get('/speech/:id',  function (req, res) {
     var userId = req.user.id
     var speechId = req.params.id
-    sql.getSpeechDataById(userId,speechId).then(data => {
+    sql.getSpecificSpeech(userId,speechId).then(data => {
         res.send(data)
     }).catch(e =>{
         res.send(e)
@@ -24,6 +24,20 @@ Router.get('/speech/:id',  function (req, res) {
 
 //TODO: should be removed?
 if(process.env.NODE_ENV=="development"){
+    function dummyDataPopulation(req,res,speech){
+        var sid = speech.id
+        var promises = []
+        promises.concat(sql.addError(sid,"Tempo",3,4,"Too fast"))
+        promises.concat(sql.addError(sid,"Grammar",5,6,"I dont like it"))
+        promises.concat(sql.addError(sid,"Tempo",7,8,"Too slow"))
+        promises.concat(sql.addError(sid,"Emotion",9,10,"Too sad"))
+        Promise.all(promises).then(() =>{
+            sql.finalizeAttempt(sid).then(a =>{
+                res.send({id:sid});
+            })
+        })
+    }
+
     function SpeechPlacement(req, res) {
         const json_data = req.body
         var email = req.user.email
@@ -31,7 +45,7 @@ if(process.env.NODE_ENV=="development"){
         var transcript = json_data.transcript
         sql.createSpeech(email,title,transcript)
         .then(s =>{
-            res.send({id:s.id});
+            dummyDataPopulation(req,res,s)
         }).catch(() => {
             res.send("Speech could not be created.");
         })
