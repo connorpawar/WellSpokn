@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -15,6 +16,7 @@ import logo from '../../Images/WellSpoknCropped.png';
 
 import useLogin from '../../CustomHooks/useLogin';
 import { loginUser } from '../../actions';
+import { useHomePage } from '../../CustomHooks/useHompage'
 
 function Copyright() {
 	return (
@@ -51,9 +53,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const user = useSelector(state => state.user);
 	const dispatch = useDispatch();
+
+	const { onLogin } = useHomePage(); 
+
 
 	const signupSubmit = () => {
 		fetch('api/register', {
@@ -68,7 +74,8 @@ export default function SignUp() {
 				console.log('Success:', data);
 				localStorage.setItem("token", data.token);
 				dispatch(loginUser(data))
-				//need to redirect to correct homepage
+				//redirect to correct homepage
+				history.push((onLogin(data.token)));
 			})
 			.catch(error => console.log("fetch error", error));
 	}
