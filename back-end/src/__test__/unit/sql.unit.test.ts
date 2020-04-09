@@ -179,6 +179,7 @@ describe('sql module', () => {
     })
 
     test("getSpecificSpeech", async (done) => {
+        const expectedUserId = 145;
         const expectedId = 1;
         const expectedReturnSpeechVal = {
             id: 1,
@@ -218,8 +219,8 @@ describe('sql module', () => {
             }
         ];
 
-        Models.Speeches.findOne.mockImplementation(arg =>{
-            if(arg.where.id === expectedId){
+        Models.Speeches.findOne.mockImplementation((arg) =>{
+            if(arg.where.id === expectedId && arg.where.user_id == expectedUserId){
                 return resolveWrap(expectedReturnSpeechVal);
             }else{
                 fail();
@@ -241,7 +242,7 @@ describe('sql module', () => {
             }
         };
 
-        var actualDataReturn = await SQL.getSpecificSpeech(expectedId);
+        var actualDataReturn = await SQL.getSpecificSpeech(expectedUserId,expectedId);
         var expectedDataReturn = {
             "date_created": "12-12-19",
             "date_last_modified": "10-12-20",

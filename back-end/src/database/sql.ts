@@ -25,21 +25,6 @@ class SQL{
       email:_email
     });
   }
-  static getSpeechDataById(_user_id : Number, _speech_id:Number) : Promise<any>{
-    return new Promise((resolve,reject) => {
-      Models.Speeches.findOne({
-        where: {
-          user_id : _user_id,
-          id: _speech_id
-        }
-      }).then(s =>{
-        //TODO: Attach Error and Attempt data onto this.
-        resolve(this.massageSpeechDataForViewing(s))
-      }).error(e =>{
-        reject(e)
-      })
-    }) 
-  }
   static getUserById(_id:Number) : Promise<Models.Users>{
     return Models.Users.findOne({
       where: {
@@ -71,23 +56,6 @@ class SQL{
         }
       })
     })
-  }
-
-  static massageSpeechDataForViewing(rawSpeechData:Models.Speeches){
-    var speech_data = {
-      id:-1,
-      name:String,
-      transcript:String,
-      date_created:String,
-      date_last_modified:String,
-      error_count:Number
-    }
-    speech_data.id = rawSpeechData.id
-    speech_data.name = rawSpeechData.title
-    speech_data.transcript = rawSpeechData.transcript
-    speech_data.date_created = rawSpeechData.createdAt.toISOString().substring(0, 10)
-    speech_data.date_last_modified = rawSpeechData.last_edited.toISOString().substring(0, 10)
-    return speech_data
   }
 
   static massageSpeechDataForPreview(rawSpeechData:Models.Speeches,allErrors:Array<Models.Errors>){
@@ -171,23 +139,60 @@ class SQL{
     return data;
   }
 
-  static async getSpecificSpeech(_id:Number){
+  static massageSpeechDataForViewing(rawSpeechData:Models.Speeches,rawErrorData:Models.Errors,rawAttemptData:Models.Attempts){
+    var speech_data = {
+      id:-1,
+      name:String,
+      transcript:String,
+      date_created:String,
+      date_last_modified:String,
+      error_count:Number,
+      previous_attempts: -1,
+      latest_error_count:  -1,
+      errors_by_attempt: [],
+      errors: []
+    }
+    speech_data.id = rawSpeechData.id
+    speech_data.name = rawSpeechData.title
+    speech_data.transcript = rawSpeechData.transcript
+    speech_data.date_created = rawSpeechData.createdAt.toISOString().substring(0, 10)
+    speech_data.date_last_modified = rawSpeechData.last_edited.toISOString().substring(0, 10)
+
+
+
+
+    speech_data.previous_attempts = rawAttemptData.length-1
+    speech_data.errors_by_attempt = rawAttemptData.map(e => {
+      return JSON.parse(e.mapping)
+    });
+
+    speech_data.latest_error_count = rawErrorData.length
+    speech_data.errors = rawErrorData.map(e => {
+      return SQL.massageErrorData(e)
+    });
+
+    
+    return speech_data
+  }
+
+  static async getSpecificSpeech(_user_id : Number, _speech_id:Number){
     return new Promise(async (resolve,reject) => {
       var speechTask = Models.Speeches.findOne({
         where: {
-          id: _id
+          user_id : _user_id,
+          id: _speech_id
         }
       })
 
       var errorTask = Models.Errors.findAll({
         where: {
-          speech_id: _id
+          speech_id: _speech_id
         }
       })
 
       var attemptTask = Models.Attempts.findAll({
         where: {
-          speech_id: _id
+          speech_id: _speech_id
         }
       })
 
@@ -195,18 +200,7 @@ class SQL{
       var errorData = await errorTask;
       var attemptData = await attemptTask;
 
-      speechData.previous_attempts = attemptData.length-1
-      speechData.errors_by_attempt = attemptData.map(e => {
-        return JSON.parse(e.mapping)
-      });
-
-      speechData.latest_error_count = errorData.length
-      speechData.errors = errorData.map(e => {
-        return SQL.massageErrorData(e)
-      });
-
-
-      resolve(speechData)
+      resolve(SQL.massageSpeechDataForViewing(speechData,errorData,attemptData))
     });
   }
 
@@ -223,17 +217,22 @@ class SQL{
 
   static async finalizeAttempt(_speech_id:Number){
     //TODO: Check if speech exists first.
-    return Models.Errors.findAll({where:{speech_id:_speech_id}}).then(errors =>{
-      var attemptData = {};
-      errors.forEach(err => {
-        if(attemptData[err.type] == undefined){
-          attemptData[err.type] = 1
-        }else{
-          attemptData[err.type] += 1
-        }
+    return new Promise((resolve,reject) => {
+      Models.Errors.findAll({where:{speech_id:_speech_id}}).then(errors =>{
+        var attemptData = {};
+        errors.forEach(err => {
+          if(attemptData[err.type] == undefined){
+            attemptData[err.type] = 1
+          }else{
+            attemptData[err.type] += 1
+          }
+        });
+        Models.Attempts.create({mapping:JSON.stringify(attemptData),speech_id:_speech_id})
+        .then(attempt => {
+          resolve(attempt.mapping)
+        })
       });
-      Models.Attempts.create({mapping:JSON.stringify(attemptData),speech_id:_speech_id})
-    });
+    })
   }
 }
 
