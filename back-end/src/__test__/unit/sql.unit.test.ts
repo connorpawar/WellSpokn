@@ -185,8 +185,8 @@ describe('sql module', () => {
             id: 1,
             name: 'Worry',
             transcript: 'I will need help with this later.',
-            date_created: '12-12-19',
-            date_last_modified: '10-12-20',
+            createdAt : new Date("2019-12-12"),
+            last_edited: new Date("2020-10-12"),
             error_count: 22
         };
         const map1 = {
@@ -238,14 +238,14 @@ describe('sql module', () => {
             if(arg.where.speech_id === expectedId){
                 return resolveWrap(expectedErrorArrayVal);
             }else{
-                fail();
+                fail("Error.findAll failed");
             }
         };
 
         var actualDataReturn = await SQL.getSpecificSpeech(expectedUserId,expectedId);
         var expectedDataReturn = {
-            "date_created": "12-12-19",
-            "date_last_modified": "10-12-20",
+            "date_created": "2019-12-12",
+            "date_last_modified": "2020-10-12",
             "error_count": 22,
             "errors": [
               {
@@ -325,19 +325,19 @@ describe('sql module', () => {
         DataMock.push({type:"Abba"})
         DataMock.push({type:"Repeated"})
         DataMock.push({type:"Repeated"})
-        Models.Attempts.create = jest.fn();
-        Models.Errors.findAll = jest.fn();
-        Models.Errors.findAll.mockImplementationOnce((whereObj) =>{
+        Models.Attempts.create = (obj) =>{
+            return resolveWrap({mapping: JSON.parse(obj.mapping)})
+        };
+        Models.Errors.findAll = (whereObj) =>{
             if(whereObj.where.speech_id == actualSpeechId){
                 return resolveWrap(DataMock)
             }else{
                 fail("Find all called with wrong arguement")
             }
-        })
+        }
         var funcReturn = await SQL.finalizeAttempt(actualSpeechId)
-        var actualDatabaseInput = JSON.parse(Models.Attempts.create.mock.calls[0][0].mapping);
         var expectedDatabaseInput = {"Descript":1,"Abba":1,"Repeated":2};
-        expect(actualDatabaseInput).toEqual(expectedDatabaseInput);
+        expect(funcReturn).toEqual(expectedDatabaseInput);
         done();
     })
 });

@@ -218,7 +218,8 @@ class SQL{
   static async finalizeAttempt(_speech_id:Number){
     //TODO: Check if speech exists first.
     return new Promise((resolve,reject) => {
-      Models.Errors.findAll({where:{speech_id:_speech_id}}).then(errors =>{
+      Models.Errors.findAll({where:{speech_id:_speech_id}})
+      .then(errors =>{
         var attemptData = {};
         errors.forEach(err => {
           if(attemptData[err.type] == undefined){
