@@ -2,6 +2,8 @@ import { AnalysisComponent } from "./AnalysisComponent"
 import * as fs from 'fs'
 import * as cp from 'child_process'
 
+const languageToolJarPath = '/languagetool/languagetool.jar'
+
 class LanguageToolComponent extends AnalysisComponent<Object>{
 	inputTopic = new Set("transcript");
 	outputTopic = "languageToolErrors";
@@ -18,7 +20,7 @@ class LanguageToolComponent extends AnalysisComponent<Object>{
 						console.log(err);
 						resolve(languageToolErrors);
 					}
-		            var child = cp.spawn('java', ['-jar', 'LanguageTool-4.7/languagetool-commandline.jar', '-l', 'en-US', '--json', 'langtool.txt']);
+		            var child = cp.spawn('java', ['-jar',languageToolJarPath, '-l', 'en-US', '--json', 'langtool.txt']);
 		            child.stdout.on('data', function(data){
 						languageToolErrors = JSON.parse(data.toString())
 						fs.unlink(fileName.toString() + '.txt', (err) => {
