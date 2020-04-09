@@ -36,6 +36,14 @@ export default function SpeechPage(props) {
 		"errors": []
 	}
 
+	let counts = [
+		{ "count": 0, "type": "Tempo" },
+		{ "count": 0, "type": "Grammar" },
+		{ "count": 0, "type": "Filler Words" },
+		{ "count": 0, "type": "Repetition" },
+		{ "count": 0, "type": "Monotone" },
+	];
+
 	const [speech, setSpeech] = useState(temp);
 	const [isBusy, setBusy] = useState(true);
 
@@ -54,7 +62,20 @@ export default function SpeechPage(props) {
 		{ "y": 10, "x": "Repetition" },
 		{ "y": 5, "x": "Monotone" },
 	];
-	
+
+	speech.errors.forEach(x =>{
+		if(x.Type === "Tempo"){
+			counts[0].count++;
+		} else if(x.Type === "Grammar"){
+			counts[1].count++;
+		} else if(x.Type === "Filler"){
+			counts[2].count++;
+		} else if(x.Type === "Repetition"){
+			counts[3].count++;
+		} else if(x.Type === "Tone"){
+			counts[4].count++;
+		}
+		});
 
 	return (
 		<div>
@@ -71,7 +92,7 @@ export default function SpeechPage(props) {
 								<Typography component="h1" variant="h5" color="primary" gutterBottom>
 									{speech.name}
 								</Typography>
-								<SpeechEditor Content={speech.transcript} />
+								<SpeechEditor Content={speech.transcript} errors={speech.errors} />
 							</CardContent>
 						</Card>
 					</Grid>
@@ -80,15 +101,14 @@ export default function SpeechPage(props) {
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<TotalErrors count="12" date="02/20/2020" />
+										<TotalErrors count={speech.latest_error_count} date={speech.date_last_modified} />
 									</CardContent>
 								</Card>
 							</Grid>
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{/*change to pie chart*/}
-										<CircularChart data={data} />
+										<CircularChart data={counts} />
 									</CardContent>
 								</Card>
 							</Grid>
@@ -104,7 +124,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<ListOfErrors />
+										<ListOfErrors data={speech.errors} />
 									</CardContent>
 								</Card>
 							</Grid>
@@ -113,7 +133,7 @@ export default function SpeechPage(props) {
 				</Grid>
 			</div>
 			}
-			<NewAttempt setTranscript={speech.transcript} />
+			<NewAttempt setTranscript={speech.transcript}/>
 		</div>
 	);
 }

@@ -13,7 +13,7 @@ export default function CircularChart(props) {
 			'Monotone'
 		],
 		datasets: [{
-			data: props.data.map(x => x.y),
+			data: props.data.map(x => x.count),
 			backgroundColor: [
 				'#FF6384',
 				'#4BC0C0',
