@@ -27,10 +27,17 @@ if(process.env.NODE_ENV=="development"){
     function dummyDataPopulation(req,res,speech){
         var sid = speech.id
         var promises = []
-        promises.concat(sql.addError(sid,"Tempo",3,4,"Too fast"))
-        promises.concat(sql.addError(sid,"Grammar",5,6,"I dont like it"))
-        promises.concat(sql.addError(sid,"Tempo",7,8,"Too slow"))
-        promises.concat(sql.addError(sid,"Emotion",9,10,"Too sad"))
+        var initialData = {"transcript" : speech.transcript};
+        var analysisCore = generateAnalysisCore()
+        analysisCore.intialize("transcript",initialData).then((allData : any) => {   
+            for(var x of allData.languageToolErrors.matches){
+                sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            }
+            res.send(allData.transcript)
+        }).catch( e =>{
+            console.log(e)
+        })
+        
         Promise.all(promises).then(() =>{
             sql.finalizeAttempt(sid).then(a =>{
                 res.send({id:sid});
@@ -43,6 +50,7 @@ if(process.env.NODE_ENV=="development"){
         var email = req.user.email
         var title = json_data.title
         var transcript = json_data.transcript
+        
         sql.createSpeech(email,title,transcript)
         .then(s =>{
             dummyDataPopulation(req,res,s)
