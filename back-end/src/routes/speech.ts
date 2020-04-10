@@ -40,6 +40,7 @@ function dummyDataPopulation(req,res,speech){
             promises.concat(err)
         }
         Promise.all(promises).then(()=>{
+            console.log(speech)
             sql.finalizeAttempt(sid).then(() =>{
                 getSpecificSpeech(res,uid,sid)
             })
@@ -49,20 +50,27 @@ function dummyDataPopulation(req,res,speech){
     })   
 }
 
-function SpeechPlacement(req, res) {
+Router.post('/dev_speech/:sid?',  (req, res) => {
     const json_data = req.body
     var email = req.user.email
     var title = json_data.title
     var transcript = json_data.transcript
-    
-    sql.createSpeech(email,title,transcript)
-    .then(s =>{
+    var sid = req.params.sid
+    var promise
+    if(sid){
+        console.log("BLAH")
+        promise = sql.upsertSpeech(email,title,transcript,sid)
+    }else{
+        promise = sql.upsertSpeech(email,title,transcript)
+    }
+
+    promise.then(s =>{
         dummyDataPopulation(req,res,s)
-    }).catch(() => {
+    }).catch(e => {
+        console.log(e)
         res.send("Speech could not be created.");
     })
-}
-Router.post('/dev_speech',  SpeechPlacement);
+});
 
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
@@ -81,7 +89,7 @@ Router.post('/speech', upload.single('audio'), async (req,res) =>{
     console.log(email,title,initialData)
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {    
-        sql.createSpeech(email,title,allData.transcript)
+        sql.upsertSpeech(email,title,allData.transcript)
         .then(s =>{
             var id = s.id
             for(var x of allData.languageToolErrors.matches){
