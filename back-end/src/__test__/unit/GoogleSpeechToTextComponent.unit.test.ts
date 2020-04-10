@@ -1,6 +1,4 @@
-jest.requireActual('fs')
-
-import GoogleTextToSpeechComponent from '../../analysis/GoogleTextToSpeechComponent';
+import GoogleSpeechToTextComponent from '../../analysis/GoogleSpeechToTextComponent';
 
 function resolveWrap(arg){
   return new Promise((resolve,reject) =>{
@@ -10,7 +8,7 @@ function resolveWrap(arg){
 
 describe('GoogleCloudData class', () => {
   test('GoogleCloudData analyze works', async (done) => {
-    var component = new GoogleTextToSpeechComponent();
+    var component = new GoogleSpeechToTextComponent();
     var MockAudioBytes = "Hi I am stub."
 
     var fastMock = (func) =>{

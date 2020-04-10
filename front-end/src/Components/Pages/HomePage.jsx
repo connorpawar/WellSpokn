@@ -68,6 +68,8 @@ export default function HomePage() {
 
 	const [speechCards, setSpeechCards] = useState(speeches);
 
+	const [reload, setReload] = useState(false);
+
 	const searchSpeeches = (searchTerm) => {
 		let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
 		return setSpeechCards(searchedSpeeches);
@@ -90,7 +92,7 @@ export default function HomePage() {
 		.then(response => response.json())
 		.then(JSONresponse => setSpeechCards(JSONresponse.speeches))
 		.catch(error => console.log("fetch error", error));
-	}, [])
+	}, [reload])
 
 	return (
 		<div>
@@ -129,7 +131,7 @@ export default function HomePage() {
 					))}
 				</Grid>
 			</div>
-			<NewSpeech />
+			<NewSpeech setReload={setReload}/>
 		</div>
 	);
 }
