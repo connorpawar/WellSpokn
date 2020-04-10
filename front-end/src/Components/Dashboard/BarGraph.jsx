@@ -1,34 +1,43 @@
 import React from 'react';
-import {
-	XYPlot,
-	XAxis, // Shows the values on x axis
-	YAxis, // Shows the values on y axis
-	VerticalBarSeries,
-	LabelSeries
-} from 'react-vis';
+import Typography from '@material-ui/core/Typography';
+import { HorizontalBar } from 'react-chartjs-2';
+
+const graphData = {
+	labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+	datasets: [
+		{
+			label: 'My First dataset',
+			backgroundColor: 'rgba(255,99,132,0.2)',
+			borderColor: 'rgba(255,99,132,1)',
+			borderWidth: 1,
+			hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+			hoverBorderColor: 'rgba(255,99,132,1)',
+			data: []
+		}
+	]
+};
 
 export default function BarGraph(props) {
-	const data = props.data;
-	const chartWidth = 280;
-	const chartHeight = 300;
-	const chartDomain = [0, 25];
-
+	let graphData = {
+		labels: ['Tempo', 'Grammar', 'Filler Words', 'Repetition', 'Tone'],
+		datasets: [
+			{
+				label: 'Count',
+				backgroundColor: 'rgba(255,99,132,0.2)',
+				borderColor: 'rgba(255,99,132,1)',
+				borderWidth: 1,
+				hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+				hoverBorderColor: 'rgba(255,99,132,1)',
+				data: props.data.map(x => x.count)
+			}
+		]
+	};
 	return (
-			<XYPlot 
-				margin={40, 0, 0, 70} 
-				xType="ordinal"
-				width={chartWidth}
-				height={chartHeight}
-				yDomain={chartDomain}>
-				<XAxis tickLabelAngle={-45} />
-				<YAxis />
-				<VerticalBarSeries data={data}/>
-				<LabelSeries
-					data={data.map(obj => {
-						return { ...obj, label: obj.y.toString() }
-					})}
-					labelAnchorX="middle"
-				/>
-			</XYPlot>
+		<React.Fragment>
+			<Typography component="h1" variant="h5" color="primary" gutterBottom>
+					Error Counts
+			</Typography>
+			<HorizontalBar data={graphData} />
+		</React.Fragment>
 	);
 }

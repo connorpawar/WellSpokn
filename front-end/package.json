@@ -19,7 +19,6 @@
     "react-scripts": "^3.4.1",
     "react-scroll": "^1.7.16",
     "react-test-renderer": "^16.13.1",
-    "react-vis": "^1.11.7",
     "redux": "^4.0.5"
   },
   "proxy": "http://localhost:8080/",
