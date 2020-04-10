@@ -27,6 +27,9 @@ class LanguageToolComponent extends AnalysisComponent<Object>{
 					child.stdout.on('data', function(data){
 						resolve(JSON.parse(data.toString()));
 					});
+					child.stdout.on('error', function(err){
+						reject(err)
+					});
 				});
 			}catch(e){
 				console.log(e)
