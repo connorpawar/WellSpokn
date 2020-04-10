@@ -22,44 +22,43 @@ Router.get('/speech/:id',  function (req, res) {
     })
 });
 
-//TODO: should be removed?
-if(process.env.NODE_ENV=="development"){
-    function dummyDataPopulation(req,res,speech){
-        var sid = speech.id
-        var promises = []
-        var initialData = {"transcript" : speech.transcript};
-        var analysisCore = generateAnalysisCore()
-        analysisCore.intialize("transcript",initialData).then((allData : any) => {   
-            for(var x of allData.languageToolErrors.matches){
-                sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
-            }
-            res.send(allData.transcript)
-        }).catch( e =>{
-            console.log(e)
+//TODO: Put in dev mode again later.
+function dummyDataPopulation(req,res,speech){
+    var sid = speech.id
+    var promises = []
+    var initialData = {"transcript" : speech.transcript};
+    var analysisCore = generateAnalysisCore()
+    analysisCore.intialize("transcript",initialData).then((allData : any) => { 
+        console.log(allData)  
+        for(var x of allData.languageToolErrors.matches){
+            sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+        }
+        res.send(allData.transcript)
+    }).catch( e =>{
+        console.log(e)
+    })
+    
+    Promise.all(promises).then(() =>{
+        sql.finalizeAttempt(sid).then(a =>{
+            res.send({id:sid});
         })
-        
-        Promise.all(promises).then(() =>{
-            sql.finalizeAttempt(sid).then(a =>{
-                res.send({id:sid});
-            })
-        })
-    }
-
-    function SpeechPlacement(req, res) {
-        const json_data = req.body
-        var email = req.user.email
-        var title = json_data.title
-        var transcript = json_data.transcript
-        
-        sql.createSpeech(email,title,transcript)
-        .then(s =>{
-            dummyDataPopulation(req,res,s)
-        }).catch(() => {
-            res.send("Speech could not be created.");
-        })
-    }
-    Router.post('/dev_speech',  SpeechPlacement);
+    })
 }
+
+function SpeechPlacement(req, res) {
+    const json_data = req.body
+    var email = req.user.email
+    var title = json_data.title
+    var transcript = json_data.transcript
+    
+    sql.createSpeech(email,title,transcript)
+    .then(s =>{
+        dummyDataPopulation(req,res,s)
+    }).catch(() => {
+        res.send("Speech could not be created.");
+    })
+}
+Router.post('/dev_speech',  SpeechPlacement);
 
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
@@ -79,15 +78,12 @@ Router.post('/speech', upload.single('audio'), async (req,res) =>{
     var analysisCore = generateAnalysisCore()
     analysisCore.intialize("audioFile",initialData).then((allData : any) => {    
         sql.createSpeech(email,title,allData.transcript)
-        //TODO Uncomment when languageTool is better configured for a production env
-        /*
         .then(s =>{
             var id = s.id
             for(var x of allData.languageToolErrors.matches){
                 sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
             }
         })
-        */
         res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
