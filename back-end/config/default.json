@@ -1,5 +1,6 @@
 {
     "DATABASE":"sqlite::memory:",
+    "SESSION_STORE":"memory",
     "PORT":5000,
     "ROOT_ROUTE":"/api"
 }

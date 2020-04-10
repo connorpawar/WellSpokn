@@ -1,10 +1,13 @@
-FROM node AS frontend-compiler
-COPY . /
+FROM node AS frontend-packages
+COPY package*.json ./
 RUN npm install
+
+FROM frontend-packages as frontend-builder
+COPY . /
 RUN npm run build
 
-FROM frontend-compiler
+FROM node
+COPY --from=frontend-builder build /build
 RUN npm install -g serve
 EXPOSE 5000
-COPY --from=frontend-compiler /build /
 CMD serve -p 5000 -s /build

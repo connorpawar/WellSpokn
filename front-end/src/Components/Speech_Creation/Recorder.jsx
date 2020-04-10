@@ -12,13 +12,13 @@ export default class Recorder extends React.Component {
 	}
 	title = props.title;
   }
- 
+
   startRecording = () => {
     this.setState({
       record: true
     });
   }
- 
+
   stopRecording = () => {
     this.setState({
       record: false
@@ -28,7 +28,7 @@ export default class Recorder extends React.Component {
   onData(recordedBlob) {
     console.log('chunk of real-time data is: ', recordedBlob);
   }
- 
+
   onStop(recordedBlob) {
 	var reader = new FileReader();
 
@@ -37,7 +37,7 @@ export default class Recorder extends React.Component {
 		var form_data = new FormData();
 		form_data.append('title', title);
         form_data.append('audio',recordedBlob.blob);
-        fetch('api/upload_speech', {
+        fetch('api/speech', {
           method : 'POST',
           body: form_data
         }).then(r =>{
@@ -47,7 +47,7 @@ export default class Recorder extends React.Component {
         })
     }
   }
- 
+
   render() {
     return (
       <div style={{margin: '20px', textAlign: 'center', display: 'block'}}>

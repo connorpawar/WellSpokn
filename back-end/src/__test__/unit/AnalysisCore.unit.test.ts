@@ -1,6 +1,5 @@
 import { AnalysisComponent } from "../../analysis/AnalysisComponent";
 import AnalysisCore from '../../analysis/AnalysisCore';
-import { resolve } from "dns";
 
 function resolveWrap<T>(data : T) : Promise<T> {
     return new Promise((resolve,reject) =>{
