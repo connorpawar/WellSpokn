@@ -26,52 +26,6 @@ Router.get('/speech/:id',  function (req, res) {
     getSpecificSpeech(res,userId,speechId)
 });
 
-//TODO: Put in dev mode again later.
-function dummyDataPopulation(req,res,speech){
-    var sid = speech.id
-    var uid = speech.user_id
-    var initialData = {"transcript" : speech.transcript};
-    var promises = []
-    var analysisCore = generateAnalysisCore()
-    analysisCore.intialize("transcript",initialData).then(async (allData : any) => { 
-        console.log(allData)  
-        for(var x of allData.languageToolErrors.matches){
-            var err = sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
-            promises.concat(err)
-        }
-        Promise.all(promises).then(()=>{
-            console.log(speech)
-            sql.finalizeAttempt(sid).then(() =>{
-                getSpecificSpeech(res,uid,sid)
-            })
-        });
-    }).catch( e =>{
-        console.log(e)
-    })   
-}
-
-Router.post('/dev_speech/:sid?',  (req, res) => {
-    const json_data = req.body
-    var email = req.user.email
-    var title = json_data.title
-    var transcript = json_data.transcript
-    var sid = req.params.sid
-    var promise
-    if(sid){
-        console.log("BLAH")
-        promise = sql.upsertSpeech(email,title,transcript,sid)
-    }else{
-        promise = sql.upsertSpeech(email,title,transcript)
-    }
-
-    promise.then(s =>{
-        dummyDataPopulation(req,res,s)
-    }).catch(e => {
-        console.log(e)
-        res.send("Speech could not be created.");
-    })
-});
-
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
     sql.getAllSpeechesForASpecificUser(email).then(data => {
@@ -81,22 +35,37 @@ Router.get('/speech_previews',  function (req, res) {
     })
 });
 
-Router.post('/speech', upload.single('audio'), async (req,res) =>{
+Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
     const json_data = req.body
     var initialData = {"audioFile" : req.file.path};
     var email = req.user.email
     var title = json_data.title
-    console.log(email,title,initialData)
+    var sid = req.params.sid
+    
     var analysisCore = generateAnalysisCore()
-    analysisCore.intialize("audioFile",initialData).then((allData : any) => {    
-        sql.upsertSpeech(email,title,allData.transcript)
-        .then(s =>{
+
+    analysisCore.intialize("audioFile",initialData).then((allData : any) => {  
+        var transcript = allData.transcript;
+        var promise;
+        if(sid){
+            promise = sql.upsertSpeech(email,title,transcript,sid)
+        }else{
+            promise = sql.upsertSpeech(email,title,transcript)
+        }  
+        promise.then(s =>{
+            var promises;
             var id = s.id
             for(var x of allData.languageToolErrors.matches){
-                sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+                var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+                promises.concat(errPromise);
             }
+            console.log(allData)
+            Promise.all(promises).then(() =>{
+                sql.finalizeAttempt(id).then(() =>{
+                    res.send(s)
+                })
+            })
         })
-        res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
     })
