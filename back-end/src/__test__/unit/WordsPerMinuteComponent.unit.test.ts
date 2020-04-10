@@ -1,8 +1,5 @@
-
-
-import * as mm from 'music-metadata';
 import WordsPerMinuteComponent from '../../analysis/WordsPerMinuteComponent';
-
+import * as mm from 'music-metadata';
 
 function resolveWrap(arg){
   return new Promise((resolve,reject) =>{

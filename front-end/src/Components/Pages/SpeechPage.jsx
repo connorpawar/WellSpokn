@@ -54,7 +54,7 @@ export default function SpeechPage(props) {
 			.then(response => response.json())
 			.then(JSONresponse => {setSpeech(JSONresponse); setBusy(false)})
 			.catch(error => console.log("fetch error", error));
-	})
+	}, [])
 
 	const data = [
 		{ "y": 8, "x": "Tempo" },
