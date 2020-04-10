@@ -12,37 +12,41 @@ const upload = storage
 
 var Router = express.Router();
 
-Router.get('/speech/:id',  function (req, res) {
-    var userId = req.user.id
-    var speechId = req.params.id
-    sql.getSpecificSpeech(userId,speechId).then(data => {
+function getSpecificSpeech(res, uid, sid){
+    sql.getSpecificSpeech(uid,sid).then(data => {
         res.send(data)
     }).catch(e =>{
         res.send(e)
     })
+}
+
+Router.get('/speech/:id',  function (req, res) {
+    var userId = req.user.id
+    var speechId = req.params.id
+    getSpecificSpeech(res,userId,speechId)
 });
 
 //TODO: Put in dev mode again later.
 function dummyDataPopulation(req,res,speech){
     var sid = speech.id
-    var promises = []
+    var uid = speech.user_id
     var initialData = {"transcript" : speech.transcript};
+    var promises = []
     var analysisCore = generateAnalysisCore()
-    analysisCore.intialize("transcript",initialData).then((allData : any) => { 
+    analysisCore.intialize("transcript",initialData).then(async (allData : any) => { 
         console.log(allData)  
         for(var x of allData.languageToolErrors.matches){
-            sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            var err = sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            promises.concat(err)
         }
-        res.send(allData.transcript)
+        Promise.all(promises).then(()=>{
+            sql.finalizeAttempt(sid).then(() =>{
+                getSpecificSpeech(res,uid,sid)
+            })
+        });
     }).catch( e =>{
         console.log(e)
-    })
-    
-    Promise.all(promises).then(() =>{
-        sql.finalizeAttempt(sid).then(a =>{
-            res.send({id:sid});
-        })
-    })
+    })   
 }
 
 function SpeechPlacement(req, res) {
