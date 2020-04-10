@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import NavBar from '../Layout/NavBar';
-import BarGraph from '../Dashboard/BarGraph';
+import LineGraph from '../Dashboard/LineGraph';
 import SpeechEditor from '../Dashboard/SpeechEditor';
 import NewAttempt from '../Layout/NewAttempt';
 import TotalErrors from '../Dashboard/TotalErrors';
@@ -115,9 +115,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{/*line graph*/}
-										<b>Placeholder Error Metrics</b>
-										<BarGraph data={data} />
+										<LineGraph data={speech} />
 									</CardContent>
 								</Card>
 							</Grid>

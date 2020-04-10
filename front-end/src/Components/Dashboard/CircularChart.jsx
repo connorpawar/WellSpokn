@@ -10,7 +10,7 @@ export default function CircularChart(props) {
 			'Grammar',
 			'Filler Words',
 			'Repetition',
-			'Monotone'
+			'Tone'
 		],
 		datasets: [{
 			data: props.data.map(x => x.count),
