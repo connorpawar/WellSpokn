@@ -70,7 +70,7 @@ export default function Dropzone(props) {
 		var form_data = new FormData();
 		form_data.append('title', props.title);
         form_data.append('file',file[0]);
-        fetch('api/upload_blob', {
+        fetch('api/upload_speech', {
           method : 'POST',
           body: form_data
         }).then(r =>{
