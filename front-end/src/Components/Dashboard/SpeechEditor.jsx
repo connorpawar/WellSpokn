@@ -5,6 +5,8 @@ import { Editor, EditorState, ContentState, CompositeDecorator } from 'draft-js'
 
 export default function SpeechEditor(props) {
 
+	let counts = props.counts;
+
 	const [errors, setErrors] = React.useState(props.errors);
 
 	const HighlightedErrors = (props) => {
@@ -15,14 +17,11 @@ export default function SpeechEditor(props) {
 
 		props.errors.forEach(error => { //can't break/return out of foreach should change later
 			if (props.start === parseInt(error.Start) && props.end === parseInt(error.End)) {
-				if (error.Type === "Tone") {
-					highlightColor = "PaleGoldenRod"
-				} else if (error.Type === "Tempo") {
-					highlightColor = "LightSalmon"
-				} else if (error.Type === "Grammar") {
-					highlightColor = "Pink"
-				} else if (error.Type === "Filler") {
-					highlightColor = "SkyBlue"
+				for(let i = 0; i < props.counts.length; i++){
+					if (error.Type === props.counts[i].type) {
+						highlightColor = props.counts[i].color;
+						break;
+					}
 				}
 				description = error.Description;
 				text = props.children;
@@ -53,7 +52,7 @@ export default function SpeechEditor(props) {
 			{
 				strategy: handleErrors,
 				component: HighlightedErrors,
-				props: { errors }
+				props: { errors, counts }
 			},
 		]);
 
