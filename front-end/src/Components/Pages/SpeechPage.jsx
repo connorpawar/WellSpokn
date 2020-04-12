@@ -37,18 +37,23 @@ export default function SpeechPage(props) {
 		"errors": []
 	}
 
-	let counts = [
-		{ "count": 0, "type": "Tempo" },
-		{ "count": 0, "type": "Grammar" },
-		{ "count": 0, "type": "Filler Words" },
-		{ "count": 0, "type": "Repetition" },
-		{ "count": 0, "type": "Monotone" },
+	let counts = [];
+
+	let colors = [
+		'#FF6384',
+		'#4BC0C0',
+		'#FFCE56',
+		'#36A2EB',
+		'#E7E9ED',
 	];
+
+	let colorIter = 0;
+
+	let error_types = new Set();
 
 	const [speech, setSpeech] = useState(temp);
 	const [isBusy, setBusy] = useState(true);
 
-	//props.history.location.state.id
 	useEffect(() => {
 		fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
@@ -56,27 +61,23 @@ export default function SpeechPage(props) {
 			.catch(error => console.log("fetch error", error));
 	}, [])
 
-	const data = [
-		{ "y": 8, "x": "Tempo" },
-		{ "y": 4, "x": "Grammar" },
-		{ "y": 5, "x": "Filler Words" },
-		{ "y": 10, "x": "Repetition" },
-		{ "y": 5, "x": "Monotone" },
-	];
-
+//merges the types and counts of each error into the counts array
 	speech.errors.forEach(x =>{
-		if(x.Type === "Tempo"){
-			counts[0].count++;
-		} else if(x.Type === "Grammar"){
-			counts[1].count++;
-		} else if(x.Type === "Filler"){
-			counts[2].count++;
-		} else if(x.Type === "Repetition"){
-			counts[3].count++;
-		} else if(x.Type === "Tone"){
-			counts[4].count++;
+		if(!error_types.has(x.Type)){
+		error_types.add(x.Type);
+		counts.push({"count": 1, "type": x.Type, "color": colors[colorIter]})
+		colorIter++;
+		colorIter = colorIter % 5;
+		} else{
+		for(let i = 0; i < counts.length; i++){
+			if(counts[i].type == x.Type){
+			counts[i].count++;
+			break;
+			}
 		}
-		});
+		}
+	});
+
 
 	return (
 		<div>
@@ -93,7 +94,7 @@ export default function SpeechPage(props) {
 								<Typography component="h1" variant="h5" color="primary" gutterBottom>
 									{speech.name}
 								</Typography>
-								<SpeechEditor Content={speech.transcript} errors={speech.errors} />
+								<SpeechEditor Content={speech.transcript} errors={speech.errors} counts={counts} />
 							</CardContent>
 						</Card>
 					</Grid>
@@ -116,7 +117,7 @@ export default function SpeechPage(props) {
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<LineGraph data={speech} />
+										<LineGraph data={speech} counts={counts} />
 									</CardContent>
 								</Card>
 							</Grid>
