@@ -55,6 +55,22 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
         promise.then(s =>{
             var promises;
             var id = s.id
+            
+            //TODO Modifiy thresholds as needed.
+            if(allData.wordsPerMinute > 150){
+                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations."));
+            }else if(allData.wordsPerMinute < 100){
+                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations."));
+            }
+            
+            //TODO Modifiy thresholds as needed.
+            var sentimentScore = allData.sentiment[0].documentSentiment.score;
+            if(allData.sentiment[0].documentSentiment.score > 0.5){
+                promises.concat(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly positive things to say; this being emotionally positive a goal of your speech?"));
+            }else if(allData.sentiment[0].documentSentiment.score < -0.5){
+                promises.concat(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly negative things to say; this being emotionally negative a goal of your speech?"));
+            }
+
             for(var x of allData.languageToolErrors.matches){
                 var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
                 promises.concat(errPromise);
