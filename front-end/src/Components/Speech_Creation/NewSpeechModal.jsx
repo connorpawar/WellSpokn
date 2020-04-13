@@ -61,12 +61,12 @@ export default function NewSpeechModal(props) {
 			{record &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Speech</DialogTitle>
-					<Recorder title={title} setTranscript={props.setTranscript}/>
+					<Recorder handleClose={handleClose} title={title} setTranscript={props.setTranscript}/>
 				</div>
 			}
 			{upload &&
 				<div>
-					<Dropzone title={title} onFilesAdded={console.log} />
+					<Dropzone handleClose={handleClose} title={title} onFilesAdded={console.log} />
 				</div>
 			}
 		</Dialog>

@@ -16,7 +16,7 @@ import Dropzone from './Dropzone';
 
 import {useNewSpeechModal} from '../../CustomHooks/useNewSpeechModal';
 
-const options = ['Record New Speech', 'Upload Existing Speech'];
+const options = ['Record New Attempt', 'Upload New Attempt'];
 const useStyles = makeStyles(theme => ({
 	avatar: {
 		backgroundColor: blue[100],
@@ -44,8 +44,8 @@ export default function NewAttemptModal(props) {
 								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
 									<ListItemAvatar>
 										<Avatar className={classes.avatar}>
-											{option === 'Record New Speech' && <MicIcon />}
-											{option === 'Upload Existing Speech' && <UploadIcon />}
+											{option === 'Record New Attempt' && <MicIcon />}
+											{option === 'Upload New Attempt' && <UploadIcon />}
 										</Avatar>
 									</ListItemAvatar>
 									<ListItemText primary={option} />
@@ -56,12 +56,12 @@ export default function NewAttemptModal(props) {
 			{record &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Attempt</DialogTitle>
-					<Recorder setTranscript={props.setTranscript}/>
+					<Recorder handleClose={handleClose} setTranscript={props.setTranscript} id={props.id} setChangedSpeech={props.setChangedSpeech} />
 				</div>
 			}
 			{upload &&
 				<div>
-					<Dropzone onFilesAdded={console.log} />
+					<Dropzone handleClose={handleClose} onFilesAdded={console.log} id={props.id} setChangedSpeech={props.setChangedSpeech} />
 				</div>
 			}
 		</Dialog>
