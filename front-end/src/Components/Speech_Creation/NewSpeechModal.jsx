@@ -46,7 +46,7 @@ export default function NewSpeechModal(props) {
 					<NewSpeechForm setSpeechTitle={setTitle} className={classes.form} />
 					<List>
 						{options.map(option => (
-								<ListItem button onClick={() => handleListItemClick(option)} key={option}>
+								<ListItem button onClick={() => handleListItemClick(option)} key={option} disabled={title === ""}>
 									<ListItemAvatar>
 										<Avatar className={classes.avatar}>
 											{option === 'Record New Speech' && <MicIcon />}

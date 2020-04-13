@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouteLink } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import logo from '../../Images/WellSpoknCropped.png';
 
@@ -20,6 +22,9 @@ import useLogin from '../../CustomHooks/useLogin';
 import { loginUser } from '../../actions';
 import { useHomePage } from '../../CustomHooks/useHompage'
 
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright() {
 	return (
@@ -58,15 +63,24 @@ export default function Login() {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const user = useSelector(state => state.user);
+	const [failed, setFailed] = React.useState(false);
+
 	const dispatch = useDispatch();
-	const { onLogin, onPageLoad } = useHomePage(); 
+	const { onLogin, onPageLoad } = useHomePage();
+
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setFailed(false);
+	};
 
 	useEffect(() => {
-		if(localStorage.token){
+		if (localStorage.token) {
 			history.push((onPageLoad(localStorage.token)));
 		}
-	  });
+	});
 
 	const loginSubmit = () => {
 		fetch('api/login', {
@@ -78,21 +92,26 @@ export default function Login() {
 		})
 			.then(response => response.json())
 			.then((data) => {
-				localStorage.setItem("token", data.token);
-				dispatch(loginUser(data));
-				
-				history.push((onLogin(data.token)));
+				if (data.status == "success") {
+					localStorage.setItem("token", data.token);
+					dispatch(loginUser(data));
+
+					history.push((onLogin(data.token)));
+				} else {
+					setFailed(true);
+				}
 			})
-			.catch(error => console.log("fetch error", error));
+			.catch(error => { setFailed(true); console.log("fetch error", error)});
 	}
 
 	const { inputs, handleInputChange, handleSubmit } = useLogin(loginSubmit);
 
 	return (
+		<React.Fragment>
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>
-				<img src={logo} alt="Company Logo" height="70"></img>
+				<img src={logo} alt="Company Logo" height="70" />
 				<form className={classes.form} onSubmit={handleSubmit}>
 					<TextField
 						variant="outlined"
@@ -151,5 +170,11 @@ export default function Login() {
 				<Copyright />
 			</Box>
 		</Container>
+		<Snackbar open={failed} autoHideDuration={6000} onClose={handleClose}>
+			<Alert onClose={handleClose} severity="error">
+				Login Failed! Please try again.
+			</Alert>
+		</Snackbar>
+		</React.Fragment>
 	);
 }

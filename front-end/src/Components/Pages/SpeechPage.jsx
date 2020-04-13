@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import NavBar from '../Layout/NavBar';
+import LineGraph from '../Dashboard/LineGraph';
 import BarGraph from '../Dashboard/BarGraph';
 import SpeechEditor from '../Dashboard/SpeechEditor';
 import NewAttempt from '../Layout/NewAttempt';
@@ -36,25 +37,47 @@ export default function SpeechPage(props) {
 		"errors": []
 	}
 
+	let counts = [];
+
+	let colors = [
+		'#FF6384',
+		'#4BC0C0',
+		'#FFCE56',
+		'#36A2EB',
+		'#E7E9ED',
+	];
+
+	let colorIter = 0;
+
+	let error_types = new Set();
+
 	const [speech, setSpeech] = useState(temp);
 	const [isBusy, setBusy] = useState(true);
 
-	//props.history.location.state.id
 	useEffect(() => {
 		fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
 			.then(JSONresponse => {setSpeech(JSONresponse); setBusy(false)})
 			.catch(error => console.log("fetch error", error));
-	})
+	}, [])
 
-	const data = [
-		{ "y": 8, "x": "Tempo" },
-		{ "y": 4, "x": "Grammar" },
-		{ "y": 5, "x": "Filler Words" },
-		{ "y": 10, "x": "Repetition" },
-		{ "y": 5, "x": "Monotone" },
-	];
-	
+//merges the types and counts of each error into the counts array
+	speech.errors.forEach(x =>{
+		if(!error_types.has(x.Type)){
+		error_types.add(x.Type);
+		counts.push({"count": 1, "type": x.Type, "color": colors[colorIter]})
+		colorIter++;
+		colorIter = colorIter % 5;
+		} else{
+		for(let i = 0; i < counts.length; i++){
+			if(counts[i].type == x.Type){
+			counts[i].count++;
+			break;
+			}
+		}
+		}
+	});
+
 
 	return (
 		<div>
@@ -71,7 +94,7 @@ export default function SpeechPage(props) {
 								<Typography component="h1" variant="h5" color="primary" gutterBottom>
 									{speech.name}
 								</Typography>
-								<SpeechEditor Content={speech.transcript} />
+								<SpeechEditor Content={speech.transcript} errors={speech.errors} counts={counts} />
 							</CardContent>
 						</Card>
 					</Grid>
@@ -80,31 +103,35 @@ export default function SpeechPage(props) {
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<TotalErrors count="12" date="02/20/2020" />
+										<TotalErrors count={speech.latest_error_count} date={speech.date_last_modified} />
 									</CardContent>
 								</Card>
 							</Grid>
 							<Grid item sm={6} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{/*change to pie chart*/}
-										<CircularChart data={data} />
+										<CircularChart data={counts} />
 									</CardContent>
 								</Card>
 							</Grid>
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										{/*line graph*/}
-										<b>Placeholder Error Metrics</b>
-										<BarGraph data={data} />
+										<LineGraph data={speech} counts={counts} />
 									</CardContent>
 								</Card>
 							</Grid>
 							<Grid item sm={12} xs={12}>
 								<Card className={classes.card}>
 									<CardContent>
-										<ListOfErrors />
+										<BarGraph data={counts} />
+									</CardContent>
+								</Card>
+							</Grid>
+							<Grid item sm={12} xs={12}>
+								<Card className={classes.card}>
+									<CardContent>
+										<ListOfErrors data={speech.errors} />
 									</CardContent>
 								</Card>
 							</Grid>
@@ -113,7 +140,7 @@ export default function SpeechPage(props) {
 				</Grid>
 			</div>
 			}
-			<NewAttempt setTranscript={speech.transcript} />
+			<NewAttempt setTranscript={speech.transcript}/>
 		</div>
 	);
 }

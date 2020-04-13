@@ -2,12 +2,15 @@ import React from 'react';
 import { ReactMic } from 'react-mic';
 import Button from '@material-ui/core/Button'
 
+var title = "";
+ 
 export default class Recorder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      record: false
+	  record: false,
 	}
+	title = props.title;
   }
 
   startRecording = () => {
@@ -21,39 +24,27 @@ export default class Recorder extends React.Component {
       record: false
     });
   }
-
-  sendRecording = () => {
-    this.setState({
-      record: false
-    });
-  }
  
   onData(recordedBlob) {
     console.log('chunk of real-time data is: ', recordedBlob);
   }
 
   onStop(recordedBlob) {
-    var reader = new FileReader();
+	var reader = new FileReader();
 
-    reader.readAsDataURL(recordedBlob.blob);
-      reader.onloadend = function() {
-      var form_data = new FormData();
-      form_data.append('title', "dummy"); 
-      //TODO: Error
-      /*
-      TypeError: this.props is undefinedRecorder.jsx:41:6
-      onloadend Recorder.jsx:41
-      */
-      form_data.append('audio',recordedBlob.blob);
-      fetch('api/speech', {
-        method : 'POST',
-        body: form_data
-      }).then(r =>{
-        r.text().then(a =>{
-          //this.props.setTranscript(a) //TODO: Temporarily commented out. This has an error regarding undefined somehting.
-          console.log(a)
+    reader.readAsDataURL(recordedBlob.blob); 
+    reader.onloadend = function() {
+		var form_data = new FormData();
+		form_data.append('title', title);
+        form_data.append('audio',recordedBlob.blob);
+        fetch('api/speech', {
+          method : 'POST',
+          body: form_data
+        }).then(r =>{
+          r.text().then(a =>{
+            console.log(a)
+          })
         })
-      })
     }
   }
 
