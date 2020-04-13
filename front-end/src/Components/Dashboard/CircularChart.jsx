@@ -5,29 +5,11 @@ import Typography from '@material-ui/core/Typography';
 export default function CircularChart(props) {
 
 	const data = {
-		labels: [
-			'Tempo',
-			'Grammar',
-			'Filler Words',
-			'Repetition',
-			'Monotone'
-		],
+		labels: props.data.map(x => x.type),
 		datasets: [{
-			data: props.data.map(x => x.y),
-			backgroundColor: [
-				'#FF6384',
-				'#4BC0C0',
-				'#FFCE56',
-				'#E7E9ED',
-				'#36A2EB'
-			],
-			hoverBackgroundColor: [
-				'#FF6384',
-				'#4BC0C0',
-				'#FFCE56',
-				'#E7E9ED',
-				'#36A2EB'
-			]
+			data: props.data.map(x => x.count),
+			backgroundColor: props.data.map(x => x.color),
+			hoverBackgroundColor: props.data.map(x => x.color),
 		}]
 	};
 
