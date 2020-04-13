@@ -3,6 +3,9 @@ import { ReactMic } from 'react-mic';
 import Button from '@material-ui/core/Button'
 
 var title = "";
+var id = "";
+let setChangedSpeech = () => {};
+let handleClose = () => {};
  
 export default class Recorder extends React.Component {
   constructor(props) {
@@ -11,6 +14,9 @@ export default class Recorder extends React.Component {
 	  record: false,
 	}
 	title = props.title;
+	id = props.id;
+	setChangedSpeech = props.setChangedSpeech;
+	handleClose = props.handleClose;
   }
 
   startRecording = () => {
@@ -32,20 +38,35 @@ export default class Recorder extends React.Component {
   onStop(recordedBlob) {
 	var reader = new FileReader();
 
-    reader.readAsDataURL(recordedBlob.blob); 
-    reader.onloadend = function() {
-		var form_data = new FormData();
-		form_data.append('title', title);
-        form_data.append('audio',recordedBlob.blob);
-        fetch('api/speech', {
-          method : 'POST',
-          body: form_data
-        }).then(r =>{
-          r.text().then(a =>{
-            console.log(a)
-          })
-        })
-    }
+	reader.readAsDataURL(recordedBlob.blob); 
+	
+	if(id){ //for new attempts
+		reader.onloadend = function() {
+			var form_data = new FormData();
+			form_data.append('audio',recordedBlob.blob);
+			fetch('../api/speech/' + id, {
+			method : 'POST',
+			body: form_data
+			}).then(response => response.json())
+			.then(JSONresponse => {setChangedSpeech(true); handleClose()})
+			.catch(error => console.log("fetch error", error));
+		}
+	} else {
+		reader.onloadend = function() {
+			var form_data = new FormData();
+			form_data.append('title', title);
+			form_data.append('audio',recordedBlob.blob);
+			fetch('api/speech', {
+			method : 'POST',
+			body: form_data
+			}).then(r =>{
+			r.text().then(a =>{
+				console.log(a);
+				handleClose();
+			})
+			})
+		}
+	}
   }
 
   render() {
