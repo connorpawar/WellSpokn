@@ -31,7 +31,7 @@ describe('WordsPerMinuteComponent class', () => {
 
     var component : WordsPerMinuteComponent = new WordsPerMinuteComponent()
 
-    var expectedWordsPerMinute = 5/2.0
+    var expectedWordsPerMinute = 5/(2.0/60)
     var actualWordsPerMinute = await component.analyze(dataInput);
 
     expect(expectedWordsPerMinute).toEqual(actualWordsPerMinute);
