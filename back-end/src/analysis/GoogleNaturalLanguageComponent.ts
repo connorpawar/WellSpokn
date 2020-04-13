@@ -23,6 +23,9 @@ class GoogleNaturalLanguageComponent extends AnalysisComponent<Sentiment>{
       this.languageClient.analyzeSentiment({document: document})
       .then(allData => {
         resolve(allData)
+      }).catch(e => {
+        console.log(e)
+        reject(e)
       })
     });
   }
