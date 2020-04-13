@@ -53,28 +53,32 @@ export default function SpeechPage(props) {
 
 	const [speech, setSpeech] = useState(temp);
 	const [isBusy, setBusy] = useState(true);
+	const [changedSpeech, setChangedSpeech] = useState(true);
 
-	useEffect(() => {
-		fetch('/api/speech/' + props.history.location.state.id)
+	useEffect(() => { //currently reloads multiple times after updating attempt, need to fix later.
+		console.log(changedSpeech)
+		if(changedSpeech){
+			fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
-			.then(JSONresponse => {setSpeech(JSONresponse); setBusy(false)})
+			.then(JSONresponse => {setSpeech(JSONresponse); setChangedSpeech(false); setBusy(false)})
 			.catch(error => console.log("fetch error", error));
-	}, [])
+		}
+	}, [changedSpeech])
 
 //merges the types and counts of each error into the counts array
 	speech.errors.forEach(x =>{
 		if(!error_types.has(x.Type)){
-		error_types.add(x.Type);
-		counts.push({"count": 1, "type": x.Type, "color": colors[colorIter]})
-		colorIter++;
-		colorIter = colorIter % 5;
+			error_types.add(x.Type);
+			counts.push({"count": 1, "type": x.Type, "color": colors[colorIter]})
+			colorIter++;
+			colorIter = colorIter % 5;
 		} else{
-		for(let i = 0; i < counts.length; i++){
-			if(counts[i].type == x.Type){
-			counts[i].count++;
-			break;
+			for(let i = 0; i < counts.length; i++){
+				if(counts[i].type == x.Type){
+					counts[i].count++;
+					break;
+				}
 			}
-		}
 		}
 	});
 
@@ -140,7 +144,7 @@ export default function SpeechPage(props) {
 				</Grid>
 			</div>
 			}
-			<NewAttempt setTranscript={speech.transcript}/>
+			<NewAttempt id={speech.id} setChangedSpeech={setChangedSpeech}/>
 		</div>
 	);
 }

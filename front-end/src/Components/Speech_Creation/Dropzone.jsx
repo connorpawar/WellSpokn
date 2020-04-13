@@ -7,6 +7,8 @@ import { useFileDisplay } from '../../CustomHooks/useFileDisplay'
 import { Button } from '@material-ui/core';
 import { useEffect } from 'react';
 
+import cloud from '../../Images/cloud_upload-24px.svg';
+
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
@@ -67,17 +69,30 @@ export default function Dropzone(props) {
 	};
 
 	const sendToBackEnd = () => {
-		var form_data = new FormData();
-		form_data.append('title', props.title);
-        form_data.append('audio',file[0]);
-        fetch('api/speech', {
-          method : 'POST',
-          body: form_data
-        }).then(r =>{
-          r.text().then(a =>{
-            console.log(a)
-          })
-        })
+
+		if (props.id) { //For new attempts
+			var form_data = new FormData();
+			form_data.append('audio', file[0]);
+			fetch('../api/speech/' + props.id, {
+				method: 'POST',
+				body: form_data
+			}).then(response => response.json())
+			.then(JSONresponse => {props.setChangedSpeech(true); props.handleClose()})
+			.catch(error => console.log("fetch error", error));
+		} else {
+			var form_data = new FormData();
+			form_data.append('title', props.title);
+			form_data.append('audio', file[0]);
+			fetch('api/speech', {
+				method: 'POST',
+				body: form_data
+			}).then(r => {
+				r.text().then(a => {
+					console.log(a);
+					props.handleClose();
+				})
+			})
+		}
 	}
 
 	return (
@@ -95,7 +110,7 @@ export default function Dropzone(props) {
 					<img
 						alt="upload"
 						className={classes.Icon}
-						src="cloud_upload-24px.svg"
+						src={cloud}
 					/>
 					<input
 						ref={upload}
