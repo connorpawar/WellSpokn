@@ -14,10 +14,10 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default function NewSpeech() {
+export default function NewSpeech(props) {
 	const classes = useStyles();
 	
-	const { open, selectedValue, handleClickOpen, handleClose } = useNewSpeech();
+	const { open, selectedValue, handleClickOpen, handleClose } = useNewSpeech(props.setReload);
 
 	return (
 		<div>

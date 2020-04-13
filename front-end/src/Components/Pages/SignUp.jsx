@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -10,11 +11,18 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouteLink } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import logo from '../../Images/WellSpoknCropped.png';
 
 import useLogin from '../../CustomHooks/useLogin';
 import { loginUser } from '../../actions';
+import { useHomePage } from '../../CustomHooks/useHompage'
+
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright() {
 	return (
@@ -51,9 +59,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const user = useSelector(state => state.user);
 	const dispatch = useDispatch();
+
+	const { onLogin } = useHomePage(); 
+
+	const [failed, setFailed] = React.useState(false);
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setFailed(false);
+	};
+
 
 	const signupSubmit = () => {
 		fetch('api/register', {
@@ -65,17 +86,22 @@ export default function SignUp() {
 		})
 			.then(response => response.json())
 			.then((data) => {
-				console.log('Success:', data);
-				localStorage.setItem("token", data.token);
-				dispatch(loginUser(data))
-				//need to redirect to correct homepage
+				if (data.status == "success") {
+					localStorage.setItem("token", data.token);
+					dispatch(loginUser(data));
+
+					history.push((onLogin(data.token)));
+				} else {
+					setFailed(true);
+				}
 			})
-			.catch(error => console.log("fetch error", error));
+			.catch(error => {setFailed(true); console.log("fetch error", error)});
 	}
 
 	const { inputs, handleInputChange, handleSubmit } = useLogin(signupSubmit);
 
 	return (
+		<React.Fragment>
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>
@@ -159,5 +185,11 @@ export default function SignUp() {
 				<Copyright />
 			</Box>
 		</Container>
+		<Snackbar open={failed} autoHideDuration={6000} onClose={handleClose}>
+			<Alert onClose={handleClose} severity="error">
+				Signup Failed! Please try again.
+			</Alert>
+		</Snackbar>
+		</React.Fragment>
 	);
 }
