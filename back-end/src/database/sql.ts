@@ -254,7 +254,10 @@ class SQL{
         .then(attempt => {
           resolve(attempt.mapping)
         })
-      });
+      }).catch(e =>{
+        console.log(e);
+        reject(e)
+      })
     })
   }
 }
