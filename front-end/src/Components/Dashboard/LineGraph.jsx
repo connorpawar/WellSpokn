@@ -51,7 +51,6 @@ export default function LineGraph(props) {
 
 		for(let i = 0; i < errorTypes.length; i++){
 			let err = errorTypes[i];
-			console.log(err, x[err]);
 			if(err in x){
 				graphData.datasets[i].data.push(x[err]);
 			} else {
