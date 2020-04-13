@@ -11,7 +11,7 @@ export const useNewSpeechModal = (onClose, selectedValue) => {
 	};
 
 	const handleListItemClick = value => {
-		if (value === 'Record New Speech') {
+		if (value === 'Record New Speech' || value === 'Record New Attempt') {
 			setRecord(true);
 			setUpload(false);
 		} else {
