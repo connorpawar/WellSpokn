@@ -26,6 +26,16 @@ Router.get('/speech/:id',  function (req, res) {
     getSpecificSpeech(res,userId,speechId)
 });
 
+
+//TODO: Uncomment later
+/*
+Router.post('/newAttempt/:id?', upload.single('audio'), async (req,res) =>{
+    var id = req.params.id
+    sql.finalizeAttempt(id).then(() =>{
+        res.send("h")
+    })
+});
+
 function dummyDataPopulation(req,res,speech){
     var sid = speech.id
     var uid = speech.user_id
@@ -69,7 +79,7 @@ Router.post('/dev_speech/:sid?',  (req, res) => {
         res.send("Speech could not be created.");
     })
 });
-
+*/
 
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
@@ -98,14 +108,14 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
             promise = sql.upsertSpeech(email,title,transcript)
         }  
         promise.then(s =>{
-            var promises;
+            var promises = [];
             var id = s.id
             
             //TODO Modifiy thresholds as needed.
             if(allData.wordsPerMinute > 150){
-                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations."));
+                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations. If you are around this speed, consider slowing down."));
             }else if(allData.wordsPerMinute < 100){
-                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations."));
+                promises.concat(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations. If you are around this speed, consider speeding up."));
             }
             
             //TODO Modifiy thresholds as needed.
@@ -120,7 +130,7 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
                 var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
                 promises.concat(errPromise);
             }
-            console.log(allData)
+            console.log(errPromise)
             Promise.all(promises).then(() =>{
                 sql.finalizeAttempt(id).then(() =>{
                     res.send(s)
