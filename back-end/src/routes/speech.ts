@@ -26,6 +26,51 @@ Router.get('/speech/:id',  function (req, res) {
     getSpecificSpeech(res,userId,speechId)
 });
 
+function dummyDataPopulation(req,res,speech){
+    var sid = speech.id
+    var uid = speech.user_id
+    var initialData = {"transcript" : speech.transcript};
+    var promises = []
+    var analysisCore = generateAnalysisCore()
+    analysisCore.intialize("transcript",initialData).then(async (allData : any) => { 
+        console.log(allData)  
+        for(var x of allData.languageToolErrors.matches){
+            var err = sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            promises.concat(err)
+        }
+        Promise.all(promises).then(()=>{
+            console.log(speech)
+            sql.finalizeAttempt(sid).then(() =>{
+                getSpecificSpeech(res,uid,sid)
+            })
+        });
+    }).catch( e =>{
+        console.log(e)
+    })   
+}
+
+Router.post('/dev_speech/:sid?',  (req, res) => {
+    const json_data = req.body
+    var email = req.user.email
+    var title = json_data.title
+    var transcript = json_data.transcript
+    var sid = req.params.sid
+    var promise
+    if(sid){
+        promise = sql.upsertSpeech(email,title,transcript,sid)
+    }else{
+        promise = sql.upsertSpeech(email,title,transcript)
+    }
+
+    promise.then(s =>{
+        dummyDataPopulation(req,res,s)
+    }).catch(e => {
+        console.log(e)
+        res.send("Speech could not be created.");
+    })
+});
+
+
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
     sql.getAllSpeechesForASpecificUser(email).then(data => {
