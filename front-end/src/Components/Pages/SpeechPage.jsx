@@ -56,7 +56,6 @@ export default function SpeechPage(props) {
 	const [changedSpeech, setChangedSpeech] = useState(true);
 
 	useEffect(() => { //currently reloads multiple times after updating attempt, need to fix later.
-		console.log(changedSpeech)
 		if(changedSpeech){
 			fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
