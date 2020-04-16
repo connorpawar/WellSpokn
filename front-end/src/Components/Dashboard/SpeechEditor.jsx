@@ -16,14 +16,14 @@ export default function SpeechEditor(props) {
 		let text = ""
 
 		props.errors.forEach(error => { //can't break/return out of foreach should change later
-			if (props.start === parseInt(error.Start) && props.end === parseInt(error.End)) {
+			if (props.start === parseInt(error.start) && props.end === parseInt(error.end)) {
 				for(let i = 0; i < props.counts.length; i++){
-					if (error.Type === props.counts[i].type) {
+					if (error.type === props.counts[i].type) {
 						highlightColor = props.counts[i].color;
 						break;
 					}
 				}
-				description = error.Description;
+				description = error.description;
 				text = props.children;
 			}
 		})
@@ -37,7 +37,7 @@ export default function SpeechEditor(props) {
 	function highlightErrors(errors, contentBlock, callback) {
 		const text = contentBlock.getText();
 		errors.forEach(error => {
-			callback(parseInt(error.Start), parseInt(error.End));
+			callback(parseInt(error.start), parseInt(error.end));
 		});
 	}
 
