@@ -23,10 +23,10 @@ export default function ListOfErrors(props) {
         </TableHead>
         <TableBody>
           {props.data.map(row => (
-            <TableRow key={row.Start}>
-              <TableCell>{row.Start}</TableCell>
-              <TableCell>{row.Type}</TableCell>
-              <TableCell>{row.Description}</TableCell>
+            <TableRow key={row.start}>
+              <TableCell>{row.start}</TableCell>
+              <TableCell>{row.type}</TableCell>
+              <TableCell>{row.description}</TableCell>
             </TableRow>
           ))}
         </TableBody>
