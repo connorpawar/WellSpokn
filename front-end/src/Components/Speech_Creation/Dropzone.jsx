@@ -70,6 +70,8 @@ export default function Dropzone(props) {
 
 	const sendToBackEnd = () => {
 
+		props.setLoading(true);
+
 		if (props.id) { //For new attempts
 			var form_data = new FormData();
 			form_data.append('audio', file[0]);
@@ -77,7 +79,7 @@ export default function Dropzone(props) {
 				method: 'POST',
 				body: form_data
 			}).then(response => response.json())
-			.then(JSONresponse => {props.setChangedSpeech(true); props.handleClose()})
+			.then(JSONresponse => {props.setChangedSpeech(true); props.setLoading(false); props.handleClose()})
 			.catch(error => console.log("fetch error", error));
 		} else {
 			var form_data = new FormData();
@@ -89,6 +91,7 @@ export default function Dropzone(props) {
 			}).then(r => {
 				r.text().then(a => {
 					console.log(a);
+					props.setLoading(false);
 					props.handleClose();
 				})
 			})
