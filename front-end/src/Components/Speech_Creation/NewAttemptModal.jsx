@@ -56,12 +56,12 @@ export default function NewAttemptModal(props) {
 			{record &&
 				<div>
 					<DialogTitle id="simple-dialog-title">Record New Attempt</DialogTitle>
-					<Recorder handleClose={handleClose} setTranscript={props.setTranscript} id={props.id} setChangedSpeech={props.setChangedSpeech} />
+					<Recorder handleClose={handleClose} setLoading={props.setLoading} setTranscript={props.setTranscript} id={props.id} setChangedSpeech={props.setChangedSpeech} />
 				</div>
 			}
 			{upload &&
 				<div>
-					<Dropzone handleClose={handleClose} onFilesAdded={console.log} id={props.id} setChangedSpeech={props.setChangedSpeech} />
+					<Dropzone handleClose={handleClose} setLoading={props.setLoading} onFilesAdded={console.log} id={props.id} setChangedSpeech={props.setChangedSpeech} />
 				</div>
 			}
 		</Dialog>

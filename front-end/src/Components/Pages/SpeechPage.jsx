@@ -15,6 +15,7 @@ import ListOfErrors from '../Dashboard/ListOfErrors';
 import CircularChart from '../Dashboard/CircularChart';
 import Loader from '../Layout/Loader';
 
+
 const useStyles = makeStyles({
 	card: {
 		minWidth: 275,
@@ -52,6 +53,7 @@ export default function SpeechPage(props) {
 	let error_types = new Set();
 
 	const [speech, setSpeech] = useState(temp);
+	const [loading, setLoading] = useState(false);
 	const [isBusy, setBusy] = useState(true);
 	const [changedSpeech, setChangedSpeech] = useState(true);
 
