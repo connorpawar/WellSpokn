@@ -56,7 +56,6 @@ export default function SpeechPage(props) {
 	const [changedSpeech, setChangedSpeech] = useState(true);
 
 	useEffect(() => { //currently reloads multiple times after updating attempt, need to fix later.
-		console.log(changedSpeech)
 		if(changedSpeech){
 			fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
@@ -67,9 +66,9 @@ export default function SpeechPage(props) {
 
 //merges the types and counts of each error into the counts array
 	speech.errors.forEach(x =>{
-		if(!error_types.has(x.Type)){
-			error_types.add(x.Type);
-			counts.push({"count": 1, "type": x.Type, "color": colors[colorIter]})
+		if(!error_types.has(x.type)){
+			error_types.add(x.type);
+			counts.push({"count": 1, "type": x.type, "color": colors[colorIter]})
 			colorIter++;
 			colorIter = colorIter % 5;
 		} else{

@@ -8,7 +8,15 @@ export default function LineGraph(props) {
 
 	let errorTypes = props.counts.map(x => x.type);
 
-	console.log(errorTypes);
+	//adds errors from previous attempts to error list
+	for(let i = 0; i < props.data.errors_by_attempt.length; i++){
+		let keys = Object.keys(props.data.errors_by_attempt[i]);
+		keys.forEach( (err) => {
+			if(!(errorTypes.includes(err))){
+				errorTypes.push(err);
+			}
+		})
+	}
 
 	let dataSets = [];
 	let colorIter = 0;
@@ -53,7 +61,7 @@ export default function LineGraph(props) {
 			let err = errorTypes[i];
 			if(err in x){
 				graphData.datasets[i].data.push(x[err]);
-			} else {
+			} else{
 				graphData.datasets[i].data.push(0);
 			}
 		}
