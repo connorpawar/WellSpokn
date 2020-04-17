@@ -21,5 +21,12 @@ export const useFileDisplay = () => {
 		console.log(file)
 	};
 
-	return { file, fileDisplay, onFileAdded, onDrop }
+	const clearFile = event => {
+		event.preventDefault();
+		const file = null
+		setFile(file);
+		setFileDisplay(false);
+	};
+
+	return { file, fileDisplay, onFileAdded, onDrop, clearFile }
 }

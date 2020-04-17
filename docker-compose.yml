@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  wellspokn-database:
+    build: ./docker/database
+    image: wellspokn-database
+    volumes:
+     - db-data:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+  wellspokn-redis:
+    build: ./docker/redis
+    image: wellspokn-redis
+    volumes:
+     - session-data:/data
+    ports:
+    - "6379:6379"
+    network_mode: "host"
+  front-end:
+    build: ./front-end
+    image: wellspokn-frontend
+    ports:
+    - "5000:5000"
+    network_mode: "host"
+  back-end:
+    build: ./back-end
+    image: wellspokn-backend
+    ports:
+    - "8080:8080"
+    network_mode: "host"
+    restart: always
+  load-balancer:
+    build: ./docker/load-balancer
+    image: load-balancer
+    ports:
+    - "80:80"
+    network_mode: "host"
+    
+volumes:
+  db-data:
+  session-data:

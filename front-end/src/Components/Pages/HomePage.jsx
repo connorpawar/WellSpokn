@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Chip from '@material-ui/core/Chip';
 
-import NavBar from '../NavBar';
-import NewSpeech from '../NewSpeech';
+import NavBar from '../Layout/NavBar';
+import NewSpeech from '../Layout/NewSpeech';
 
 import Grow from '@material-ui/core/Grow';
 
@@ -68,6 +68,8 @@ export default function HomePage() {
 
 	const [speechCards, setSpeechCards] = useState(speeches);
 
+	const [reload, setReload] = useState(false);
+
 	const searchSpeeches = (searchTerm) => {
 		let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
 		return setSpeechCards(searchedSpeeches);
@@ -90,7 +92,7 @@ export default function HomePage() {
 		.then(response => response.json())
 		.then(JSONresponse => setSpeechCards(JSONresponse.speeches))
 		.catch(error => console.log("fetch error", error));
-	}, [])
+	}, [reload])
 
 	return (
 		<div>
@@ -129,7 +131,7 @@ export default function HomePage() {
 					))}
 				</Grid>
 			</div>
-			<NewSpeech />
+			<NewSpeech setReload={setReload}/>
 		</div>
 	);
 }

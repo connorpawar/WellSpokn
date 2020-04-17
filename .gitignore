@@ -13,6 +13,7 @@
 /back-end/backend.js
 /back-end/ts-built
 /back-end/uploads
+/back-end/auth/authKey.json
 
 # misc
 .DS_Store
