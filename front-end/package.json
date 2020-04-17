@@ -3,21 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.5.0",
-    "@material-ui/icons": "^4.4.3",
-    "babel-preset-react-app": "^9.0.2",
-    "draft-js": "^0.11.1",
+    "@material-ui/core": "^4.9.9",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.49",
+    "babel-preset-react-app": "^9.1.2",
+    "chart.js": "^2.9.3",
+    "draft-js": "^0.11.5",
     "express": "^4.17.1",
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1",
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.13.1",
     "react-mic": "^12.4.1",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.1",
-    "react-scroll": "^1.7.14",
-    "react-test-renderer": "^16.12.0",
-    "react-vis": "^1.11.7"
+    "react-scripts": "^3.4.1",
+    "react-scroll": "^1.7.16",
+    "react-test-renderer": "^16.13.1",
+    "redux": "^4.0.5"
   },
-  "proxy": "http://localhost:8080/",
+  "proxy": "http://localhost:5000/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -40,7 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^9.4.0",
+    "@testing-library/react": "^9.5.0",
     "@testing-library/react-hooks": "^3.2.1"
   }
 }

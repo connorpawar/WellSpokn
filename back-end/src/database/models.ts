@@ -6,9 +6,10 @@ sequelize = new Sequelize(config.get('DATABASE'))
 
 export class Users extends Sequelize.Model{}
 Users.init({
-  username: {type: Sequelize.STRING, unique:"username"},
+  firstname: {type: Sequelize.STRING},
+  lastname: {type: Sequelize.STRING},
   password: Sequelize.STRING,
-  email: Sequelize.STRING,
+  email: {type: Sequelize.STRING, unique:"email"}
 },
 {
   sequelize,

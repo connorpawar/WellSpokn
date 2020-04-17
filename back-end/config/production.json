@@ -6,6 +6,7 @@
         "host": "localhost",
         "dialect": "postgres"
     },
+    "SESSION_STORE":"redis",
     "PORT":8080,
     "ROOT_ROUTE":"/"
 }
