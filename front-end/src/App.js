@@ -1,6 +1,7 @@
 import React,  { useState } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './Components/Pages/HomePage';
+import Logout from './Components/Pages/Logout';
 import Settings from './Components/Pages/Settings';
 import SignUp from './Components/Pages/SignUp';
 import Login from './Components/Pages/Login';
@@ -44,6 +45,7 @@ export default function App() {
 					<Route exact path='/' component={Landing} />
 					<Route exact path='/speeches' component={HomePage} />
 					<Route exact path='/Login' component={Login}/>
+					<Route exact path='/Logout' component={Logout}/>
 					<Route exact path='/SignUp' component={SignUp}/>
 					<Route exact path='/Landing' component={Landing}/>
 					<Route exact path='/Settings' render={() => <Settings Mode={Mode} IsThemeLight={isThemeLight} />} />

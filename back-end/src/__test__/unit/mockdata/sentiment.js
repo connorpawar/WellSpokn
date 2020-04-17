@@ -1,4 +1,5 @@
-module.exports = {
+module.exports = [
+  {
     "sentences": [
       {
         "text": { "content": "I hate coconut flavored foods.", "beginOffset": -1 },
@@ -21,4 +22,5 @@ module.exports = {
     ],
     "documentSentiment": { "magnitude": 1.399999976158142, "score": 0.4000000059604645 },
     "language": "en"
-}
+  }
+]

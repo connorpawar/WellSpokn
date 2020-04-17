@@ -10,7 +10,7 @@ const language : any = require('@google-cloud/language');
 
 class GoogleNaturalLanguageComponent extends AnalysisComponent<Sentiment>{
   languageClient = new language.LanguageServiceClient();
-  inputTopic = new Set("transcript");
+  inputTopic = new Set(["transcript"]);
   outputTopic = "sentiment";
 
   analyze(data: Object) : Promise<Sentiment>{
@@ -22,7 +22,10 @@ class GoogleNaturalLanguageComponent extends AnalysisComponent<Sentiment>{
       };
       this.languageClient.analyzeSentiment({document: document})
       .then(allData => {
-        resolve(allData.documentSentiment)
+        resolve(allData)
+      }).catch(e => {
+        console.log(e)
+        reject(e)
       })
     });
   }

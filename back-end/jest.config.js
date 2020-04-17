@@ -1,17 +1,14 @@
 module.exports = {
   "testEnvironment": "node",
-  "roots": [
-    "./src/__test__",
-  ],  
   "testMatch": [
-    "**/*.+(test.ts)",
+    "**/*.+(unit.test.ts)",
   ],
   "transform": {
     "^.+\\.(ts)$": "ts-jest"
   },
   "modulePaths": [
-    "/"
-  ],
+    "<rootDir>"
+  ],  
   "resetMocks" : true,
   "resetModules" : true,
   "restoreMocks":true
