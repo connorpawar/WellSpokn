@@ -24,16 +24,17 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
         audio: audio,
         config: config,
       };
-      this.speechClient.longRunningRecognize(request).then(response => {
-        console.log(response);
-        var [transcriptParts] = response
-        const transcription = transcriptParts.results
-          .map(result => result.alternatives[0].transcript)
-          .join('\n');
-        resolve(transcription)
-      }).catch(e => {
-        console.log(e)
-        reject(e)
+      
+
+      this.speechClient.longRunningRecognize(request).then(recongizeReturn =>{
+        var operation = recongizeReturn[0];
+        operation.promise().then(operationReturn =>{
+          var response = operationReturn[0]
+          const transcription = response.results
+            .map(result => result.alternatives[0].transcript)
+            .join('\n');
+          resolve(transcription)
+        });
       })
     });
   }
