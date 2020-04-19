@@ -89,7 +89,7 @@ describe('sql module', () => {
             arg == "CURRENT_TIMESTAMP" ? "I can't believe its not undefined!" : undefined
         );
 
-        var returnVal = await SQL.createSpeech(_username,_title,_transcript)
+        var returnVal = await SQL.upsertSpeech(_username,_title,_transcript)
         expect(returnVal).toEqual("Correct return")
         expect(Models.Speeches.create).toBeCalledWith({
             user_id:2,
