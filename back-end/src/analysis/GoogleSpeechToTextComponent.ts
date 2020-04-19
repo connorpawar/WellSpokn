@@ -29,6 +29,9 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
           .map(result => result.alternatives[0].transcript)
           .join('\n');
         resolve(transcription)
+      }).catch(e => {
+        console.log(e)
+        reject(e)
       })
     });
   }

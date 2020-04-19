@@ -26,44 +26,6 @@ Router.get('/speech/:id',  function (req, res) {
     getSpecificSpeech(res,userId,speechId)
 });
 
-//TODO: Put in dev mode again later.
-function dummyDataPopulation(req,res,speech){
-    var sid = speech.id
-    var uid = speech.user_id
-    var initialData = {"transcript" : speech.transcript};
-    var promises = []
-    var analysisCore = generateAnalysisCore()
-    analysisCore.intialize("transcript",initialData).then(async (allData : any) => { 
-        console.log(allData)  
-        for(var x of allData.languageToolErrors.matches){
-            var err = sql.addError(sid, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
-            promises.concat(err)
-        }
-        Promise.all(promises).then(()=>{
-            sql.finalizeAttempt(sid).then(() =>{
-                getSpecificSpeech(res,uid,sid)
-            })
-        });
-    }).catch( e =>{
-        console.log(e)
-    })   
-}
-
-function SpeechPlacement(req, res) {
-    const json_data = req.body
-    var email = req.user.email
-    var title = json_data.title
-    var transcript = json_data.transcript
-    
-    sql.createSpeech(email,title,transcript)
-    .then(s =>{
-        dummyDataPopulation(req,res,s)
-    }).catch(() => {
-        res.send("Speech could not be created.");
-    })
-}
-Router.post('/dev_speech',  SpeechPlacement);
-
 Router.get('/speech_previews',  function (req, res) {
     var email = req.user.email
     sql.getAllSpeechesForASpecificUser(email).then(data => {
@@ -73,22 +35,53 @@ Router.get('/speech_previews',  function (req, res) {
     })
 });
 
-Router.post('/speech', upload.single('audio'), async (req,res) =>{
+Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
     const json_data = req.body
     var initialData = {"audioFile" : req.file.path};
     var email = req.user.email
     var title = json_data.title
-    console.log(email,title,initialData)
+    var sid = req.params.sid
+    
     var analysisCore = generateAnalysisCore()
-    analysisCore.intialize("audioFile",initialData).then((allData : any) => {    
-        sql.createSpeech(email,title,allData.transcript)
-        .then(s =>{
+
+    analysisCore.intialize("audioFile",initialData).then((allData : any) => {  
+        var transcript = allData.transcript;
+        var promise;
+        if(sid){
+            promise = sql.upsertSpeech(email,title,transcript,sid)
+        }else{
+            promise = sql.upsertSpeech(email,title,transcript)
+        }  
+        promise.then(s =>{
+            var promises = [];
             var id = s.id
-            for(var x of allData.languageToolErrors.matches){
-                sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+            
+            //TODO Modifiy thresholds as needed.
+            if(allData.wordsPerMinute > 150){
+                promises.push(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations. If you are around this speed, consider slowing down."));
+            }else if(allData.wordsPerMinute < 100){
+                promises.push(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations. If you are around this speed, consider speeding up."));
             }
+            
+            //TODO Modifiy thresholds as needed.
+            var sentimentScore = allData.sentiment[0].documentSentiment.score;
+            if(allData.sentiment[0].documentSentiment.score > 0.5){
+                promises.push(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly positive things to say; is being emotionally positive a goal of your speech?"));
+            }else if(allData.sentiment[0].documentSentiment.score < -0.5){
+                promises.push(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly negative things to say; is being emotionally negative a goal of your speech?"));
+            }
+
+            for(var x of allData.languageToolErrors.matches){
+                var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+                promises.push(errPromise);
+            }
+            console.log(errPromise)
+            Promise.all(promises).then(() =>{
+                sql.finalizeAttempt(id).then(() =>{
+                    getSpecificSpeech(res,s.user_id,s.id)
+                })
+            })
         })
-        res.send(allData.transcript)
     }).catch( e =>{
         console.log(e)
     })

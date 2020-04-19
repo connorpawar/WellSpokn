@@ -11,7 +11,7 @@ class WordsPerMinuteComponent extends AnalysisComponent<number>{
       var transcript = data["transcript"];
       return new Promise((resolve,reject) => {
         mm.parseFile(fileName, {duration:true}).then(metadata =>{
-            var Minutes : number = metadata.format.duration
+            var Minutes : number = metadata.format.duration/60
             var Words : number = transcript.split(" ").length
             resolve(Words/Minutes)
         })

@@ -39,11 +39,33 @@ class SQL{
       }
     })
   }
-  static createSpeech(_email:String,_title:String,_transcript:String) : Promise<Models.Speeches>{
+  static upsertSpeech(_email:String,_title:String,_transcript:String,_speech_id?:number) : Promise<Models.Speeches>{
     return new Promise((resolve,reject) =>{
       SQL.getUser(_email).then(u => {
         if(u == null){
-          throw "User Not Found"
+          reject("User Not Found")
+        }else if(_speech_id != null){
+          Models.Speeches.update({
+            last_edited: Models.default.literal('CURRENT_TIMESTAMP'),
+            transcript: _transcript,
+          },{
+            returning:true,
+            where:{
+              id : _speech_id,
+              user_id : u.id
+            }
+          }).then(() =>{
+            Models.Errors.destroy({where: {speech_id : _speech_id}}).then(() =>{
+              Models.Speeches.findOne({
+                where:{
+                  id : _speech_id,
+                  user_id : u.id
+                }
+              }).then(speech_data =>{
+                resolve(speech_data)
+              })
+            })
+          }).catch(e => {reject(e)})
         }else{
           Models.Speeches.create({
             user_id:u.id,
@@ -52,7 +74,7 @@ class SQL{
             transcript: _transcript,
           }).then(s =>{
             resolve(s)
-          })
+          }).catch(e => {reject(e)})
         }
       })
     })
@@ -218,7 +240,7 @@ class SQL{
   static async finalizeAttempt(_speech_id:Number){
     //TODO: Check if speech exists first.
     return new Promise((resolve,reject) => {
-      Models.Errors.findAll({where:{speech_id:_speech_id}})
+      Models.Errors.findAll({where:{speech_id: _speech_id}})
       .then(errors =>{
         var attemptData = {};
         errors.forEach(err => {
@@ -232,7 +254,10 @@ class SQL{
         .then(attempt => {
           resolve(attempt.mapping)
         })
-      });
+      }).catch(e =>{
+        console.log(e);
+        reject(e)
+      })
     })
   }
 }
