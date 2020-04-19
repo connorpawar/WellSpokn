@@ -2,6 +2,7 @@ import AnalysisCore from "./AnalysisCore";
 import FileToAudioBytesComponent from './FileToAudioBytesComponent'
 import GoogleSpeechToTextComponent from './GoogleSpeechToTextComponent'
 import GoogleNaturalLanguageComponent, {Sentiment} from './GoogleNaturalLanguageComponent'
+import GoogleSyntaxComponent from './GoogleSyntaxComponent'
 import WordsPerMinuteComponent from './WordsPerMinuteComponent'
 import LanguageToolComponent from './LanguageToolComponent'
 
@@ -11,6 +12,7 @@ function generateAnalysisCore() : AnalysisCore{
     analysisCore.addAnalysisComponent<string>(new FileToAudioBytesComponent())
     analysisCore.addAnalysisComponent<string>(new GoogleSpeechToTextComponent())
     analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
+    analysisCore.addAnalysisComponent<Object>(new GoogleSyntaxComponent())
     analysisCore.addAnalysisComponent<number>(new WordsPerMinuteComponent())
     analysisCore.addAnalysisComponent<Object>(new LanguageToolComponent())
     return analysisCore

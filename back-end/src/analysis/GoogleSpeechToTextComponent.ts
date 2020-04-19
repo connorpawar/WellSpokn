@@ -16,6 +16,7 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
       };
       const config = {
         languageCode: 'en-US',
+        enableWordTimeOffsets: true,
         audio_channel_count: 1,
         enableAutomaticPunctuation: true,
       };
@@ -23,7 +24,8 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
         audio: audio,
         config: config,
       };
-      this.speechClient.recognize(request).then(response => {
+      this.speechClient.longRunningRecognize(request).then(response => {
+        console.log(response);
         var [transcriptParts] = response
         const transcription = transcriptParts.results
           .map(result => result.alternatives[0].transcript)
