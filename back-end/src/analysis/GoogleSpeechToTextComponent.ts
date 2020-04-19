@@ -1,6 +1,5 @@
 
 import { AnalysisComponent } from "./AnalysisComponent"
-import HzComponent from "./HzComponent";
 
 const speech : any = require('@google-cloud/speech');
 const {Storage} = require('@google-cloud/storage');
@@ -32,24 +31,28 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
     var hz = data["hz"]
     return new Promise((resolve,reject) => {
 
-      this.uploadFile(convertedFile).then(gcsUri =>{
+      this.uploadFile(convertedFile).then(gsUri =>{
         const audio = {
-          uri: gcsUri,
+          uri: gsUri,
         };
+        console.log(gsUri,hz)
         const config = {
           encoding: "LINEAR16",
           sampleRateHertz : hz,
           languageCode: 'en-US',
           enableAutomaticPunctuation: true,
+          model: "default"
         };
         const request = {
           audio: audio,
           config: config,
         };
 
+        
         this.speechClient.longRunningRecognize(request).then(recongizeReturn =>{
           var operation = recongizeReturn[0];
           operation.promise().then(operationReturn =>{
+            console.log(operationReturn)
             var response = operationReturn[0]
             const transcription = response.results
               .map(result => result.alternatives[0].transcript)
