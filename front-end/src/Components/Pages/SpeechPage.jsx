@@ -13,6 +13,7 @@ import NewAttempt from '../Layout/NewAttempt';
 import TotalErrors from '../Dashboard/TotalErrors';
 import ListOfErrors from '../Dashboard/ListOfErrors';
 import CircularChart from '../Dashboard/CircularChart';
+import GlobalErrors from '../Dashboard/GlobalErrors';
 import Loader from '../Layout/Loader';
 
 
@@ -21,6 +22,12 @@ const useStyles = makeStyles({
 		minWidth: 275,
 		margin: 30,
 	},
+	grid: {
+		// Use flex layout with column direction for components in the card
+		// (CardContent and CardActions)
+		display: "flex",
+		flexDirection: "column",
+	  }
 
 });
 export default function SpeechPage(props) {
@@ -39,6 +46,8 @@ export default function SpeechPage(props) {
 	}
 
 	let counts = [];
+
+	let globalErrors = [];
 
 	let colors = [
 		'#FF6384',
@@ -68,7 +77,9 @@ export default function SpeechPage(props) {
 
 //merges the types and counts of each error into the counts array
 	speech.errors.forEach(x =>{
-		if(!error_types.has(x.type)){
+		if(x.type.toLowerCase() === "sentiment" ||x.type.toLowerCase() === "tempo"){
+			globalErrors.push({"type": x.type, "description": x.description })
+		} else if(!error_types.has(x.type)){
 			error_types.add(x.type);
 			counts.push({"count": 1, "type": x.type, "color": colors[colorIter]})
 			colorIter++;
@@ -99,20 +110,25 @@ export default function SpeechPage(props) {
 								<Typography component="h1" variant="h5" color="primary" gutterBottom>
 									{speech.name}
 								</Typography>
-								<SpeechEditor Content={speech.transcript} errors={speech.errors} counts={counts} />
+								<SpeechEditor id={speech.id} setChangedSpeech={setChangedSpeech} Content={speech.transcript} errors={speech.errors} counts={counts} />
 							</CardContent>
 						</Card>
 					</Grid>
-					<Grid item sm={6} xs={"auto"}>
-						<Grid container spacing={2}>
-							<Grid item sm={6} xs={12}>
+					<Grid item sm={6} xs={"auto"} className={classes.grid}>
+						<Grid container spacing={2} alignItems="stretch">
+							<Grid item sm={6} xs>
 								<Card className={classes.card}>
 									<CardContent>
 										<TotalErrors count={speech.latest_error_count} date={speech.date_last_modified} />
 									</CardContent>
 								</Card>
+								<Card className={classes.card}>
+									<CardContent>
+										<GlobalErrors data={globalErrors} />
+									</CardContent>
+								</Card>
 							</Grid>
-							<Grid item sm={6} xs={12}>
+							<Grid item sm xs>
 								<Card className={classes.card}>
 									<CardContent>
 										<CircularChart data={counts} />
