@@ -16,7 +16,7 @@ class GoogleSyntaxComponent extends AnalysisComponent<any>{
       };
       this.languageClient.analyzeSyntax({document: document})
       .then(allData => {
-        console.log(allData[0]);
+        //console.log(allData[0]); //TODO: Uncomment when debugging.
         resolve(allData)
       }).catch(e => {
         console.log(e)
