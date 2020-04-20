@@ -7,12 +7,12 @@ export const useNewSpeech = (setReload) => {
 
 	const handleClickOpen = () => {
 		setOpen(true);
-		setReload(true);
+		//setReload(true);
 	};
 
 	const handleClose = value => {
 		setOpen(false);
-		setReload(true);
+		//setReload(true);
 		setSelectedValue(value);
 	};
 
