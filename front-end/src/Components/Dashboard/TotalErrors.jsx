@@ -7,8 +7,8 @@ const useStyles = makeStyles({
 		flex: 1,
 	},
 	count: {
-		marginTop: 65,
-		marginBottom: 65
+		marginTop: 15,
+		marginBottom: 15
 	},
 });
 
@@ -19,7 +19,7 @@ export default function TotalErrors(props) {
 			<Typography component="h1" variant="h5" color="primary" gutterBottom>
 				Total Error Count
     	</Typography>
-			<Typography align="center" component="p" variant="h1" className={classes.count}>
+			<Typography align="center" component="p" variant="h2" className={classes.count}>
 				{props.count}
 			</Typography>
 			<Typography align="right" color="textSecondary" className={classes.date}>

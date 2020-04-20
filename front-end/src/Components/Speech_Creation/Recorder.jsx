@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button'
 var title = "";
 var id = "";
 let setChangedSpeech = () => {};
+let setLoading = () => {};
 let handleClose = () => {};
  
 export default class Recorder extends React.Component {
@@ -17,6 +18,7 @@ export default class Recorder extends React.Component {
 	id = props.id;
 	setChangedSpeech = props.setChangedSpeech;
 	handleClose = props.handleClose;
+	setLoading = props.setLoading;
   }
 
   startRecording = () => {
@@ -37,6 +39,7 @@ export default class Recorder extends React.Component {
 
   onStop(recordedBlob) {
 	var reader = new FileReader();
+	setLoading(true);
 
 	reader.readAsDataURL(recordedBlob.blob); 
 	
@@ -48,7 +51,7 @@ export default class Recorder extends React.Component {
 			method : 'POST',
 			body: form_data
 			}).then(response => response.json())
-			.then(JSONresponse => {setChangedSpeech(true); handleClose()})
+			.then(JSONresponse => {setChangedSpeech(true); setLoading(false); handleClose()})
 			.catch(error => console.log("fetch error", error));
 		}
 	} else {
@@ -62,6 +65,7 @@ export default class Recorder extends React.Component {
 			}).then(r =>{
 			r.text().then(a =>{
 				console.log(a);
+				setLoading(false);
 				handleClose();
 			})
 			})
