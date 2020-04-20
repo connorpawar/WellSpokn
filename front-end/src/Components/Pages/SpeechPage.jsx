@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,6 +16,7 @@ import ListOfErrors from '../Dashboard/ListOfErrors';
 import CircularChart from '../Dashboard/CircularChart';
 import GlobalErrors from '../Dashboard/GlobalErrors';
 import Loader from '../Layout/Loader';
+import { updateSpeech } from '../../actions';
 
 
 const useStyles = makeStyles({
@@ -32,6 +34,8 @@ const useStyles = makeStyles({
 });
 export default function SpeechPage(props) {
 	const classes = useStyles();
+
+	const dispatch = useDispatch();
 
 	const temp = {
 		"id": "0",
@@ -62,7 +66,6 @@ export default function SpeechPage(props) {
 	let error_types = new Set();
 
 	const [speech, setSpeech] = useState(temp);
-	const [loading, setLoading] = useState(false);
 	const [isBusy, setBusy] = useState(true);
 	const [changedSpeech, setChangedSpeech] = useState(true);
 
@@ -70,7 +73,10 @@ export default function SpeechPage(props) {
 		if(changedSpeech){
 			fetch('/api/speech/' + props.history.location.state.id)
 			.then(response => response.json())
-			.then(JSONresponse => {setSpeech(JSONresponse); setChangedSpeech(false); setBusy(false)})
+			.then(JSONresponse => {setSpeech(JSONresponse);
+				setChangedSpeech(false);
+				setBusy(false);
+				dispatch(updateSpeech(JSONresponse.transcript));})
 			.catch(error => console.log("fetch error", error));
 		}
 	}, [changedSpeech])
@@ -110,7 +116,8 @@ export default function SpeechPage(props) {
 								<Typography component="h1" variant="h5" color="primary" gutterBottom>
 									{speech.name}
 								</Typography>
-								<SpeechEditor id={speech.id} setChangedSpeech={setChangedSpeech} Content={speech.transcript} errors={speech.errors} counts={counts} />
+								<SpeechEditor id={speech.id} setChangedSpeech={setChangedSpeech} Content={speech.transcript} 
+								errors={speech.errors} counts={counts} />
 							</CardContent>
 						</Card>
 					</Grid>
