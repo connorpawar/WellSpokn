@@ -112,7 +112,7 @@ Router.post('/speech_fix/:sid?', upload.single('audio'), async (req,res) =>{
             }
 
             for(var x of allData.languageToolErrors.matches){
-                var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+                var errPromise = sql.addError(id, x.rule.category.name, x.offset, x.offset + x.length, x.rule.description);
                 promises.push(errPromise);
             }
             Promise.all(promises).then(() =>{
