@@ -13,8 +13,8 @@ export default function CircularChart(props) {
 		}]
 	};
 
-	const chartWidth = 180;
-	const chartHeight = 180;
+	const chartWidth = 205;
+	const chartHeight = 205;
 
 	return (
 		<React.Fragment>
