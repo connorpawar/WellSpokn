@@ -27,7 +27,7 @@ export default function NewSpeech(props) {
 			<Fab color="primary" aria-label="add" className={classes.fab} onClick={handleClickOpen}>
 				<AddIcon />
 			</Fab>
-			<NewSpeechModal setLoading={setLoading} selectedValue={selectedValue} open={open} onClose={handleClose} />
+			<NewSpeechModal setReload={props.setReload} setLoading={setLoading} selectedValue={selectedValue} open={open} onClose={handleClose} />
 			<LoadingScreen loading={loading}/>
 		</div>
 	);

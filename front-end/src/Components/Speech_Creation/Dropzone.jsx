@@ -93,6 +93,7 @@ export default function Dropzone(props) {
 					console.log(a);
 					props.setLoading(false);
 					props.handleClose();
+					props.setReload(true); 
 				})
 			})
 		}
