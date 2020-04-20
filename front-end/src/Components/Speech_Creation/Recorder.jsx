@@ -6,7 +6,9 @@ var title = "";
 var id = "";
 let setChangedSpeech = () => {};
 let setLoading = () => {};
+let setReload = () => {};
 let handleClose = () => {};
+
  
 export default class Recorder extends React.Component {
   constructor(props) {
@@ -19,6 +21,7 @@ export default class Recorder extends React.Component {
 	setChangedSpeech = props.setChangedSpeech;
 	handleClose = props.handleClose;
 	setLoading = props.setLoading;
+	setReload = props.setReload;
   }
 
   startRecording = () => {
@@ -67,6 +70,7 @@ export default class Recorder extends React.Component {
 				console.log(a);
 				setLoading(false);
 				handleClose();
+				setReload(true);
 			})
 			})
 		}
