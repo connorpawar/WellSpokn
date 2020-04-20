@@ -58,9 +58,9 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
             
             //TODO Modifiy thresholds as needed.
             if(allData.wordsPerMinute > 150){
-                promises.push(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations. If you are around this speed, consider slowing down."));
+                promises.push(sql.addError(id, "Tempo", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations. If you are around this speed, consider slowing down."));
             }else if(allData.wordsPerMinute < 100){
-                promises.push(sql.addError(id, "Speed", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations. If you are around this speed, consider speeding up."));
+                promises.push(sql.addError(id, "Tempo", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations. If you are around this speed, consider speeding up."));
             }
             
             //TODO Modifiy thresholds as needed.
@@ -75,9 +75,48 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
                 var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
                 promises.push(errPromise);
             }
-            console.log(errPromise)
             Promise.all(promises).then(() =>{
                 sql.finalizeAttempt(id).then(() =>{
+                    getSpecificSpeech(res,s.user_id,s.id)
+                })
+            })
+        })
+    }).catch( e =>{
+        console.log(e)
+    })
+});
+
+
+
+Router.post('/speech_fix/:sid?', upload.single('audio'), async (req,res) =>{
+    var transcript = req.body.transcript
+    var initialData = {"transcript" : transcript};
+    var email = req.user.email
+    var sid = req.params.sid
+    
+    var analysisCore = generateAnalysisCore()
+
+    analysisCore.intialize("transcript",initialData).then((allData : any) => {  
+        var promise;
+        promise = sql.changeTranscript(email,transcript,sid)
+        promise.then(s =>{
+            var promises = [];
+            var id = s.id
+            
+            //Error uploading is not quite unique. Refactor later.
+            var sentimentScore = allData.sentiment[0].documentSentiment.score;
+            if(allData.sentiment[0].documentSentiment.score > 0.5){
+                promises.push(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly positive things to say; is being emotionally positive a goal of your speech?"));
+            }else if(allData.sentiment[0].documentSentiment.score < -0.5){
+                promises.push(sql.addError(id, "Sentiment", 0, 0, "Your sentiment score is " + sentimentScore + ". This means you had mostly negative things to say; is being emotionally negative a goal of your speech?"));
+            }
+
+            for(var x of allData.languageToolErrors.matches){
+                var errPromise = sql.addError(id, x.rule.category.name, x.context.offset, x.context.offset + x.context.length, x.rule.description);
+                promises.push(errPromise);
+            }
+            Promise.all(promises).then(() =>{
+                sql.finalizeAttempt(id,false).then(() =>{
                     getSpecificSpeech(res,s.user_id,s.id)
                 })
             })

@@ -1,7 +1,7 @@
 
 
 import * as Models from "./models";
-import { resolve } from "dns";
+const { Op } = require("sequelize");
 
 class SQL{
   static softInitialize(){
@@ -237,7 +237,7 @@ class SQL{
     });
   }
 
-  static async finalizeAttempt(_speech_id:Number){
+  static async finalizeAttempt(_speech_id:Number, _is_new:boolean = true){
     //TODO: Check if speech exists first.
     return new Promise((resolve,reject) => {
       Models.Errors.findAll({where:{speech_id: _speech_id}})
@@ -250,13 +250,65 @@ class SQL{
             attemptData[err.type] += 1
           }
         });
-        Models.Attempts.create({mapping:JSON.stringify(attemptData),speech_id:_speech_id})
-        .then(attempt => {
-          resolve(attempt.mapping)
-        })
+        var attemptDataJsonString = JSON.stringify(attemptData)
+        if(_is_new){
+          Models.Attempts.create({mapping:attemptDataJsonString,speech_id:_speech_id})
+          .then(attempt => {
+            resolve(attempt.mapping)
+          })
+        }else{
+          Models.Attempts.findOne({ 
+              where: {speech_id : _speech_id},
+              order: [['createdAt', 'DESC']]
+          }).then(attempt =>{
+            console.log(attempt)
+            attempt.mapping = attemptDataJsonString;
+            attempt.save().then(() =>{
+              resolve(attempt.mapping)
+            })
+          })
+        }
       }).catch(e =>{
         console.log(e);
         reject(e)
+      })
+    })
+  }
+
+
+
+  static changeTranscript(_email:String,_transcript:String,_speech_id?:number) : Promise<Models.Speeches>{
+    return new Promise((resolve,reject) =>{
+      SQL.getUser(_email).then(u => {
+        if(u == null){
+          reject("User Not Found")
+        }else{
+          Models.Speeches.update({
+            last_edited: Models.default.literal('CURRENT_TIMESTAMP'),
+            transcript: _transcript,
+          },{
+            returning:true,
+            where:{
+              id : _speech_id,
+              user_id : u.id
+            }
+          }).then(() =>{
+            //TODO: This should only destory errors that are based on the text. So far, that means only NOT Tempo
+            Models.Errors.destroy({where: {
+              speech_id : _speech_id,
+              type : {[Op.ne] : 'Tempo'}
+            }}).then(() =>{
+              Models.Speeches.findOne({
+                where:{
+                  id : _speech_id,
+                  user_id : u.id
+                }
+              }).then(speech_data =>{
+                resolve(speech_data)
+              })
+            })
+          }).catch(e => {reject(e)})
+        }
       })
     })
   }
