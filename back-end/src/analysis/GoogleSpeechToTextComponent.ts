@@ -28,7 +28,6 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
       this.speechClient.longRunningRecognize(request).then(recongizeReturn =>{
         var operation = recongizeReturn[0];
         operation.promise().then(operationReturn =>{
-          console.log(operationReturn)
           var response = operationReturn[0]
           const transcription = response.results
             .map(result => result.alternatives[0].transcript)
