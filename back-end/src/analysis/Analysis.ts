@@ -1,5 +1,5 @@
 import AnalysisCore from "./AnalysisCore";
-import FfmpegFileConverterComponent from './FfmpegFileConverterComponent'
+import FileToAudioBytesComponent from './FileToAudioBytesComponent'
 import GoogleSpeechToTextComponent from './GoogleSpeechToTextComponent'
 import GoogleNaturalLanguageComponent, {Sentiment} from './GoogleNaturalLanguageComponent'
 import GoogleSyntaxComponent from './GoogleSyntaxComponent'
@@ -9,7 +9,7 @@ import LanguageToolComponent from './LanguageToolComponent'
 //TODO: Is this the best place to initialize everything?
 function generateAnalysisCore() : AnalysisCore{
     var analysisCore = new AnalysisCore();
-    analysisCore.addAnalysisComponent<string>(new FfmpegFileConverterComponent())
+    analysisCore.addAnalysisComponent<string>(new FileToAudioBytesComponent())
     analysisCore.addAnalysisComponent<string>(new GoogleSpeechToTextComponent())
     analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
     analysisCore.addAnalysisComponent<Object>(new GoogleSyntaxComponent())
