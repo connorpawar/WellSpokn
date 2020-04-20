@@ -68,7 +68,7 @@ export default function HomePage() {
 
 	const [speechCards, setSpeechCards] = useState(speeches);
 
-	const [reload, setReload] = useState(false);
+	const [reload, setReload] = useState(true);
 
 	const searchSpeeches = (searchTerm) => {
 		let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
@@ -88,10 +88,13 @@ export default function HomePage() {
 	}
 
 	useEffect(() => {
+		if(reload){
 		fetch('api/speech_previews')
 		.then(response => response.json())
 		.then(JSONresponse => setSpeechCards(JSONresponse.speeches))
 		.catch(error => console.log("fetch error", error));
+		}
+		setReload(false);
 	}, [reload])
 
 	return (
