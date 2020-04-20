@@ -6,7 +6,7 @@ const Ffmpeg = require('fluent-ffmpeg')
 
 class FileToAudioBytesComponent extends AnalysisComponent<string>{
   inputTopic = new Set(["audioFile"]);
-  outputTopic = "convertedFile";
+  outputTopic = "audioBytes";
 
   standardizeFileName(fileName) : string{
     var fileNameExt : string = path.parse(fileName).ext;
@@ -18,18 +18,18 @@ class FileToAudioBytesComponent extends AnalysisComponent<string>{
 
   useFfmpeg(fileName) : Promise<string>{
     return new Promise((resolve,reject) => {
-      var newFileName : string = this.standardizeFileName(fileName);
+      var newFileName : String = this.standardizeFileName(fileName);
       var command = new Ffmpeg()
         .input(fileName)
         .audioChannels(1)
         .output(newFileName)
         .on('end', async function(){
           const file = fs.readFileSync(newFileName);
+          const audioBytes = file.toString('base64');
           //TODO: figure out why unlinking happens prematurely.
-          //const audioBytes = file.toString('base64');
           //fs.unlink(fileName,() => {})
           //fs.unlink(newFileName,() => {})
-          resolve(newFileName);
+          resolve(audioBytes);
         })
         .on('error', e => {
           //TODO: figure out why unlinking happens prematurely.

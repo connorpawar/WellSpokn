@@ -1,13 +1,14 @@
 const language = require('@google-cloud/language');
 import { AnalysisComponent } from "./AnalysisComponent"
 
+const language : any = require('@google-cloud/language');
 
-class GoogleSyntaxComponent extends AnalysisComponent<any>{
+class GooglSyntaxComponent extends AnalysisComponent<Sentiment>{
   languageClient = new language.LanguageServiceClient();
   inputTopic = new Set(["transcript"]);
   outputTopic = "syntaxanalysis";
 
-  analyze(data: Object) : Promise<any>{
+  analyze(data: Object) : Promise<Sentiment>{
     var transcript = data["transcript"];
     return new Promise((resolve,reject) => {
       const document = {

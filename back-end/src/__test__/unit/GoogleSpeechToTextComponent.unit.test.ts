@@ -6,8 +6,7 @@ function resolveWrap(arg){
   })
 }
 
-//TODO: Made broken by uploading to Google Cloud Storage first.
-describe.skip('GoogleCloudData class', () => {
+describe('GoogleCloudData class', () => {
   test('GoogleCloudData analyze works', async (done) => {
     var component = new GoogleSpeechToTextComponent();
     var MockAudioBytes = "Hi I am stub."
