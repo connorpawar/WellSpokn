@@ -20,11 +20,10 @@ import logo from '../../Images/WellSpoknCropped.png';
 import demo1 from '../../Images/demo.png'
 import demo2 from '../../Images/demo2.png'
 import demo3 from '../../Images/demo3.png'
+import demo4 from '../../Images/demo4.png'
 
 import connor from '../../Images/Connor.jpg'
 import devin from '../../Images/Devin.jpeg'
-import ian from '../../Images/Connor.jpg'
-import kyle from '../../Images/Connor.jpg'
 import sherman from '../../Images/Sherman.jpg'
 
 import { Link as LinkScroll } from "react-scroll";
@@ -215,7 +214,7 @@ export default function LandingPage() {
 						<img src={demo3} alt="Product Demo" height="400"></img>
 					</Grid>
 					<Grid item xs={12} sm={6} md={6}>
-						<img src={demo1} alt="Product Demo" height="400"></img>
+						<img src={demo4} alt="Product Demo" height="400"></img>
 					</Grid>
 				</Grid>
 			</Container>
@@ -298,13 +297,13 @@ export default function LandingPage() {
 				</Grid>
 				<Grid justify="space-evenly" alignItems="center" container spacing={10}>
 					<Grid item xs={12} sm={4} md={4}>
-						<Avatar alt="Ian" src={ian} className={classes.bigAvatar} />
+						<Avatar className={classes.bigAvatar} />
 						<Typography variant="h5" align="center" color="textSecondary" component="p">
 							Ian Yake
         			</Typography>
 					</Grid>
 					<Grid item xs={12} sm={4} md={4}>
-						<Avatar alt="Kyle" src={kyle} className={classes.bigAvatar} />
+						<Avatar className={classes.bigAvatar} />
 						<Typography variant="h5" align="center" color="textSecondary" component="p">
 							Kyle Lindteigen
         			</Typography>
