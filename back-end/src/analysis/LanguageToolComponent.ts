@@ -18,7 +18,7 @@ class LanguageToolComponent extends AnalysisComponent<Object>{
 		return new Promise((resolve, reject) => {
 			try{
 				fs.writeFile(fileName, transcript, (err) => {
-					console.log("java -jar " + languageToolJarPath + ' -l en-US --json ' + fileName)
+					//console.log("java -jar " + languageToolJarPath + ' -l en-US --json ' + fileName)
 					if (err){
 						console.log(err);
 						resolve(languageToolErrors);
