@@ -5,7 +5,6 @@ import GoogleNaturalLanguageComponent, {Sentiment} from './GoogleNaturalLanguage
 import GoogleSyntaxComponent from './GoogleSyntaxComponent'
 import WordsPerMinuteComponent from './WordsPerMinuteComponent'
 import LanguageToolComponent from './LanguageToolComponent'
-import HzComponent from './HzComponent'
 
 //TODO: Is this the best place to initialize everything?
 function generateAnalysisCore() : AnalysisCore{
@@ -13,12 +12,9 @@ function generateAnalysisCore() : AnalysisCore{
     analysisCore.addAnalysisComponent<string>(new FfmpegFileConverterComponent())
     analysisCore.addAnalysisComponent<string>(new GoogleSpeechToTextComponent())
     analysisCore.addAnalysisComponent<Sentiment>(new GoogleNaturalLanguageComponent())
-    analysisCore.addAnalysisComponent<number>(new WordsPerMinuteComponent())
-    analysisCore.addAnalysisComponent<number>(new HzComponent())
-    analysisCore.addAnalysisComponent<Object>(new LanguageToolComponent())
-
-
     analysisCore.addAnalysisComponent<Object>(new GoogleSyntaxComponent())
+    analysisCore.addAnalysisComponent<number>(new WordsPerMinuteComponent())
+    analysisCore.addAnalysisComponent<Object>(new LanguageToolComponent())
     return analysisCore
 }
 
