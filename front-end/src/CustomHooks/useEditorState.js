@@ -55,5 +55,5 @@ export const useEditorState = (Errors, Counts, Content) => {
 		EditorState.createWithContent(ContentState.createFromText(content), createDecorator())
 	);
 
-	return { editorState, setEditorState, createDecorator, setContent}
+	return { editorState, setEditorState, createDecorator, setContent, setErrors}
 }
