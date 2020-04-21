@@ -76,7 +76,7 @@ export default function SpeechPage(props) {
 			.then(JSONresponse => {setSpeech(JSONresponse);
 				setChangedSpeech(false);
 				setBusy(false);
-				dispatch(updateSpeech(JSONresponse.transcript));})
+				dispatch(updateSpeech(JSONresponse));})
 			.catch(error => console.log("fetch error", error));
 		}
 	}, [changedSpeech])
