@@ -5,7 +5,7 @@ RUN curl https://languagetool.org/download/LanguageTool-4.8.zip --output /Langua
 RUN unzip /LanguageTool-4.8.zip
 
 FROM node AS additionalPackages
-RUN apt-get -qq update && apt-get install -y ffmpeg default-jre
+RUN apt-get -qq update && apt-get install -y ffmpeg default-jre sox libsox-fmt-all 
 
 FROM additionalPackages AS production-only-packages
 COPY package*.json /
