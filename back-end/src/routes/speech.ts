@@ -41,28 +41,28 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
     var email = req.user.email
     var title = json_data.title
     var sid = req.params.sid
-    
+
     var analysisCore = generateAnalysisCore()
 
-    analysisCore.intialize("audioFile",initialData).then((allData : any) => {  
+    analysisCore.intialize("audioFile",initialData).then((allData : any) => {
         var transcript = allData.transcript;
         var promise;
         if(sid){
             promise = sql.upsertSpeech(email,title,transcript,sid)
         }else{
             promise = sql.upsertSpeech(email,title,transcript)
-        }  
+        }
         promise.then(s =>{
             var promises = [];
             var id = s.id
-            
+
             //TODO Modifiy thresholds as needed.
             if(allData.wordsPerMinute > 150){
                 promises.push(sql.addError(id, "Tempo", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at most 160 for presentations. If you are around this speed, consider slowing down."));
             }else if(allData.wordsPerMinute < 100){
                 promises.push(sql.addError(id, "Tempo", 0, 0, "Your words per minute is " + allData.wordsPerMinute + ". Your words per minute should be at least 100 for presentations. If you are around this speed, consider speeding up."));
             }
-            
+
             //TODO Modifiy thresholds as needed.
             var sentimentScore = allData.sentiment[0].documentSentiment.score;
             if(allData.sentiment[0].documentSentiment.score > 0.5){
@@ -75,6 +75,17 @@ Router.post('/speech/:sid?', upload.single('audio'), async (req,res) =>{
                 var errPromise = sql.addError(id, x.rule.category.name, x.offset, x.offset + x.length, x.rule.description);
                 promises.push(errPromise);
             }
+
+            for(var x of allData.repeatAdjectiveErrors){
+                var errPromise = sql.addError(id, "Repeat Adjective", x.offset, x.offset + x.word.length, "You said the word " +x.word+" recently, maybe change it for with a synonym");
+                promises.push(errPromise);
+            }
+
+            // for(var x of allData.pauses){
+            //     var errPromise = sql.addError(id, "Pause", x.offset, x.offset + 1, "Paused for " + x.duration+ " amount of time");
+            //     promises.push(errPromise);
+            // }
+
             Promise.all(promises).then(() =>{
                 sql.finalizeAttempt(id).then(() =>{
                     getSpecificSpeech(res,s.user_id,s.id)
@@ -93,16 +104,16 @@ Router.post('/speech_fix/:sid?', upload.single('audio'), async (req,res) =>{
     var initialData = {"transcript" : transcript};
     var email = req.user.email
     var sid = req.params.sid
-    
+
     var analysisCore = generateAnalysisCore()
 
-    analysisCore.intialize("transcript",initialData).then((allData : any) => {  
+    analysisCore.intialize("transcript",initialData).then((allData : any) => {
         var promise;
         promise = sql.changeTranscript(email,transcript,sid)
         promise.then(s =>{
             var promises = [];
             var id = s.id
-            
+
             //Error uploading is not quite unique. Refactor later.
             var sentimentScore = allData.sentiment[0].documentSentiment.score;
             if(allData.sentiment[0].documentSentiment.score > 0.5){
@@ -115,6 +126,12 @@ Router.post('/speech_fix/:sid?', upload.single('audio'), async (req,res) =>{
                 var errPromise = sql.addError(id, x.rule.category.name, x.offset, x.offset + x.length, x.rule.description);
                 promises.push(errPromise);
             }
+
+            for(var x of allData.repeatAdjectiveErrors){
+                var errPromise = sql.addError(id, "Repeat Adjective", x.offset, x.offset + x.word.length, "You said the word " +x.word+" recently, maybe change it for with a synonym");
+                promises.push(errPromise);
+            }
+
             Promise.all(promises).then(() =>{
                 sql.finalizeAttempt(id,false).then(() =>{
                     getSpecificSpeech(res,s.user_id,s.id)

@@ -32,7 +32,7 @@ describe('GoogleNaturalLanguageComponent class', () => {
 
     var componentReturn = await component.analyze(inputData)
     expect(componentReturn[0].documentSentiment).toEqual(expectedReturn[0].documentSentiment)
-    
+
     done();
   });
 });

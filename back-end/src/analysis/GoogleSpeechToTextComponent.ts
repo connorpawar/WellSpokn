@@ -3,12 +3,12 @@ import { AnalysisComponent } from "./AnalysisComponent"
 
 const speech : any = require('@google-cloud/speech');
 
-class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
+class GoogleSpeechToTextComponent extends AnalysisComponent<Object>{
   speechClient = new speech.SpeechClient();
   inputTopic = new Set(["audioBytes"]);
-  outputTopic = "transcript";
+  outputTopic = "speechToTextRet";
 
-  analyze(data: Object) : Promise<string>{
+  analyze(data: Object) : Promise<Object>{
     var audioBytes = data["audioBytes"];
     return new Promise((resolve,reject) => {
       const audio = {
@@ -24,15 +24,12 @@ class GoogleSpeechToTextComponent extends AnalysisComponent<string>{
         audio: audio,
         config: config,
       };
-        
+
       this.speechClient.longRunningRecognize(request).then(recongizeReturn =>{
         var operation = recongizeReturn[0];
         operation.promise().then(operationReturn =>{
           var response = operationReturn[0]
-          const transcription = response.results
-            .map(result => result.alternatives[0].transcript)
-            .join('\n');
-          resolve(transcription)
+          resolve(response)
         });
       })
     });

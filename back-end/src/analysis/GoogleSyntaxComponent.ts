@@ -14,10 +14,10 @@ class GoogleSyntaxComponent extends AnalysisComponent<any>{
         content: transcript,
         type: 'PLAIN_TEXT',
       };
-      this.languageClient.analyzeSyntax({document: document})
+      this.languageClient.analyzeSyntax({document: document, encodingType: 'UTF8'})
       .then(allData => {
-        //console.log(allData[0]); //TODO: Uncomment when debugging.
-        resolve(allData)
+        //console.log(allData[0].tokens[0]); //TODO: Uncomment when debugging.
+        resolve(allData[0])
       }).catch(e => {
         console.log(e)
         reject(e)

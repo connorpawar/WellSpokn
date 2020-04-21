@@ -5,7 +5,7 @@ import * as cp from 'child_process'
 const path = require('path')
 
 //TODO make this an enviroment variable
-var languageToolJarPath : String = '/languagetool/languagetool-commandline.jar'
+var languageToolJarPath : String = './languagetool/languagetool-commandline.jar'
 
 class LanguageToolComponent extends AnalysisComponent<Object>{
 	inputTopic = new Set(["transcript"]);
