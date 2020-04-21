@@ -17,19 +17,19 @@ const useStyles = makeStyles((theme) => ({
 export default function SpeechEditor(props) {
 	const classes = useStyles();
 
-	let content = useSelector(state => state.currentSpeech);
+	let speech = useSelector(state => state.currentSpeech);
 
-	const {editorState, setEditorState, createDecorator, setContent} = useEditorState(props.errors, props.counts, props.Content);
+	const {editorState, setEditorState, createDecorator, setContent, setErrors} = useEditorState(props.errors, props.counts, props.Content);
 
-	//console.log(props.Content)
 	React.useEffect(() => {
-		console.log("in useEffect")
 		setEditorState(EditorState.createWithContent(ContentState.createFromText(props.Content), createDecorator()))
-		if(typeof content === "string"){
+		if(typeof speech.transcript === "string"){
 			console.log("set")
-			setContent(content);
+			setErrors(speech.errors)
+			setContent(speech.transcript);
+			setEditorState(EditorState.createWithContent(ContentState.createFromText(speech.transcript), createDecorator()))
 		}
-	}, [props.Content])
+	}, [speech])
 
 	const [load, setLoad] = React.useState(false);
 
