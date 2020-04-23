@@ -11,8 +11,7 @@ FROM additionalPackages AS production-only-packages
 COPY package*.json /
 #TODO: Dependency Folder?
 COPY --from=LangaugeToolDownloader /LanguageTool-4.8/ /languagetool/
-COPY ./auth/authKey.json /authKey.json
-ENV GOOGLE_APPLICATION_CREDENTIALS '/authKey.json'
+ENV GOOGLE_APPLICATION_CREDENTIALS '/run/secrets/gcapikey'
 RUN npm install --only=prod
 RUN npm install pg
 

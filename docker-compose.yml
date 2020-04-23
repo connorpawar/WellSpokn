@@ -28,6 +28,8 @@ services:
     - "8080:8080"
     network_mode: "host"
     restart: always
+    secrets:
+      - gcapikey
   load-balancer:
     build: ./docker/load-balancer
     image: load-balancer
@@ -35,6 +37,10 @@ services:
     - "80:80"
     network_mode: "host"
     
+secrets:
+  gcapikey:
+    file: './gcapikey.json'
+
 volumes:
   db-data:
   session-data:

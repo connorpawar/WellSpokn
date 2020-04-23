@@ -13,7 +13,6 @@
 /back-end/backend.js
 /back-end/ts-built
 /back-end/uploads
-/back-end/auth/authKey.json
 
 # misc
 .DS_Store
@@ -26,3 +25,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.tar
+
+gcapikey.json
+**/gcapikey.json
