@@ -48,7 +48,7 @@
     "passport-local": "^1.0.0",
     "pg": "^7.18.1",
     "pg-hstore": "^2.3.3",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
     "sequelize-typescript": "^1.0.0",
